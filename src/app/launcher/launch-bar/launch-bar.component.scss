@@ -1,0 +1,72 @@
+.launch-bar {
+	width: 100%;
+	height: 64px;
+	background: #e91e63;
+	color: #fff;
+
+	// display: flex;
+	// justify-content: space-between;
+	// align-items: center;
+
+	table {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	button.launch-button {
+		height: 48px;
+		width: 100%;
+		background-color: #fff;
+		line-height: 1em;
+		font-size: 1em;
+
+		&[disabled] {
+			.launch-button__icon {
+				color: rgba(#e91e63, 0.5) !important;
+			}
+		}
+
+		.launch-button__content {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			align-content: center;
+
+			width: 100%;
+			height: 100%;
+			margin: 0 -16px;
+
+			.launch-button__icon {
+				background: rgba(#e91e63, 0.2);
+				// border-radius: 4px 0 0 4px;
+				height: 100%;
+				width: 52px;
+				padding-top: 18px;
+				color: #e91e63;
+
+				mat-icon {
+					width: 28px;
+					height: 28px;
+					font-size: 28px;
+					text-align: center;
+				}
+			}
+
+			.launch-button__text {
+				text-align: center;
+
+				span {
+					font-weight: 400;
+					font-size: 0.8em;
+				}
+			}
+		}
+	}
+
+	.user-image {
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+	}
+}

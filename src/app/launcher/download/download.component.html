@@ -1,0 +1,55 @@
+<div class="download">
+	<ng-container *ngIf="!downloading && !complete">
+		<h3>It seems that you don't have<br />the Tivoli client installed!</h3>
+		<br />
+
+		<button
+			mat-flat-button
+			color="primary"
+			(click)="onDownload()"
+			[disabled]="!downloadInfo"
+		>
+			Download now
+		</button>
+
+		<mat-progress-bar
+			mode="indeterminate"
+			*ngIf="!downloadInfo"
+			style="margin-top: 16px"
+		></mat-progress-bar>
+		<p *ngIf="downloadInfo" style="opacity: 0.8; margin-top: 4px;">
+			v{{ downloadInfo.version }} ({{ downloadInfo.size }} MB)
+		</p>
+	</ng-container>
+	<ng-container *ngIf="downloading && !complete">
+		<h3>
+			<span style="text-transform: capitalize;">{{ progress.type }}</span>
+			the client...
+		</h3>
+		<br />
+
+		<div style="width: 300px; opacity: 0.8;">
+			<mat-progress-bar
+				mode="determinate"
+				[value]="progress.percentage"
+			></mat-progress-bar>
+			<table style="width: 100%; margin-top: 4px;">
+				<tr>
+					<td style="text-align: left;">
+						<p>{{ mathFloor(progress.percentage) }}% complete</p>
+					</td>
+					<td style="text-align: right;">
+						<p>{{ bytesToMB(progress.remaining) }} MB remaining</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="complete">
+		<h2>Installation complete!</h2>
+		<br />
+		<button mat-flat-button color="primary" (click)="onClose()">
+			I'm ready for virtual reality!
+		</button>
+	</ng-container>
+</div>

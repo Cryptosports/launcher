@@ -1,0 +1,6 @@
+/node_modules
+/dist
+/out
+/electron/dist
+/interface*
+package-lock.json
