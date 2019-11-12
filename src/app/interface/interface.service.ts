@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { User, AuthService } from "../auth/auth.service";
-import { Subscription, BehaviorSubject, Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
+import { AuthService, User } from "../auth/auth.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -139,7 +139,7 @@ export class InterfaceService {
 				"--url",
 				"alpha.tivolicloud.com",
 				"--tokens",
-				JSON.stringify(this.user.tokens),
+				JSON.stringify(this.user.token),
 			],
 			{
 				env: {

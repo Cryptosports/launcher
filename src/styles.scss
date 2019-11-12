@@ -7,10 +7,6 @@ $warn: mat-palette($mat-red);
 $theme: mat-light-theme($primary, $accent, $warn);
 @include angular-material-theme($theme);
 
-* {
-	margin: 0;
-}
-
 html,
 body {
 	height: 100vh;

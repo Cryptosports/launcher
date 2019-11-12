@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { environment } from "../../../environments/environment";
-import { AuthService } from "../../auth/auth.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { AuthService, AuthToken } from "../../auth/auth.service";
+
+const electron = (window as any).require("electron");
 
 @Component({
 	selector: "app-form",
@@ -11,14 +12,16 @@ import { AuthService } from "../../auth/auth.service";
 export class FormComponent implements OnInit {
 	errorMessage = "";
 
-	inSignUpMode = false;
+	mode: "signIn" | "signUp" | "extSignUp" = "signIn";
 	isLoading = false;
 
 	signInForm: FormGroup = null as any;
 	signUpForm: FormGroup = null as any;
+	extSignUpForm: FormGroup = null as any;
 
-	//extServices = ["Google", "Discord", "GitHub"];
-	extServices = [];
+	extServices = ["Google", "Discord", "GitHub"];
+	extEmail = "";
+	extImageUrl = "";
 
 	constructor(private authService: AuthService) {}
 
@@ -71,22 +74,41 @@ export class FormComponent implements OnInit {
 				Validators.maxLength(64),
 			]),
 		});
+
+		this.extSignUpForm = new FormGroup({
+			username: new FormControl(null, [
+				Validators.required,
+				this.usernameValidator,
+				Validators.minLength(4),
+				Validators.maxLength(24),
+			]),
+			token: new FormControl(null),
+			imageUrl: new FormControl(null),
+		});
 	}
 
 	onSubmit() {
-		const form = this.inSignUpMode ? this.signUpForm : this.signInForm;
+		let form = null;
+		if (this.mode == "signIn") form = this.signInForm;
+		if (this.mode == "signUp") form = this.signUpForm;
+		if (this.mode == "extSignUp") form = this.extSignUpForm;
+		if (form == null) return;
 		if (form.invalid) return;
+
+		let service = null;
+		if (this.mode == "signIn")
+			service = this.authService.signIn({ ...form.value });
+		if (this.mode == "signUp")
+			service = this.authService.signUp({ ...form.value });
+		if (this.mode == "extSignUp")
+			service = this.authService.extSignUp({ ...form.value });
+		if (service == null) return;
 
 		this.isLoading = true;
 		form.disable();
 
-		const sub = (this.inSignUpMode
-			? this.authService.signUp({ ...form.value })
-			: this.authService.signIn({ ...form.value })
-		).subscribe(
-			data => {
-				// goto next page
-			},
+		const sub = service.subscribe(
+			data => {},
 			err => {
 				this.errorMessage = err;
 				this.isLoading = false;
@@ -100,48 +122,68 @@ export class FormComponent implements OnInit {
 
 	onSignInExt(serviceName: string) {
 		const authWindow = window.open(
-			(environment.production ? "" : "http://localhost:3000") +
-				"/auth/" +
-				serviceName,
+			this.authService.metaverseUrl + "/api/auth/" + serviceName,
 			"",
-			"width=500,height=600",
+			"toolbar=no,menubar=no,width=500,height=600",
 		);
 
 		this.signInForm.disable();
 		this.isLoading = true;
 
-		const interval = setInterval(() => {
-			try {
-				if (
-					authWindow.document.URL.indexOf(
-						environment.production
-							? window.location.host
-							: "localhost",
-					) > -1
-				) {
-					const token = authWindow.document.head.querySelector(
-						"#token",
-					).innerHTML;
+		const handleMessage = (e: MessageEvent) => {
+			if (e.origin != this.authService.metaverseUrl) return;
+			window.removeEventListener("message", handleMessage);
+			authWindow.close();
 
-					clearInterval(interval);
+			const { token, register } = e.data as {
+				token: AuthToken;
+				register: {
+					token: string;
+					username: string;
+					email: string;
+					imageUrl: string;
+				};
+			};
 
-					authWindow.close();
-					//this.authService.handleAuthentication(token);
-				}
-			} catch (err) {}
+			if (token != null) {
+				this.authService.handleAuthentication(token);
+				return;
+			}
 
-			try {
-				if (authWindow.location.href == undefined) {
-					clearInterval(interval);
-					this.signInForm.enable();
-					this.isLoading = false;
-				}
-			} catch (err) {}
+			if (register != null) {
+				this.extSignUpForm.controls.token.setValue(register.token);
+				this.extSignUpForm.controls.username.setValue(
+					register.username,
+				);
+				if (register.imageUrl)
+					this.extSignUpForm.controls.imageUrl.setValue(
+						register.imageUrl,
+					);
+
+				this.extEmail = register.email;
+				this.extImageUrl = register.imageUrl;
+
+				this.isLoading = false;
+
+				this.errorMessage = "";
+				this.mode = "extSignUp";
+				return;
+			}
+		};
+
+		window.addEventListener("message", handleMessage);
+
+		const onClosedInterval = setInterval(() => {
+			if (authWindow.closed) {
+				clearInterval(onClosedInterval);
+				this.signInForm.enable();
+				this.isLoading = false;
+			}
 		}, 100);
 	}
 
 	onToggleSignUp() {
 		this.errorMessage = "";
-		this.inSignUpMode = !this.inSignUpMode;
+		this.mode = this.mode == "signIn" ? "signUp" : "signIn";
 	}
 }

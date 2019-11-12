@@ -1,0 +1,12 @@
+@each $service in (google, discord, github) {
+	.icon-#{$service} {
+		width: 24px;
+		height: 24px;
+		margin-right: 4px;
+		background-image: url(../../../assets/#{$service}-logo.svg);
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: contain;
+		display: inline-block;
+	}
+}

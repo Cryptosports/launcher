@@ -1,4 +1,5 @@
-import { app, BrowserWindow, Menu } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
+import { watchFile } from "fs";
 import * as path from "path";
 
 let win: BrowserWindow;
@@ -6,11 +7,13 @@ let win: BrowserWindow;
 const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
 const APP_ICON = path.resolve(__dirname, "../../assets/icon.ico");
 
-// fs.watchFile(APP_ROOT, { interval: 500 }, () => {
-// 	if (win != null) win.loadFile(APP_ROOT);
-// });
+watchFile(APP_ROOT, { interval: 500 }, () => {
+	if (win != null) win.loadFile(APP_ROOT);
+});
 
-Menu.setApplicationMenu(null);
+//Menu.setApplicationMenu(null);
+app.commandLine.appendSwitch("disable-web-security");
+app.commandLine.appendSwitch("disable-site-isolation-trials");
 
 const createWindow = () => {
 	if (win != null) return;
@@ -25,6 +28,8 @@ const createWindow = () => {
 		webPreferences: {
 			nodeIntegration: true,
 			backgroundThrottling: false,
+			webSecurity: false,
+			nativeWindowOpen: true,
 		},
 
 		// https://iconverticons.com/online
@@ -33,7 +38,11 @@ const createWindow = () => {
 		autoHideMenuBar: true,
 	});
 
-	win.loadFile(APP_ROOT);
+	win.loadURL(APP_ROOT);
+
+	ipcMain.on("postMessage", (e, arg) => {
+		win.webContents.send("postMessage", arg);
+	});
 
 	win.on("closed", () => {
 		win = null;

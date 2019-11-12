@@ -9,13 +9,13 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { BehaviorSubject, Observable, throwError } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 
-interface AuthResponse {
+export interface AuthToken {
 	access_token: string;
 	created_at: number;
 	expires_in: number;
 	refresh_token: string;
-	scope: string;
-	token_type: string;
+	scope: "owner";
+	token_type: "Bearer";
 }
 
 export class User {
@@ -23,7 +23,7 @@ export class User {
 		public id: string,
 		public username: string,
 		public email: string,
-		public tokens: AuthResponse,
+		public token: AuthToken,
 	) {}
 }
 
@@ -42,11 +42,13 @@ export class AuthService {
 
 	private handleError = (err: HttpErrorResponse): Observable<never> => {
 		//console.log(err);
-		return throwError(err.statusText);
+		if (err.error.message) return throwError(err.error.message);
+		if (err.status == 401)
+			return throwError("Invalid username and password");
 	};
 
-	handleAuthentication = (res: AuthResponse) => {
-		const jwt = res.access_token;
+	handleAuthentication = (token: AuthToken) => {
+		const jwt = token.access_token;
 
 		if (this.jwtHelper.isTokenExpired(jwt))
 			return throwError("Token expired");
@@ -72,15 +74,15 @@ export class AuthService {
 				profile => {
 					const { id, username, email } = profile.data.user;
 
-					const user = new User(id, username, email, res);
+					const user = new User(id, username, email, token);
 
-					const token = this.jwtHelper.decodeToken(jwt);
+					const payload = this.jwtHelper.decodeToken(jwt);
 					const msTillExpire =
-						+new Date(token.exp * 1000) - +new Date();
+						+new Date(payload.exp * 1000) - +new Date();
 
 					this.autoLogout(msTillExpire);
 					this.user.next(user);
-					localStorage.setItem("auth", JSON.stringify(res));
+					localStorage.setItem("auth", JSON.stringify(token));
 
 					this.router.navigateByUrl("/launcher");
 				},
@@ -91,18 +93,9 @@ export class AuthService {
 			);
 	};
 
-	signUp(signUpDto: { email: string; username: string; password: string }) {
-		return this.http
-			.post<AuthResponse>(
-				this.metaverseUrl + "/api/auth/signup",
-				signUpDto,
-			)
-			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
-	}
-
 	signIn(signInDto: { username: string; password: string }) {
 		return this.http
-			.post<AuthResponse>(this.metaverseUrl + "/oauth/token", {
+			.post<AuthToken>(this.metaverseUrl + "/oauth/token", {
 				grant_type: "password",
 				username: signInDto.username,
 				password: signInDto.password,
@@ -111,12 +104,28 @@ export class AuthService {
 			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
 	}
 
+	signUp(signUpDto: { email: string; username: string; password: string }) {
+		return this.http
+			.post<AuthToken>(this.metaverseUrl + "/api/auth/signup", signUpDto)
+			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
+	}
+
+	extSignUp(extSignUpDto: { token: string; username: string }) {
+		return this.http
+			.post<AuthToken>(
+				this.metaverseUrl + "/api/auth/signup-external",
+				extSignUpDto,
+			)
+			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
+	}
+
 	autoLogin() {
-		const token = localStorage.getItem("auth");
-		if (!token) return;
+		const tokenStr = localStorage.getItem("auth");
+		if (!tokenStr) return;
+
 		try {
-			const res = JSON.parse(token) as AuthResponse;
-			this.handleAuthentication(res);
+			const token = JSON.parse(tokenStr);
+			this.handleAuthentication(token);
 		} catch (err) {}
 	}
 

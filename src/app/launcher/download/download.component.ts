@@ -37,9 +37,9 @@ export class DownloadComponent implements OnInit {
 	}
 
 	onDownload() {
+		this.downloading = true;
 		this.interfaceService.download().subscribe(
 			progress => {
-				this.downloading = true;
 				this.progress = progress;
 			},
 			err => {},
