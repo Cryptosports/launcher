@@ -1,17 +1,28 @@
 import { app, BrowserWindow, ipcMain, Menu } from "electron";
 import { watchFile } from "fs";
 import * as path from "path";
+import * as os from "os";
 
 let win: BrowserWindow;
 
+const PLATFORM = os.platform();
+const DEV = process.env.DEV != null;
+
 const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
-const APP_ICON = path.resolve(__dirname, "../../assets/icon.ico");
+const APP_ICON = (() => {
+	if (PLATFORM == "darwin")
+		return path.resolve(__dirname, "../../assets/icon.icns");
+})();
 
-watchFile(APP_ROOT, { interval: 500 }, () => {
-	if (win != null) win.loadFile(APP_ROOT);
-});
+if (DEV) {
+	watchFile(APP_ROOT, { interval: 500 }, () => {
+		if (win != null) win.loadFile(APP_ROOT);
+	});
+}
 
-Menu.setApplicationMenu(null);
+if (!DEV) {
+	Menu.setApplicationMenu(null);
+}
 
 const createWindow = () => {
 	if (win != null) return;
@@ -29,13 +40,11 @@ const createWindow = () => {
 			nativeWindowOpen: true,
 		},
 
-		// https://iconverticons.com/online
 		icon: APP_ICON,
-
 		autoHideMenuBar: true,
 	});
 
-	win.loadURL(APP_ROOT);
+	win.loadFile(APP_ROOT);
 
 	win.on("closed", () => {
 		win = null;

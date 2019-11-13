@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { AuthService, User } from "../../auth/auth.service";
 import { Subscription } from "rxjs";
-import { InterfaceService } from "../../interface/interface.service";
+import { InterfaceService } from "../interface.service";
 
 @Component({
 	selector: "app-launch-bar",

@@ -4,3 +4,4 @@
 /electron/dist
 /interface*
 package-lock.json
+.DS_Store

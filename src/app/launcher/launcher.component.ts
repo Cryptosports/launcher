@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { DownloadComponent } from "./download/download.component";
-import { InterfaceService } from "../interface/interface.service";
+import { InterfaceService } from "./interface.service";
 
 @Component({
 	selector: "app-launcher",
@@ -15,9 +14,9 @@ export class LauncherComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		if (!this.interfaceService.downloaded())
-			this.dialog.open(DownloadComponent, {
-				disableClose: true,
-			});
+		// if (!this.interfaceService.downloaded())
+		// 	this.dialog.open(DownloadComponent, {
+		// 		disableClose: true,
+		// 	});
 	}
 }

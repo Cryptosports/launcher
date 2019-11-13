@@ -1,24 +1,51 @@
 {
-	"name": "tivoli-cloud-launcher",
+	"name": "tivoli-cloud",
 	"author": "Maki",
 	"version": "0.0.0",
 	"description": "Tivoli Cloud Launcher",
 	"main": "electron/dist/main.js",
 	"scripts": {
-		"build": "tsc --p electron && ng build --prod",
+		"build:electron": "tsc --p electron",
+		"build:angular": "ng build --prod",
+		"build": "npm run build:angular && npm run build:electron",
 		"dist": "electron-builder",
-		"electron": "tsc --p electron && electron .",
+		"electron": "tsc --p electron && DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
 		"start": "ng build --watch"
 	},
 	"build": {
 		"appId": "com.tivolicloud.launcher",
+		"productName": "Tivoli Cloud",
 		"asar": false,
 		"win": {
-			"artifactName": "tivoli-cloud-launcher.zip",
+			"artifactName": "tivoli-cloud.zip",
 			"target": "zip",
-			"compression": "normal",
-			"icon": "./assets/icon.ico"
+			"icon": "assets/icon.ico"
+		},
+		"mac": {
+			"artifactName": "tivoli-cloud.dmg",
+			"target": "dmg",
+			"category": "public.app-category.games",
+			"icon": "assets/icon.icns",
+			"files": [
+				"interface/0.85.0.app/**/*"
+			]
+		},
+		"dmg": {
+			"background": "assets/dmg.png",
+			"title": "Tivoli Cloud",
+			"contents": [
+				{
+					"x": 170,
+					"y": 190
+				},
+				{
+					"x": 370,
+					"y": 190,
+					"type": "link",
+					"path": "/Applications"
+				}
+			]
 		},
 		"files": [
 			"out",
@@ -47,7 +74,7 @@
 		"@angular/router": "~8.2.11",
 		"@auth0/angular-jwt": "^3.0.1",
 		"@types/electron": "^1.6.10",
-		"@types/node": "~8.9.4",
+		"@types/node": "^8.9.5",
 		"@types/node-fetch": "^2.5.3",
 		"electron": "^7.1.1",
 		"electron-builder": "^22.1.0",
