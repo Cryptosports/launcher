@@ -38,7 +38,10 @@ export class InterfaceService {
 
 		const executable = (() => {
 			if (platform == "darwin")
-				return path.resolve(this.interfacePath, "0.85.0.app");
+				return path.resolve(
+					this.interfacePath,
+					"0.85.0.app/Contents/MacOS/interface",
+				);
 			if (platform == "win32")
 				return path.resolve(this.interfacePath, "0.85.0/interface.exe");
 			return null;
