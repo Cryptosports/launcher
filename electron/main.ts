@@ -1,7 +1,7 @@
-import { app, BrowserWindow, ipcMain, Menu } from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import { watchFile } from "fs";
-import * as path from "path";
 import * as os from "os";
+import * as path from "path";
 
 let win: BrowserWindow;
 
@@ -12,6 +12,8 @@ const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
 const APP_ICON = (() => {
 	if (PLATFORM == "darwin")
 		return path.resolve(__dirname, "../../assets/icon.icns");
+	if (PLATFORM == "win32")
+		return path.resolve(__dirname, "../../assets/icon.ico");
 })();
 
 if (DEV) {

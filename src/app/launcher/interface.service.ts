@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Subject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 
 const require = (window as any).require;
@@ -35,35 +35,34 @@ export class InterfaceService {
 		if (this.isRunning) return;
 
 		const platform = os.platform();
-		let cmd = null;
 
-		switch (platform) {
-			case "darwin":
-				cmd =
-					"open " +
-					path
-						.resolve(this.interfacePath, "0.85.0.app")
-						.replace(/(\s+)/g, "\\$1") +
-					" --args";
-				break;
-		}
+		const executable = (() => {
+			if (platform == "darwin")
+				return path.resolve(this.interfacePath, "0.85.0.app");
+			if (platform == "win32")
+				return path.resolve(this.interfacePath, "0.85.0/interface.exe");
+			return null;
+		})();
+		if (executable == null) return;
 
-		if (cmd == null) return;
 		this.isRunning = true;
 
-		cmd += [
-			"",
-			"--no-launcher",
-			"--suppress-settings-reset",
-			"--url alpha.tivolicloud.com",
-			`--tokens '${JSON.stringify(this.user.token)}'`,
-		].join(" ");
-
-		const child = childProcess.exec(cmd, {
-			env: {
-				HIFI_METAVERSE_URL: this.authService.metaverseUrl,
+		const child = childProcess.execFile(
+			executable,
+			[
+				"--no-launcher",
+				"--suppress-settings-reset",
+				"--url",
+				"alpha.tivolicloud.com",
+				"--tokens",
+				JSON.stringify(this.user.token),
+			],
+			{
+				env: {
+					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
+				},
 			},
-		});
+		);
 
 		const stopRunning = () => {
 			this.isRunning = false;

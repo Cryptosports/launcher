@@ -1,6 +1,6 @@
 {
 	"name": "tivoli-cloud",
-	"author": "Maki",
+	"author": "Tivoli Cloud VR, Inc.",
 	"version": "0.0.0",
 	"description": "Tivoli Cloud Launcher",
 	"main": "electron/dist/main.js",
@@ -9,7 +9,8 @@
 		"build:angular": "ng build --prod",
 		"build": "npm run build:angular && npm run build:electron",
 		"dist": "electron-builder",
-		"electron": "tsc --p electron && DEV=true electron .",
+		"electron:win": "tsc --p electron && set DEV=true && electron .",
+		"electron:mac": "tsc --p electron && DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
 		"start": "ng build --watch"
 	},
@@ -18,15 +19,25 @@
 		"productName": "Tivoli Cloud",
 		"asar": false,
 		"win": {
-			"artifactName": "tivoli-cloud.zip",
-			"target": "zip",
-			"icon": "assets/icon.ico"
+			"artifactName": "tivoli-cloud-setup.exe",
+			"target": "nsis",
+			"icon": "assets/icon.ico",
+			"files": [
+				"interface/0.85.0/**/*"
+			]
+		},
+		"nsis": {
+			"oneClick": false,
+			"perMachine": true,
+			"allowToChangeInstallationDirectory": true,
+			"runAfterFinish": true,
+			"installerSidebar": "assets/installer-sidebar.bmp"
 		},
 		"mac": {
 			"artifactName": "tivoli-cloud.dmg",
 			"target": "dmg",
-			"category": "public.app-category.games",
 			"icon": "assets/icon.icns",
+			"category": "public.app-category.games",
 			"files": [
 				"interface/0.85.0.app/**/*"
 			]
