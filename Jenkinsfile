@@ -8,13 +8,21 @@ pipeline {
   stages {
     stage('Compile') {
       steps {
-        sh 'npm run build'
+        sh '''export PATH=/usr/local/bin:$PATH
+npm run build'''
       }
     }
 
     stage('Build') {
       steps {
-        sh 'npm run dist'
+        sh '''export PATH=/usr/local/bin:$PATH
+npm run dist'''
+      }
+    }
+
+    stage('Complete') {
+      steps {
+        archiveArtifacts 'dist/tivoli-cloud.dmg'
       }
     }
 
