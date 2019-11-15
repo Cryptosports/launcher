@@ -56,10 +56,17 @@ export class InterfaceService {
 		const child = childProcess.execFile(
 			executable,
 			[
+				"--no-updater",
 				"--no-launcher",
+				"--no-login-suggestion",
 				"--suppress-settings-reset",
+
+				"--displayName",
+				this.user.username,
+
 				"--url",
 				"alpha.tivolicloud.com",
+
 				"--tokens",
 				JSON.stringify(this.user.token),
 			],
