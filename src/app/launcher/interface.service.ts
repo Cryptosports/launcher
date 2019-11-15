@@ -23,7 +23,7 @@ export class InterfaceService {
 		electron.remote.app.getAppPath(),
 		"interface",
 	);
-	readonly interfaceVersion = "0.86.0";
+	readonly interfaceVersion = "0.85.0";
 
 	constructor(private authService: AuthService) {
 		this.userSub = this.authService.user.subscribe(user => {
