@@ -23,7 +23,7 @@ export class InterfaceService {
 		electron.remote.app.getAppPath(),
 		"interface",
 	);
-	readonly interfaceVersion = "0.85.0";
+	readonly interfaceVersion = "0.86.0";
 
 	constructor(private authService: AuthService) {
 		this.userSub = this.authService.user.subscribe(user => {
@@ -40,10 +40,13 @@ export class InterfaceService {
 			if (platform == "darwin")
 				return path.resolve(
 					this.interfacePath,
-					"0.85.0.app/Contents/MacOS/interface",
+					this.interfaceVersion + ".app/Contents/MacOS/interface",
 				);
 			if (platform == "win32")
-				return path.resolve(this.interfacePath, "0.85.0/interface.exe");
+				return path.resolve(
+					this.interfacePath,
+					this.interfaceVersion + "/interface.exe",
+				);
 			return null;
 		})();
 		if (executable == null) return;
@@ -63,6 +66,7 @@ export class InterfaceService {
 			{
 				env: {
 					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
+					HIFI_ENABLE_MATERIAL_PROCEDURAL_SHADERS: true,
 				},
 			},
 		);

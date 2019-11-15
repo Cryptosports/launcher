@@ -21,10 +21,7 @@
 		"win": {
 			"artifactName": "tivoli-cloud-setup.exe",
 			"target": "nsis",
-			"icon": "assets/icon.ico",
-			"files": [
-				"interface/0.85.0/**/*"
-			]
+			"icon": "assets/icon.ico"
 		},
 		"nsis": {
 			"oneClick": false,
@@ -37,10 +34,7 @@
 			"artifactName": "tivoli-cloud.dmg",
 			"target": "dmg",
 			"icon": "assets/icon.icns",
-			"category": "public.app-category.games",
-			"files": [
-				"interface/0.85.0.app/**/*"
-			]
+			"category": "public.app-category.games"
 		},
 		"dmg": {
 			"background": "assets/dmg.png",
@@ -60,7 +54,8 @@
 		},
 		"files": [
 			"out",
-			"electron/dist"
+			"electron/dist",
+			"interface/**/*"
 		]
 	},
 	"dependencies": {
