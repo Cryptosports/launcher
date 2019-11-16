@@ -14,6 +14,9 @@ deps windows:
         - windows
     script:
         - npm i -D
+    artifacts:
+        paths:
+            - node_modules/
 
 build windows:
     stage: build
@@ -22,6 +25,9 @@ build windows:
     script:
         - npm run build
         - npm run dist
+    artifacts:
+        paths:
+            - dist/
         
 deploy windows:
     stage: deploy
