@@ -1,17 +1,18 @@
 before_script:
   - npm i -D
 
-compile:
-  stage: compile
-  script:
-    - npm run build
-
-build:
-  stage: build
-  script:
-    - npm run dist
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Do your deploy here"
+build windows:
+    stage: build
+    tags:
+        - windows
+    script:
+        - npm run build
+        - npm run dist
+        
+deploy windows:
+    stage: deploy
+    tags:
+        - windows
+    script:
+        - echo "Deploying!"
+        
