@@ -3,11 +3,6 @@ stages:
     - build
     - deploy
 
-cache:
-  paths:
-    - node_modules/
-    - dist/ 
-
 deps windows:
     stage: deps
     tags:
