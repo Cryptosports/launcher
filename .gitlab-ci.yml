@@ -1,0 +1,17 @@
+before_script:
+  - npm i -D
+
+compile:
+  stage: compile
+  script:
+    - npm run build
+
+build:
+  stage: build
+  script:
+    - npm run dist
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Do your deploy here"
