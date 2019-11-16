@@ -1,5 +1,19 @@
-before_script:
-  - npm i -D
+stages:
+    - deps
+    - build
+    - deploy
+
+cache:
+  paths:
+    - node_modules/
+    - dist/ 
+
+deps windows:
+    stage: deps
+    tags:
+        - windows
+    script:
+        - npm i -D
 
 build windows:
     stage: build
