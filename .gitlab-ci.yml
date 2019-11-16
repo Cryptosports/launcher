@@ -14,7 +14,7 @@ build windows:
     tags:
         - windows
     script:
-        - npm run install
+        - npm i -D
         - npm run build
         - npm run dist
         
