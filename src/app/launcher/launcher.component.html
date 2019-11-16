@@ -1,6 +1,15 @@
 <div class="launcher">
+	<div class="header">
+		<button mat-button routerLink="home" routerLinkActive="active">
+			<mat-icon>home</mat-icon> Home
+		</button>
+		<button mat-button routerLink="video-stream" routerLinkActive="active">
+			<mat-icon>screen_share</mat-icon> Stream Video
+		</button>
+		<button mat-button><mat-icon>settings</mat-icon> Settings</button>
+	</div>
 	<div class="content">
-		<app-content></app-content>
+		<router-outlet></router-outlet>
 	</div>
 	<app-launch-bar></app-launch-bar>
 </div>

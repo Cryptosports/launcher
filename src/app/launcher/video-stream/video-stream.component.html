@@ -1,0 +1,78 @@
+<div class="content">
+	<!-- <div>
+		<video #preview class="preview" controls autoplay></video>
+		<br />
+		<ng-container *ngIf="id">
+			<p style="margin-bottom: 0;">Share this link:</p>
+			<mat-form-field style="width: 100%;">
+				<input matInput [value]="id" />
+			</mat-form-field>
+		</ng-container>
+	</div>
+
+	<div class="controls" style="margin-left: 16px;">
+		<button mat-stroked-button (click)="startHosting()">
+			<mat-icon>play_arrow</mat-icon> Start sharing
+		</button>
+	</div> -->
+
+	<div>
+		<video
+			#preview
+			class="preview"
+			autoplay
+			[srcObject]="videoStreamService.webmStream"
+		></video>
+		<br />
+		<div style="margin-top: 8px;">
+			<table style="width: 100%; height: 72px">
+				<tr style="vertical-align: top;">
+					<td style="width: 0;">
+						<button
+							*ngIf="!videoStreamService.active"
+							mat-stroked-button
+							(click)="start()"
+						>
+							<mat-icon>play_arrow</mat-icon> Start sharing
+						</button>
+						<button
+							*ngIf="videoStreamService.active"
+							mat-stroked-button
+							(click)="stop()"
+						>
+							<mat-icon>stop</mat-icon> Stop sharing
+						</button>
+						<button
+							style="margin-left: 16px"
+							*ngIf="!videoStreamService.active"
+							mat-stroked-button
+						>
+							<mat-icon>settings</mat-icon> Settings
+						</button>
+					</td>
+					<td
+						*ngIf="videoStreamService.id"
+						style="width: 100%; padding-left: 16px;"
+					>
+						<mat-form-field style="width: 100%;">
+							<input
+								matInput
+								placeholder="Shareable link"
+								[value]="
+									'https://alpha.tivolicloud.com/stream/' +
+									videoStreamService.id
+								"
+							/>
+						</mat-form-field>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- <ng-container *ngIf="true">
+		<p style="margin-bottom: 0;">Share this link:</p>
+		<mat-form-field style="width: 300px;">
+			<input matInput [value]="id" />
+		</mat-form-field>
+	</ng-container> -->
+</div>

@@ -32,9 +32,8 @@ const createWindow = () => {
 	win = new BrowserWindow({
 		title: "Tivoli Cloud Launcher",
 
-		// minecraft launcher dimensions
 		width: 1000,
-		height: 639,
+		height: 640,
 
 		webPreferences: {
 			nodeIntegration: true,

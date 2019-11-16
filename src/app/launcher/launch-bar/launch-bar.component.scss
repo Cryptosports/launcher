@@ -8,6 +8,16 @@
 	// justify-content: space-between;
 	// align-items: center;
 
+	.logo {
+		height: 32px;
+		width: 100%;
+		background-image: url(../../../assets/logo-light-nopink.svg);
+		background-position: left center;
+		background-repeat: no-repeat;
+		background-size: auto 100%;
+		margin-left: 8px;
+	}
+
 	table {
 		width: 100%;
 		table-layout: fixed;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { InterfaceService } from "./interface.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
 	selector: "app-launcher",
@@ -9,11 +9,17 @@ import { InterfaceService } from "./interface.service";
 })
 export class LauncherComponent implements OnInit {
 	constructor(
-		private interfaceService: InterfaceService,
+		//private interfaceService: InterfaceService,
 		public dialog: MatDialog,
+		private router: Router,
+		private activatedRoute: ActivatedRoute,
 	) {}
 
 	ngOnInit() {
+		this.router.navigate(["home"], {
+			relativeTo: this.activatedRoute,
+		});
+
 		// if (!this.interfaceService.downloaded())
 		// 	this.dialog.open(DownloadComponent, {
 		// 		disableClose: true,
