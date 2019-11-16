@@ -3,26 +3,20 @@ stages:
     - build
     - deploy
 
-deps windows:
-    stage: deps
-    tags:
-        - windows
-    script:
-        - npm i -D
-    artifacts:
-        paths:
-            - node_modules/
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - node_modules/
+        - dist/
 
 build windows:
     stage: build
     tags:
         - windows
     script:
+        - npm run install
         - npm run build
         - npm run dist
-    artifacts:
-        paths:
-            - dist/
         
 deploy windows:
     stage: deploy
