@@ -65,7 +65,7 @@ export class InterfaceService {
 				this.user.username,
 
 				"--url",
-				"alpha.tivolicloud.com",
+				"alpha.tivolicloud.com:50162",
 
 				"--tokens",
 				JSON.stringify(this.user.token),
