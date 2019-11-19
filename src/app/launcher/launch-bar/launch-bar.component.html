@@ -13,10 +13,25 @@
 				>
 					<div class="launch-button__content">
 						<div class="launch-button__icon">
-							<mat-icon>public</mat-icon>
+							<mat-icon *ngIf="!interfaceService.isRunning">
+								public
+							</mat-icon>
+							<mat-progress-spinner
+								*ngIf="interfaceService.isRunning"
+								diameter="28"
+								strokeWidth="4"
+								color="primary"
+								mode="indeterminate"
+							>
+							</mat-progress-spinner>
 						</div>
 						<div class="launch-button__text">
-							Take me in-world!
+							<ng-container *ngIf="!interfaceService.isRunning"
+								>Take me in-world!</ng-container
+							>
+							<ng-container *ngIf="interfaceService.isRunning"
+								>Tivoli is now running!</ng-container
+							>
 							<br />
 							<span
 								>using v{{

@@ -30,12 +30,6 @@
 		line-height: 1em;
 		font-size: 1em;
 
-		&[disabled] {
-			.launch-button__icon {
-				color: rgba(#e91e63, 0.5) !important;
-			}
-		}
-
 		.launch-button__content {
 			display: flex;
 			flex-direction: row;
@@ -61,6 +55,11 @@
 					font-size: 28px;
 					text-align: center;
 				}
+
+				mat-progress-spinner {
+					margin: 0 auto;
+					display: inline-block;
+				}
 			}
 
 			.launch-button__text {
@@ -70,6 +69,12 @@
 					font-weight: 400;
 					font-size: 0.8em;
 				}
+			}
+		}
+
+		&[disabled] {
+			.launch-button__icon {
+				opacity: 0.5;
 			}
 		}
 	}
