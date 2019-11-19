@@ -26,18 +26,16 @@
 							</mat-progress-spinner>
 						</div>
 						<div class="launch-button__text">
-							<ng-container *ngIf="!interfaceService.isRunning"
-								>Take me in-world!</ng-container
-							>
-							<ng-container *ngIf="interfaceService.isRunning"
-								>Tivoli is now running!</ng-container
-							>
+							<ng-container *ngIf="!interfaceService.isRunning">
+								Take me in-world!
+							</ng-container>
+							<ng-container *ngIf="interfaceService.isRunning">
+								Tivoli is now running!
+							</ng-container>
 							<br />
-							<span
-								>using v{{
-									interfaceService.interfaceVersion
-								}}</span
-							>
+							<span>
+								using v{{ interfaceService.interfaceVersion }}
+							</span>
 						</div>
 					</div>
 				</button>
