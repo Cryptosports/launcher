@@ -3,7 +3,6 @@ import { Subscription } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 
 const require = (window as any).require;
-const process = (window as any).process;
 
 const childProcess = require("child_process");
 const electron = require("electron");
@@ -65,7 +64,7 @@ export class InterfaceService {
 				this.user.username,
 
 				"--url",
-				"alpha.tivolicloud.com:50162",
+				"wxr-accelerator-event-tivolicloud",
 
 				"--tokens",
 				JSON.stringify(this.user.token),
