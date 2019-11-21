@@ -23,6 +23,7 @@ export class User {
 		public id: string,
 		public username: string,
 		public email: string,
+		public minutes: number,
 		public token: AuthToken,
 	) {}
 }
@@ -58,10 +59,12 @@ export class AuthService {
 				status: boolean;
 				data: {
 					user: {
-						id: string;
 						username: string;
-						email: string;
 						roles: string;
+
+						id: string;
+						email: string;
+						minutes: number;
 					};
 				};
 			}>(this.metaverseUrl + "/api/v1/user/profile", {
@@ -72,9 +75,9 @@ export class AuthService {
 			})
 			.subscribe(
 				profile => {
-					const { id, username, email } = profile.data.user;
+					const { id, username, email, minutes } = profile.data.user;
 
-					const user = new User(id, username, email, token);
+					const user = new User(id, username, email, minutes, token);
 
 					const payload = this.jwtHelper.decodeToken(jwt);
 					const msTillExpire =
