@@ -9,8 +9,7 @@
 		"build:angular": "ng build --prod",
 		"build": "npm run build:angular && npm run build:electron",
 		"dist": "electron-builder",
-		"electron:win": "tsc --p electron && set DEV=true && electron .",
-		"electron:mac": "tsc --p electron && DEV=true electron .",
+		"electron": "tsc --p electron && cross-env DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
 		"start": "ng build --watch"
 	},
@@ -85,6 +84,7 @@
 		"@types/node": "^8.9.5",
 		"@types/node-fetch": "^2.5.3",
 		"@types/socket.io-client": "^1.4.32",
+		"cross-env": "^6.0.3",
 		"electron": "^7.1.1",
 		"electron-builder": "^22.1.0",
 		"hammerjs": "^2.0.8",
