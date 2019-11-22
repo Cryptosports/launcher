@@ -4,6 +4,7 @@ import { AuthService, User } from "../auth/auth.service";
 
 const require = (window as any).require;
 
+const DiscordRPC = require("discord-rpc");
 const childProcess = require("child_process");
 const electron = require("electron");
 const path = require("path");
@@ -24,10 +25,65 @@ export class InterfaceService {
 	);
 	readonly interfaceVersion = "0.85.0";
 
+	private rpc = null;
+
 	constructor(private authService: AuthService) {
 		this.userSub = this.authService.user.subscribe(user => {
 			this.user = user;
 		});
+
+		this.rpc = new DiscordRPC.Client({ transport: "ipc" });
+		this.rpc.login({ clientId: "626510915843653638" }).catch(err => {
+			// discord not open
+		});
+	}
+
+	private currentDomainId = null;
+	async updateDomainId(domainId: string) {
+		if (this.currentDomainId == domainId) return;
+		this.currentDomainId = domainId;
+		//console.log("new domain! " + this.currentDomainId);
+
+		if (this.rpc == null) return;
+		if (this.rpc.user == null) return;
+		try {
+			const res = await fetch(
+				this.authService.metaverseUrl +
+					"/api/v1/domains/" +
+					this.currentDomainId,
+			);
+
+			const json: {
+				status: "success" | "fail";
+				domain: {
+					label: string;
+					description: string;
+					restriction: "open" | "hifi" | "acl";
+				};
+			} = await res.json();
+
+			if (json.status != "success") throw new Error();
+			if (json.domain.restriction == "acl") {
+				this.rpc.setActivity({
+					details: "Private domain",
+					largeImageKey: "logo",
+					startTimestamp: new Date(),
+				});
+				return;
+			}
+
+			//console.log("setting activity");
+			this.rpc.setActivity({
+				details: json.domain.label,
+				state: json.domain.description,
+				largeImageKey: "logo",
+				startTimestamp: new Date(),
+			});
+		} catch (err) {
+			try {
+				this.rpc.clearActivity({});
+			} catch (err) {}
+		}
 	}
 
 	launch() {
@@ -85,8 +141,20 @@ export class InterfaceService {
 			stopRunning();
 		});
 
-		// child.stdout.on("data", data => {
-		// 	console.log(data);
-		// });
+		let lastData = "";
+		child.stdout.on("data", data => {
+			const lines = (lastData + data).split("\n");
+			lastData = data;
+
+			for (let line of lines) {
+				const matches = line.match(
+					/\[hifi.networking\] Domain ID changed to "([^]+)"/i,
+				);
+				if (matches == null) continue;
+				if (matches.length >= 2) {
+					this.updateDomainId(matches[1]);
+				}
+			}
+		});
 	}
 }

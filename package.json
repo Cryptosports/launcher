@@ -58,6 +58,7 @@
 		]
 	},
 	"dependencies": {
+		"discord-rpc": "^3.1.0",
 		"node-fetch": "^2.6.0",
 		"progress-stream": "^2.0.0",
 		"socket.io-client": "^2.3.0",
