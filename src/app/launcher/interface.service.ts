@@ -34,7 +34,7 @@ export class InterfaceService {
 			this.user = user;
 		});
 
-		DiscordRPC.register(this.rpcClientId);
+		//DiscordRPC.register(this.rpcClientId);
 		this.rpc = new DiscordRPC.Client({ transport: "ipc" });
 		this.rpc
 			.login({
@@ -114,13 +114,13 @@ export class InterfaceService {
 				return;
 			}
 
-			//console.log("setting activity");
+			console.log("setting activity");
 			this.rpc.setActivity({
 				details: json.domain.label,
 				state: json.domain.description,
 				largeImageKey: "header",
 				smallImageKey: "logo",
-				joinSecret: this.currentDomainId,
+				//joinSecret: this.currentDomainId,
 				startTimestamp: new Date(),
 			});
 		} catch (err) {
