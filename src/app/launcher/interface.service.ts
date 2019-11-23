@@ -27,15 +27,19 @@ export class InterfaceService {
 	readonly interfaceVersion = "0.85.0";
 
 	private rpc = null;
+	readonly rpcClientId = "626510915843653638";
 
 	constructor(private authService: AuthService) {
 		this.userSub = this.authService.user.subscribe(user => {
 			this.user = user;
 		});
 
+		DiscordRPC.register(this.rpcClientId);
 		this.rpc = new DiscordRPC.Client({ transport: "ipc" });
 		this.rpc
-			.login({ clientId: "626510915843653638" })
+			.login({
+				clientId: this.rpcClientId,
+			})
 			.catch(err => {
 				// discord not open
 				console.log(err);
@@ -46,12 +50,12 @@ export class InterfaceService {
 				console.log(this.rpc);
 
 				// https://discordapp.com/developers/docs/topics/rpc#commands-and-events-rpc-events
-				this.rpc.subscribe("ACTIVITY_JOIN_REQUEST", {}, e => {
+				this.rpc.subscribe("ACTIVITY_JOIN_REQUEST", null, e => {
 					console.log("join request");
 					console.log(e);
 				});
 
-				this.rpc.subscribe("ACTIVITY_JOIN", {}, e => {
+				this.rpc.subscribe("ACTIVITY_JOIN", null, e => {
 					console.log("join");
 					console.log(e);
 				});
