@@ -38,17 +38,37 @@ export class InterfaceService {
 			.login({ clientId: "626510915843653638" })
 			.catch(err => {
 				// discord not open
+				console.log(err);
 			})
 			.then(() => {
+				this.rpcAtLauncher();
+
 				console.log(this.rpc);
-				this.rpc.subscribe("GAME_JOIN", {}, e => {
+
+				// https://discordapp.com/developers/docs/topics/rpc#commands-and-events-rpc-events
+				this.rpc.subscribe("ACTIVITY_JOIN_REQUEST", {}, e => {
+					console.log("join request");
+					console.log(e);
+				});
+
+				this.rpc.subscribe("ACTIVITY_JOIN", {}, e => {
+					console.log("join");
 					console.log(e);
 				});
 			});
 	}
 
 	private currentDomainId = null;
-	async updateDomainId(domainId: string) {
+
+	rpcAtLauncher() {
+		this.currentDomainId = null;
+
+		this.rpc.setActivity({
+			details: "Waiting at the launcher...",
+		});
+	}
+
+	async rpcUpdateDomainId(domainId: string) {
 		if (this.currentDomainId == domainId) return;
 		this.currentDomainId = domainId;
 		//console.log("new domain! " + this.currentDomainId);
@@ -148,6 +168,7 @@ export class InterfaceService {
 
 		const stopRunning = () => {
 			this.isRunning = false;
+			this.rpcAtLauncher();
 		};
 
 		child.on("exit", () => {
@@ -165,7 +186,7 @@ export class InterfaceService {
 				);
 				if (matches == null) continue;
 				if (matches.length >= 2) {
-					this.updateDomainId(matches[1]);
+					this.rpcUpdateDomainId(matches[1]);
 				}
 			}
 		});
