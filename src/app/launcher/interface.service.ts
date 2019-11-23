@@ -47,18 +47,26 @@ export class InterfaceService {
 			.then(() => {
 				this.rpcAtLauncher();
 
-				console.log(this.rpc);
+				// // https://discordapp.com/developers/docs/topics/rpc#commands-and-events-rpc-events
+				// this.rpc.subscribe(
+				// 	"ACTIVITY_JOIN_REQUEST",
+				// 	{ clientId: this.rpcClientId },
+				// 	e => {
+				// 		console.log("join request");
+				// 		console.log(e);
+				// 	},
+				// );
 
-				// https://discordapp.com/developers/docs/topics/rpc#commands-and-events-rpc-events
-				this.rpc.subscribe("ACTIVITY_JOIN_REQUEST", null, e => {
-					console.log("join request");
-					console.log(e);
-				});
+				// this.rpc.subscribe(
+				// 	"ACTIVITY_JOIN",
+				// 	{ clientId: this.rpcClientId },
+				// 	e => {
+				// 		console.log("join");
+				// 		console.log(e);
+				// 	},
+				// );
 
-				this.rpc.subscribe("ACTIVITY_JOIN", null, e => {
-					console.log("join");
-					console.log(e);
-				});
+				// console.log(this.rpc);
 			});
 	}
 
