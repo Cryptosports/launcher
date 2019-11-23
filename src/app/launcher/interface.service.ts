@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 
 const require = (window as any).require;
+const process = (window as any).process;
 
 const DiscordRPC = require("discord-rpc");
 const childProcess = require("child_process");
@@ -33,9 +34,17 @@ export class InterfaceService {
 		});
 
 		this.rpc = new DiscordRPC.Client({ transport: "ipc" });
-		this.rpc.login({ clientId: "626510915843653638" }).catch(err => {
-			// discord not open
-		});
+		this.rpc
+			.login({ clientId: "626510915843653638" })
+			.catch(err => {
+				// discord not open
+			})
+			.then(() => {
+				console.log(this.rpc);
+				this.rpc.subscribe("GAME_JOIN", {}, e => {
+					console.log(e);
+				});
+			});
 	}
 
 	private currentDomainId = null;
@@ -66,7 +75,8 @@ export class InterfaceService {
 			if (json.domain.restriction == "acl") {
 				this.rpc.setActivity({
 					details: "Private domain",
-					largeImageKey: "logo",
+					largeImageKey: "header",
+					smallImageKey: "logo",
 					startTimestamp: new Date(),
 				});
 				return;
@@ -76,7 +86,9 @@ export class InterfaceService {
 			this.rpc.setActivity({
 				details: json.domain.label,
 				state: json.domain.description,
-				largeImageKey: "logo",
+				largeImageKey: "header",
+				smallImageKey: "logo",
+				joinSecret: this.currentDomainId,
 				startTimestamp: new Date(),
 			});
 		} catch (err) {
@@ -115,6 +127,7 @@ export class InterfaceService {
 				"--no-launcher",
 				"--no-login-suggestion",
 				"--suppress-settings-reset",
+				process.env.DEV != null ? "--allowMultipleInstances" : "",
 
 				"--displayName",
 				this.user.username,
