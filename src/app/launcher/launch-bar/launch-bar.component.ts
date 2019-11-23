@@ -1,12 +1,6 @@
-import {
-	Component,
-	OnInit,
-	OnDestroy,
-	ChangeDetectorRef,
-	HostListener,
-} from "@angular/core";
-import { AuthService, User } from "../../auth/auth.service";
+import { ChangeDetectorRef, Component, OnDestroy, NgZone } from "@angular/core";
 import { Subscription } from "rxjs";
+import { AuthService, User } from "../../auth/auth.service";
 import { InterfaceService } from "../interface.service";
 
 @Component({
@@ -18,19 +12,24 @@ export class LaunchBarComponent implements OnDestroy {
 	user: User = null;
 	userSub: Subscription;
 
+	running: boolean;
+	runningSub: Subscription;
+
 	metaverseUrl = this.authService.metaverseUrl;
 
 	constructor(
 		private authService: AuthService,
 		public interfaceService: InterfaceService,
-		private ref: ChangeDetectorRef,
+		private zone: NgZone, //private dialog: MatDialog,
 	) {
-		this.userSub = this.authService.user.subscribe(user => {
+		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
 		});
 
-		window.addEventListener("focus", () => {
-			this.ref.detectChanges();
+		this.runningSub = this.interfaceService.running$.subscribe(running => {
+			this.zone.run(() => {
+				this.running = running;
+			});
 		});
 	}
 
@@ -50,5 +49,6 @@ export class LaunchBarComponent implements OnDestroy {
 
 	ngOnDestroy() {
 		this.userSub.unsubscribe();
+		this.runningSub.unsubscribe();
 	}
 }

@@ -32,7 +32,7 @@ export class User {
 	providedIn: "root",
 })
 export class AuthService {
-	user = new BehaviorSubject<User>(null);
+	user$ = new BehaviorSubject<User>(null);
 
 	private tokenExpirationTimer: any;
 	private jwtHelper = new JwtHelperService();
@@ -84,7 +84,7 @@ export class AuthService {
 						+new Date(payload.exp * 1000) - +new Date();
 
 					this.autoLogout(msTillExpire);
-					this.user.next(user);
+					this.user$.next(user);
 					localStorage.setItem("auth", JSON.stringify(token));
 
 					this.router.navigateByUrl("/launcher");
@@ -133,7 +133,7 @@ export class AuthService {
 	}
 
 	logout() {
-		this.user.next(null);
+		this.user$.next(null);
 		this.router.navigate(["/"]);
 		localStorage.removeItem("auth");
 		if (this.tokenExpirationTimer) {

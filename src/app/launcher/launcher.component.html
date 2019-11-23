@@ -7,6 +7,16 @@
 			<mat-icon>screen_share</mat-icon> Stream Video
 		</button> -->
 		<button mat-button><mat-icon>settings</mat-icon> Settings</button>
+		<span style="flex-grow: 1;"></span>
+		<button
+			mat-flat-button
+			color="warn"
+			style="margin-right: 0;"
+			*ngIf="running"
+			(click)="onForceClose()"
+		>
+			<mat-icon>close</mat-icon> Force close Tivoli
+		</button>
 	</div>
 	<div class="content">
 		<router-outlet></router-outlet>

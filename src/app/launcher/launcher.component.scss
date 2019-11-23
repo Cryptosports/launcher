@@ -7,7 +7,12 @@
 
 	.header {
 		padding: 8px;
-		padding-top: 0;
+		background: #fff;
+		display: flex;
+
+		button {
+			margin-right: 8px;
+		}
 
 		button.active {
 			background: rgba(#1d1f21, 0.1);

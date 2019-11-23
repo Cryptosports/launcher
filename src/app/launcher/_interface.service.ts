@@ -44,7 +44,7 @@
 // 		"https://tivolicloud.s3-us-west-2.amazonaws.com/interface-v0.85.0.zip";
 
 // 	constructor(private authService: AuthService) {
-// 		this.userSub = this.authService.user.subscribe(user => {
+// 		this.userSub = this.authService.user$.subscribe(user => {
 // 			this.user = user;
 // 		});
 // 	}

@@ -9,15 +9,15 @@
 					class="launch-button"
 					mat-flat-button
 					(click)="onLaunch()"
-					[disabled]="interfaceService.isRunning"
+					[disabled]="running"
 				>
 					<div class="launch-button__content">
 						<div class="launch-button__icon">
-							<mat-icon *ngIf="!interfaceService.isRunning">
+							<mat-icon *ngIf="!running">
 								public
 							</mat-icon>
 							<mat-progress-spinner
-								*ngIf="interfaceService.isRunning"
+								*ngIf="running"
 								diameter="28"
 								strokeWidth="4"
 								color="primary"
@@ -26,10 +26,10 @@
 							</mat-progress-spinner>
 						</div>
 						<div class="launch-button__text">
-							<ng-container *ngIf="!interfaceService.isRunning">
+							<ng-container *ngIf="!running">
 								Take me in-world!
 							</ng-container>
-							<ng-container *ngIf="interfaceService.isRunning">
+							<ng-container *ngIf="running">
 								Tivoli is now running!
 							</ng-container>
 							<br />
@@ -43,7 +43,7 @@
 					class="launch-button"
 					mat-flat-button
 					(click)="onLaunch()"
-					[disabled]="interfaceService.isRunning"
+					[disabled]="running"
 				>
 					<div class="launch-button__content">
 						<div class="launch-button__icon">

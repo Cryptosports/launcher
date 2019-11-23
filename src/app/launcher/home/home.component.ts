@@ -12,7 +12,7 @@ export class HomeComponent implements OnDestroy {
 	userSub: Subscription;
 
 	constructor(private authService: AuthService) {
-		this.userSub = this.authService.user.subscribe(user => {
+		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
 		});
 	}

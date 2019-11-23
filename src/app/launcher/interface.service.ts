@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 
 const require = (window as any).require;
@@ -18,7 +18,7 @@ export class InterfaceService {
 	user: User = null;
 	userSub: Subscription = null;
 
-	isRunning = false;
+	running$ = new BehaviorSubject<boolean>(false);
 
 	readonly interfacePath = path.resolve(
 		electron.remote.app.getAppPath(),
@@ -26,11 +26,13 @@ export class InterfaceService {
 	);
 	readonly interfaceVersion = "0.85.0";
 
+	private child = null;
+
 	private rpc = null;
 	readonly rpcClientId = "626510915843653638";
 
 	constructor(private authService: AuthService) {
-		this.userSub = this.authService.user.subscribe(user => {
+		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
 		});
 
@@ -42,7 +44,7 @@ export class InterfaceService {
 			})
 			.catch(err => {
 				// discord not open
-				console.log(err);
+				//console.log(err);
 			})
 			.then(() => {
 				this.rpcAtLauncher();
@@ -131,7 +133,7 @@ export class InterfaceService {
 	}
 
 	launch() {
-		if (this.isRunning) return;
+		if (this.running$.value == true) return;
 
 		const platform = os.platform();
 
@@ -150,9 +152,9 @@ export class InterfaceService {
 		})();
 		if (executable == null) return;
 
-		this.isRunning = true;
+		this.running$.next(true);
 
-		const child = childProcess.execFile(
+		this.child = childProcess.execFile(
 			executable,
 			[
 				"--no-updater",
@@ -165,7 +167,7 @@ export class InterfaceService {
 				this.user.username,
 
 				"--url",
-				"wxr-accelerator-event-tivolicloud",
+				"alpha.tivolicloud.com:50162",
 
 				"--tokens",
 				JSON.stringify(this.user.token),
@@ -173,34 +175,48 @@ export class InterfaceService {
 			{
 				env: {
 					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
-					HIFI_ENABLE_MATERIAL_PROCEDURAL_SHADERS: true,
+					HIFI_ENABLE_MATERIAL_PROCEDURAL_SHADERS: false,
 				},
 			},
 		);
 
 		const stopRunning = () => {
-			this.isRunning = false;
+			this.running$.next(false);
 			this.rpcAtLauncher();
 		};
 
-		child.on("exit", () => {
+		this.child.on("exit", () => {
 			stopRunning();
 		});
 
 		let lastData = "";
-		child.stdout.on("data", data => {
+		this.child.stdout.on("data", data => {
 			const lines = (lastData + data).split("\n");
 			lastData = data;
 
 			for (let line of lines) {
-				const matches = line.match(
-					/\[hifi.networking\] Domain ID changed to "([^]+)"/i,
+				const updatedDomainIdMatches = line.match(
+					/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
 				);
-				if (matches == null) continue;
-				if (matches.length >= 2) {
-					this.rpcUpdateDomainId(matches[1]);
+				if (updatedDomainIdMatches != null) {
+					if (updatedDomainIdMatches.length >= 2) {
+						this.rpcUpdateDomainId(updatedDomainIdMatches[1]);
+					}
+				}
+
+				if (/\[hifi\.interface\] Created Display Window/i.test(line)) {
+					const win = electron.remote.getCurrentWindow();
+					if (win.isMinimized() == false) {
+						win.minimize();
+					}
 				}
 			}
 		});
+	}
+
+	forceClose() {
+		if (this.running$.value == false) return;
+		if (this.child == null) return;
+		this.child.kill("SIGKILL");
 	}
 }
