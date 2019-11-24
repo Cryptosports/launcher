@@ -230,12 +230,15 @@ export class InterfaceService {
 			"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
 			antialiasingEnabled: true,
 
-			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
+			"Display/Disable Preview": false,
+			disableHmdPreview: false,
 
 			// we're not high fidelity
 			"Developer/Network/Disable Activity Logger": true,
 			"Network/Disable Activity Logger": true,
 			UserActivityLoggerDisabled: true,
+
+			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
 
 			allowTeleporting: false,
 			"Avatar/flyingHMD": true,
