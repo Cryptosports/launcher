@@ -17,6 +17,23 @@ export class HomeComponent implements OnDestroy {
 		});
 	}
 
+	displayMinutes(mins: number): string {
+		if (mins >= 60) {
+			let hours = Math.floor(mins / 60);
+			mins = mins - hours * 60;
+
+			return (
+				hours +
+				(hours == 1 ? " hour" : " hours") +
+				" " +
+				mins +
+				(mins == 1 ? " minute" : " minutes")
+			);
+		} else {
+			return mins + (mins == 1 ? " minute" : " minutes");
+		}
+	}
+
 	ngOnDestroy() {
 		this.userSub.unsubscribe();
 	}

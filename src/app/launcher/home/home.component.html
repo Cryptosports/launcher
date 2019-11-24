@@ -7,7 +7,8 @@
 			Welcome back, <b>{{ user.username }}</b>
 		</h1>
 		<h3>
-			You've been online for <b>{{ user.minutes }} minutes</b>
+			You've been online for
+			<b>{{ displayMinutes(user.minutes) }}</b>
 		</h3>
 	</div>
 </div>
