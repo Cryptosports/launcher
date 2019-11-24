@@ -135,18 +135,32 @@ export class InterfaceService {
 
 	private patchInterfaceSettings(settings: { [s: string]: any }) {
 		try {
-			const interfacePath = path.resolve(
-				process.platform == "darwin"
-					? process.env.HOME + "/Library/Preferences"
-					: process.env.APPDATA,
-				"High Fidelity",
-			);
+			const interfacePath = (() => {
+				switch (process.platform) {
+					case "win32":
+						return path.resolve(
+							process.env.APPDATA,
+							"High Fidelity",
+						);
+					case "darwin":
+						return path.resolve(
+							process.env.HOME,
+							".config/highfidelity.io",
+						);
+					default:
+						return null;
+				}
+			})();
+			if (interfacePath == null) throw Error();
 			if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
 
 			const jsonPath = path.resolve(interfacePath, "Interface.json");
 
 			if (!fs.existsSync(jsonPath)) {
-				fs.writeFileSync(jsonPath, JSON.stringify(settings));
+				fs.writeFileSync(
+					jsonPath,
+					JSON.stringify(settings, null, 4) + "\n",
+				);
 			} else {
 				const jsonStr = fs.readFileSync(jsonPath, "utf8");
 				const json = JSON.parse(jsonStr);
@@ -156,7 +170,10 @@ export class InterfaceService {
 					json[key] = settings[key];
 				}
 
-				fs.writeFileSync(jsonPath, JSON.stringify(json));
+				fs.writeFileSync(
+					jsonPath,
+					JSON.stringify(json, null, 4) + "\n",
+				);
 			}
 		} catch (err) {
 			console.log(err);
@@ -169,17 +186,20 @@ export class InterfaceService {
 		const platform = os.platform();
 
 		const executable = (() => {
-			if (platform == "darwin")
-				return path.resolve(
-					this.interfacePath,
-					this.interfaceVersion + ".app/Contents/MacOS/interface",
-				);
-			if (platform == "win32")
-				return path.resolve(
-					this.interfacePath,
-					this.interfaceVersion + "/interface.exe",
-				);
-			return null;
+			switch (process.platform) {
+				case "win32":
+					return path.resolve(
+						this.interfacePath,
+						this.interfaceVersion + "/interface.exe",
+					);
+				case "darwin":
+					return path.resolve(
+						this.interfacePath,
+						this.interfaceVersion + ".app/Contents/MacOS/interface",
+					);
+				default:
+					return null;
+			}
 		})();
 		if (executable == null) return;
 		this.running$.next(true);
@@ -212,7 +232,9 @@ export class InterfaceService {
 
 			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
 
+			// we're not high fidelity
 			"Developer/Network/Disable Activity Logger": true,
+			"Network/Disable Activity Logger": true,
 			UserActivityLoggerDisabled: true,
 
 			allowTeleporting: false,
@@ -244,6 +266,7 @@ export class InterfaceService {
 			],
 			{
 				env: {
+					...process.env,
 					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
 					HIFI_ENABLE_MATERIAL_PROCEDURAL_SHADERS: false,
 				},
