@@ -166,6 +166,9 @@ export class InterfaceService {
 				"--displayName",
 				this.user.username,
 
+				"--defaultScriptsOverride",
+				"https://tivolicloud.s3-us-west-2.amazonaws.com/defaultScripts/defaultScripts.js",
+
 				"--url",
 				"alpha.tivolicloud.com:50162",
 
