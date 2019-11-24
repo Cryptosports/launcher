@@ -26,6 +26,9 @@ if (!DEV) {
 	Menu.setApplicationMenu(null);
 }
 
+const appLock = app.requestSingleInstanceLock();
+if (!appLock) app.quit();
+
 const createWindow = () => {
 	if (win != null) return;
 
@@ -59,4 +62,8 @@ app.on("activate", () => {
 
 app.on("window-all-closed", () => {
 	app.quit();
+});
+
+app.on("second-instance", () => {
+	if (win) if (win.isMinimized()) win.restore();
 });
