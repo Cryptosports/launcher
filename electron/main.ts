@@ -27,7 +27,7 @@ if (!DEV) {
 }
 
 const appLock = app.requestSingleInstanceLock();
-if (!appLock) app.quit();
+if (!DEV && !appLock) app.quit();
 
 const createWindow = () => {
 	if (win != null) return;
@@ -65,5 +65,5 @@ app.on("window-all-closed", () => {
 });
 
 app.on("second-instance", () => {
-	if (win) if (win.isMinimized()) win.restore();
+	if (win && !DEV) if (win.isMinimized()) win.restore();
 });

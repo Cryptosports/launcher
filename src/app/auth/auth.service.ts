@@ -6,7 +6,7 @@ import {
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { BehaviorSubject, Observable, throwError, Subject } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 
 export interface AuthToken {
@@ -33,6 +33,7 @@ export class User {
 })
 export class AuthService {
 	user$ = new BehaviorSubject<User>(null);
+	autoLoggingIn$ = new Subject<boolean>();
 
 	private tokenExpirationTimer: any;
 	private jwtHelper = new JwtHelperService();
@@ -51,8 +52,10 @@ export class AuthService {
 	handleAuthentication = (token: AuthToken) => {
 		const jwt = token.access_token;
 
-		if (this.jwtHelper.isTokenExpired(jwt))
+		if (this.jwtHelper.isTokenExpired(jwt)) {
+			this.autoLoggingIn$.next(false);
 			return throwError("Token expired");
+		}
 
 		const sub = this.http
 			.get<{
@@ -74,7 +77,7 @@ export class AuthService {
 				}),
 			})
 			.subscribe(
-				profile => {
+				async profile => {
 					const { id, username, email, minutes } = profile.data.user;
 
 					const user = new User(id, username, email, minutes, token);
@@ -87,7 +90,8 @@ export class AuthService {
 					this.user$.next(user);
 					localStorage.setItem("auth", JSON.stringify(token));
 
-					this.router.navigateByUrl("/launcher");
+					await this.router.navigateByUrl("/launcher");
+					this.autoLoggingIn$.next(false);
 				},
 				() => {},
 				() => {
@@ -128,6 +132,7 @@ export class AuthService {
 
 		try {
 			const token = JSON.parse(tokenStr);
+			this.autoLoggingIn$.next(true);
 			this.handleAuthentication(token);
 		} catch (err) {}
 	}

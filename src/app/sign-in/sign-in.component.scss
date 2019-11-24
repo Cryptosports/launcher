@@ -37,3 +37,25 @@ $bgDim: 0.2;
 		background: #fff;
 	}
 }
+
+.logging-in {
+	position: fixed;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
+	background: rgba(#1d1f21, 0.8);
+	font-weight: 500;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	color: #fff;
+
+	.mat-progress-spinner ::ng-deep circle {
+		stroke: #fff;
+	}
+}

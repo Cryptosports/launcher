@@ -10,6 +10,7 @@ const childProcess = require("child_process");
 const electron = require("electron");
 const path = require("path");
 const os = require("os");
+const fs = require("fs");
 
 @Injectable({
 	providedIn: "root",
@@ -132,6 +133,36 @@ export class InterfaceService {
 		}
 	}
 
+	private patchInterfaceSettings(settings: { [s: string]: any }) {
+		try {
+			const interfacePath = path.resolve(
+				process.platform == "darwin"
+					? process.env.HOME + "/Library/Preferences"
+					: process.env.APPDATA,
+				"High Fidelity",
+			);
+			if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
+
+			const jsonPath = path.resolve(interfacePath, "Interface.json");
+
+			if (!fs.existsSync(jsonPath)) {
+				fs.writeFileSync(jsonPath, JSON.stringify(settings));
+			} else {
+				const jsonStr = fs.readFileSync(jsonPath, "utf8");
+				const json = JSON.parse(jsonStr);
+
+				const settingsKeys = Object.keys(settings);
+				for (let key of settingsKeys) {
+					json[key] = settings[key];
+				}
+
+				fs.writeFileSync(jsonPath, JSON.stringify(json));
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
 	launch() {
 		if (this.running$.value == true) return;
 
@@ -151,8 +182,41 @@ export class InterfaceService {
 			return null;
 		})();
 		if (executable == null) return;
-
 		this.running$.next(true);
+
+		this.patchInterfaceSettings({
+			"Maximum Texture Memory/4 MB": false,
+			"Maximum Texture Memory/64 MB": false,
+			"Maximum Texture Memory/256 MB": false,
+			"Maximum Texture Memory/512 MB": false,
+			"Maximum Texture Memory/1024 MB": false,
+			"Maximum Texture Memory/2048 MB": false,
+			"Maximum Texture Memory/4096 MB": true,
+			"Maximum Texture Memory/6144 MB": false,
+			"Maximum Texture Memory/8192 MB": false,
+			"Maximum Texture Memory/Automatic Texture Memory": false,
+			"Developer/Render/Maximum Texture Memory/4 MB": false,
+			"Developer/Render/Maximum Texture Memory/64 MB": false,
+			"Developer/Render/Maximum Texture Memory/256 MB": false,
+			"Developer/Render/Maximum Texture Memory/512 MB": false,
+			"Developer/Render/Maximum Texture Memory/1024 MB": false,
+			"Developer/Render/Maximum Texture Memory/2048 MB": false,
+			"Developer/Render/Maximum Texture Memory/4096 MB": true,
+			"Developer/Render/Maximum Texture Memory/6144 MB": false,
+			"Developer/Render/Maximum Texture Memory/8192 MB": false,
+			"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
+
+			// necessary for disabling anti aliasing
+			"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
+
+			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
+			//"Render/Throttle FPS If Not Focus": false,
+			UserActivityLoggerDisabled: true,
+			allowTeleporting: false,
+			"Avatar/flyingHMD": true,
+
+			//"Avatar/fullAvatarURL": "https://maki.cat/hifi/avatars/kyouko/juniper.fst",
+		});
 
 		this.child = childProcess.execFile(
 			executable,

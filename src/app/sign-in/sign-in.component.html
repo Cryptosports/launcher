@@ -2,3 +2,11 @@
 <div class="content">
 	<app-form></app-form>
 </div>
+<div class="logging-in" *ngIf="autoLoggingIn">
+	<mat-progress-spinner
+		mode="indeterminate"
+		diameter="48"
+		color="primary"
+	></mat-progress-spinner>
+	<p>Logging in...</p>
+</div>
