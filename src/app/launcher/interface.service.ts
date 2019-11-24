@@ -208,10 +208,13 @@ export class InterfaceService {
 
 			// necessary for disabling anti aliasing
 			"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
+			antialiasingEnabled: true,
 
 			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
-			//"Render/Throttle FPS If Not Focus": false,
+
+			"Developer/Network/Disable Activity Logger": true,
 			UserActivityLoggerDisabled: true,
+
 			allowTeleporting: false,
 			"Avatar/flyingHMD": true,
 
