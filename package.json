@@ -37,7 +37,10 @@
 		},
 		"mac": {
 			"artifactName": "tivoli-cloud.dmg",
-			"target": "dmg",
+			"target": [
+				"dmg",
+				"zip"
+			],
 			"icon": "assets/icon.icns",
 			"category": "public.app-category.games"
 		},
