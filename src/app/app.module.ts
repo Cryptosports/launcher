@@ -4,6 +4,8 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
+import { UpdateAvailableComponent } from "./update-available/update-available.component";
+import { MaterialModule } from "./material.module";
 
 const routes: Routes = [
 	{
@@ -19,14 +21,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-	declarations: [AppComponent],
+	declarations: [AppComponent, UpdateAvailableComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
+		MaterialModule,
 		HttpClientModule,
 		RouterModule.forRoot(routes),
 	],
-	providers: [],
+	entryComponents: [UpdateAvailableComponent],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

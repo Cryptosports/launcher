@@ -1,12 +1,16 @@
-import { app, BrowserWindow, Menu } from "electron";
+import { app, BrowserWindow, Menu, ipcRenderer, ipcMain } from "electron";
 import { watchFile } from "fs";
 import * as os from "os";
 import * as path from "path";
+import { autoUpdater } from "electron-updater";
 
 let win: BrowserWindow;
 
 const PLATFORM = os.platform();
 const DEV = process.env.DEV != null;
+
+const appLock = app.requestSingleInstanceLock();
+if (!DEV && !appLock) app.quit();
 
 const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
 const APP_ICON = (() => {
@@ -26,46 +30,80 @@ if (!DEV) {
 	Menu.setApplicationMenu(null);
 }
 
-const appLock = app.requestSingleInstanceLock();
-if (!DEV && !appLock) app.quit();
+autoUpdater.autoDownload = false;
 
-if (appLock) {
-	const createWindow = () => {
-		if (win != null) return;
+const createWindow = () => {
+	if (!appLock) return;
+	if (win != null) return;
 
-		win = new BrowserWindow({
-			title: "Tivoli Cloud Launcher",
+	win = new BrowserWindow({
+		title: "Tivoli Cloud Launcher",
 
-			width: 1000,
-			height: 640,
+		width: 1000,
+		height: 640,
 
-			webPreferences: {
-				nodeIntegration: true,
-				backgroundThrottling: false,
-				nativeWindowOpen: true,
-			},
+		webPreferences: {
+			nodeIntegration: true,
+			backgroundThrottling: false,
+			nativeWindowOpen: true,
+		},
 
-			icon: APP_ICON,
-			autoHideMenuBar: true,
-		});
-
-		win.loadFile(APP_ROOT);
-
-		win.on("closed", () => {
-			win = null;
-		});
-	};
-
-	app.on("ready", createWindow);
-	app.on("activate", () => {
-		if (win == null) createWindow();
+		icon: APP_ICON,
+		autoHideMenuBar: true,
 	});
 
-	app.on("window-all-closed", () => {
-		app.quit();
-	});
+	win.loadFile(APP_ROOT);
 
-	app.on("second-instance", () => {
-		if (win && !DEV) if (win.isMinimized()) win.restore();
+	win.on("closed", () => {
+		win = null;
 	});
+};
+
+app.on("ready", createWindow);
+app.on("activate", () => {
+	if (win == null) createWindow();
+});
+
+app.on("window-all-closed", () => {
+	app.quit();
+});
+
+app.on("second-instance", () => {
+	if (win && !DEV) if (win.isMinimized()) win.restore();
+});
+
+// updater
+function sendUpdateMessage(msg: string, info: any = null) {
+	if (win == null) return;
+	win.webContents.send("updater", msg, info);
 }
+
+ipcMain.on("updater", (e, msg: string) => {
+	if (msg == "check-for-update") {
+		autoUpdater.checkForUpdates();
+		return;
+	}
+	if (msg == "start-download") {
+		autoUpdater.downloadUpdate();
+		return;
+	}
+	if (msg == "restart-app") {
+		autoUpdater.quitAndInstall();
+		return;
+	}
+});
+
+autoUpdater.on("update-available", e => {
+	sendUpdateMessage("update-available");
+});
+// autoUpdater.on("update-not-available", e => {});
+
+autoUpdater.on("error", e => {
+	sendUpdateMessage("error", e);
+});
+autoUpdater.on("download-progress", e => {
+	sendUpdateMessage("download-progress", e);
+});
+autoUpdater.on("update-downloaded", e => {
+	sendUpdateMessage("update-downloaded", e);
+});

@@ -93,7 +93,9 @@ export class AuthService {
 					await this.router.navigateByUrl("/launcher");
 					this.autoLoggingIn$.next(false);
 				},
-				() => {},
+				() => {
+					this.autoLoggingIn$.next(false);
+				},
 				() => {
 					sub.unsubscribe();
 				},
@@ -128,13 +130,15 @@ export class AuthService {
 
 	autoLogin() {
 		const tokenStr = localStorage.getItem("auth");
-		if (!tokenStr) return;
+		if (!tokenStr) return this.autoLoggingIn$.next(false);
 
 		try {
 			const token = JSON.parse(tokenStr);
 			this.autoLoggingIn$.next(true);
 			this.handleAuthentication(token);
-		} catch (err) {}
+		} catch (err) {
+			this.autoLoggingIn$.next(false);
+		}
 	}
 
 	logout() {

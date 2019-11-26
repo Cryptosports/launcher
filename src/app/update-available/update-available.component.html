@@ -1,0 +1,65 @@
+<ng-container *ngIf="updateState == 0">
+	<h2 style="margin-top: 0;">There is a new update available!</h2>
+	<p>
+		Would you like to download the latest version?
+		<b>It is highly recommended.</b>
+	</p>
+	<div class="buttons">
+		<button mat-flat-button (click)="onDismiss()">Dismiss</button>
+		<button mat-flat-button (click)="onUpdate()" color="primary">
+			<mat-icon>get_app</mat-icon> Update now!
+		</button>
+	</div>
+</ng-container>
+<ng-container *ngIf="updateState == 1">
+	<h2 style="margin-top: 0;"><b>Tivoli Cloud launcher</b> is updating...</h2>
+	<p>Please wait as we download the necessary files!</p>
+	<table class="sorry">
+		<tr>
+			<td>
+				<p>
+					Since watching a download is really boring, for now you can
+					appreciate this cute duckie plushie named Eentje! She's very
+					special to us and loves you. Maybe you might find her in
+					Tivoli some day!
+				</p>
+			</td>
+			<td>
+				<div class="eentje"></div>
+			</td>
+		</tr>
+	</table>
+
+	<br />
+	<mat-progress-bar
+		mode="determinate"
+		[value]="downloadPercent"
+	></mat-progress-bar>
+	<table class="download-progress">
+		<tr>
+			<td style="text-align: left;">{{ downloadPercent }}%</td>
+			<td style="text-align: right;">
+				{{ downloadRemaining }} MB remaining
+			</td>
+		</tr>
+	</table>
+</ng-container>
+<ng-container *ngIf="updateState == 2">
+	<h2 style="margin-top: 0;">Update complete!</h2>
+	<p>
+		Thank you for waiting. You need to restart the launcher now so you can
+		use the new version!
+	</p>
+	<div class="buttons">
+		<button mat-flat-button (click)="onRestart()" color="primary">
+			<mat-icon>refresh</mat-icon> Restart Tivoli Cloud launcher!
+		</button>
+	</div>
+</ng-container>
+<ng-container *ngIf="updateState == 3">
+	<h2 style="margin-top: 0;">An error occurred whilst updating.</h2>
+	<p>Please try again later. We're not sure what's going on...</p>
+	<div class="buttons">
+		<button mat-flat-button (click)="onDismiss()">Dismiss</button>
+	</div>
+</ng-container>

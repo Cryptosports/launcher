@@ -17,6 +17,12 @@
 		"appId": "com.tivolicloud.launcher",
 		"productName": "Tivoli Cloud",
 		"asar": false,
+		"publish": [
+			{
+				"provider": "generic",
+				"url": "https://tivolicloud.s3-us-west-2.amazonaws.com/releases"
+			}
+		],
 		"win": {
 			"artifactName": "tivoli-cloud-setup.exe",
 			"target": "nsis",
@@ -53,16 +59,14 @@
 		},
 		"files": [
 			"out",
-			"electron/dist",
-			"interface/**/*"
+			"electron/dist"
 		]
 	},
 	"dependencies": {
 		"discord-rpc": "^3.1.0",
+		"electron-updater": "^4.2.0",
 		"node-fetch": "^2.6.0",
-		"progress-stream": "^2.0.0",
-		"socket.io-client": "^2.3.0",
-		"unzipper": "^0.10.5"
+		"socket.io-client": "^2.3.0"
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "~0.803.19",
