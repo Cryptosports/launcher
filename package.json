@@ -1,14 +1,14 @@
 {
 	"name": "tivoli-cloud",
 	"author": "Tivoli Cloud VR, Inc.",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "Tivoli Cloud Launcher",
 	"main": "electron/dist/main.js",
 	"scripts": {
 		"build:electron": "tsc --p electron",
 		"build:angular": "ng build --prod",
 		"build": "npm run build:angular && npm run build:electron",
-		"dist": "electron-builder",
+		"dist": "electron-builder --win --mac",
 		"electron": "tsc --p electron && cross-env DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
 		"start": "ng build --watch"
