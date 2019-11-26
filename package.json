@@ -20,7 +20,7 @@
 		"publish": [
 			{
 				"provider": "generic",
-				"url": "https://tivolicloud.com/releases"
+				"url": "https://tivolicloud.s3-us-west-2.amazonaws.com/releases"
 			}
 		],
 		"win": {

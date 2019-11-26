@@ -87,10 +87,6 @@ ipcMain.on("updater", (e, msg: string) => {
 		autoUpdater.downloadUpdate();
 		return;
 	}
-	if (msg == "restart-app") {
-		autoUpdater.quitAndInstall();
-		return;
-	}
 });
 
 autoUpdater.on("update-available", e => {
@@ -104,6 +100,7 @@ autoUpdater.on("error", e => {
 autoUpdater.on("download-progress", e => {
 	sendUpdateMessage("download-progress", e);
 });
+
 autoUpdater.on("update-downloaded", e => {
-	sendUpdateMessage("update-downloaded", e);
+	autoUpdater.quitAndInstall();
 });

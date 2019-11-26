@@ -10,7 +10,7 @@ export class UpdateAvailableComponent {
 	private readonly ipcRenderer = (window as any).require("electron")
 		.ipcRenderer;
 
-	public updateState: 0 | 1 | 2 | 3 = 0; // ask, updating, complete, error
+	public updateState: 0 | 1 | 2 = 0; // ask, updating, error
 
 	public downloadPercent = 0; // %
 	public downloadRemaining = 0; // mb
@@ -38,12 +38,8 @@ export class UpdateAvailableComponent {
 						);
 						break;
 
-					case "update-downloaded":
-						this.updateState = 2;
-						break;
-
 					case "error":
-						this.updateState = 3;
+						this.updateState = 2;
 						break;
 				}
 			});
@@ -57,9 +53,5 @@ export class UpdateAvailableComponent {
 	onUpdate() {
 		this.updateState = 1;
 		this.sendMessageToUpdater("start-download");
-	}
-
-	onRestart() {
-		this.sendMessageToUpdater("restart-app");
 	}
 }
