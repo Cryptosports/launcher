@@ -8,7 +8,7 @@
 		"build:electron": "tsc --p electron",
 		"build:angular": "ng build --prod",
 		"build": "npm run build:angular && npm run build:electron",
-		"dist": "electron-builder --win --mac",
+		"dist": "electron-builder",
 		"electron": "tsc --p electron && cross-env DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
 		"start": "ng build --watch"
@@ -59,7 +59,8 @@
 		},
 		"files": [
 			"out",
-			"electron/dist"
+			"electron/dist",
+			"interface/**/*"
 		]
 	},
 	"dependencies": {
