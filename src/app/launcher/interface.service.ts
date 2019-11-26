@@ -233,15 +233,16 @@ export class InterfaceService {
 			"Display/Disable Preview": false,
 			disableHmdPreview: false,
 
-			// we're not high fidelity
+			// no, its unethical
 			"Developer/Network/Disable Activity Logger": true,
 			"Network/Disable Activity Logger": true,
 			UserActivityLoggerDisabled: true,
 
 			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
-
-			allowTeleporting: false,
 			"Avatar/flyingHMD": true,
+			allowTeleporting: false,
+			miniTabletEnabled: false,
+			use3DKeyboard: false,
 
 			//"Avatar/fullAvatarURL": "https://maki.cat/hifi/avatars/kyouko/juniper.fst",
 		});
@@ -262,7 +263,7 @@ export class InterfaceService {
 				"https://tivolicloud.s3-us-west-2.amazonaws.com/defaultScripts/defaultScripts.js",
 
 				"--url",
-				"alpha.tivolicloud.com:50162",
+				"alpha.tivolicloud.com:50162/0,0.5,0",
 
 				"--tokens",
 				JSON.stringify(this.user.token),
