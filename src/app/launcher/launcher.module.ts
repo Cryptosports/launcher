@@ -6,7 +6,6 @@ import { HomeComponent } from "./home/home.component";
 import { LaunchBarComponent } from "./launch-bar/launch-bar.component";
 import { LauncherComponent } from "./launcher.component";
 import { VideoStreamComponent } from "./video-stream/video-stream.component";
-import { OpeningPopupComponent } from "./opening-popup/opening-popup.component";
 
 const routes: Routes = [
 	{
@@ -25,9 +24,7 @@ const routes: Routes = [
 		LaunchBarComponent,
 		HomeComponent,
 		VideoStreamComponent,
-		OpeningPopupComponent,
 	],
 	imports: [CommonModule, MaterialModule, RouterModule.forChild(routes)],
-	entryComponents: [OpeningPopupComponent],
 })
 export class LauncherModule {}
