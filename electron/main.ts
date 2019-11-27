@@ -80,7 +80,7 @@ function sendUpdateMessage(msg: string, info: any = null) {
 
 ipcMain.on("updater", (e, msg: string) => {
 	if (msg == "check-for-update") {
-		autoUpdater.checkForUpdates();
+		if (!DEV) autoUpdater.checkForUpdates();
 		return;
 	}
 	if (msg == "start-download") {

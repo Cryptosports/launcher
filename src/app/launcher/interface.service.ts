@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
+import { SettingsService } from "./settings/settings.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -30,46 +31,36 @@ export class InterfaceService {
 	private child = null;
 
 	private rpc = null;
-	readonly rpcClientId = "626510915843653638";
 
-	constructor(private authService: AuthService) {
+	constructor(
+		private authService: AuthService,
+		private settingsService: SettingsService,
+	) {
 		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
 		});
 
-		//DiscordRPC.register(this.rpcClientId);
-		this.rpc = new DiscordRPC.Client({ transport: "ipc" });
-		this.rpc
-			.login({
-				clientId: this.rpcClientId,
-			})
-			.catch(err => {
-				// discord not open
-				//console.log(err);
-			})
-			.then(() => {
-				this.rpcAtLauncher();
-
-				// // https://discordapp.com/developers/docs/topics/rpc#commands-and-events-rpc-events
-				// this.rpc.subscribe(
-				// 	"ACTIVITY_JOIN_REQUEST",
-				// 	{ clientId: this.rpcClientId },
-				// 	e => {
-				// 		console.log("join request");
-				// 		console.log(e);
-				// 	},
-				// );
-
-				// this.rpc.subscribe(
-				// 	"ACTIVITY_JOIN",
-				// 	{ clientId: this.rpcClientId },
-				// 	e => {
-				// 		console.log("join");
-				// 		console.log(e);
-				// 	},
-				// );
-
-				// console.log(this.rpc);
+		this.settingsService
+			.getSetting("discordRichPresence")
+			.subscribe(enabled => {
+				if (enabled) {
+					this.rpc = new DiscordRPC.Client({ transport: "ipc" });
+					this.rpc
+						.login({
+							clientId: "626510915843653638",
+						})
+						.catch(err => {
+							console.log(err);
+						})
+						.then(() => {
+							this.rpcAtLauncher();
+						});
+				} else {
+					if (this.rpc != null) {
+						this.rpc.destroy();
+						this.rpc = null;
+					}
+				}
 			});
 	}
 
@@ -78,6 +69,7 @@ export class InterfaceService {
 	rpcAtLauncher() {
 		this.currentDomainId = null;
 
+		if (this.rpc == null) return;
 		this.rpc.setActivity({
 			details: "Waiting at the launcher...",
 		});

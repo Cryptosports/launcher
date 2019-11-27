@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { InterfaceService } from "./interface.service";
+import { SettingsService } from "./settings/settings.service";
 
 @Component({
 	selector: "app-launcher",
@@ -12,9 +13,10 @@ import { InterfaceService } from "./interface.service";
 export class LauncherComponent implements OnInit, OnDestroy {
 	constructor(
 		private interfaceService: InterfaceService,
-		public dialog: MatDialog,
+		public settingsService: SettingsService, // to init defaults
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
+		private dialog: MatDialog,
 		private zone: NgZone,
 	) {}
 

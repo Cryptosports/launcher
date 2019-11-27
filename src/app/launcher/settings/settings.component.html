@@ -1,0 +1,22 @@
+<div class="settings">
+	<div>
+		<h2><mat-icon>settings</mat-icon> General</h2>
+		<mat-slide-toggle
+			[checked]="
+				settingsService.getSetting('discordRichPresence') | async
+			"
+			(change)="updateSetting('discordRichPresence', $event)"
+		>
+			Discord Rich Presence
+		</mat-slide-toggle>
+		<div style="padding: 8px 0;"></div>
+
+		<h2><mat-icon>developer_board</mat-icon> Experimental</h2>
+		<mat-slide-toggle
+			[checked]="settingsService.getSetting('videoStreaming') | async"
+			(change)="updateSetting('videoStreaming', $event)"
+		>
+			Video streaming <span>(using WebRTC and WebM)</span>
+		</mat-slide-toggle>
+	</div>
+</div>

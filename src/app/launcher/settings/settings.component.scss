@@ -1,0 +1,17 @@
+.settings {
+	display: flex;
+	width: 100%;
+	height: calc(100% - 64px);
+	align-items: center;
+	justify-content: center;
+
+	h2 > mat-icon {
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+
+	mat-slide-toggle span {
+		font-size: 0.8em;
+		opacity: 0.8;
+	}
+}
