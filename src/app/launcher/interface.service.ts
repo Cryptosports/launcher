@@ -62,6 +62,17 @@ export class InterfaceService {
 					}
 				}
 			});
+
+		electron.ipcRenderer.send("url", "get-url");
+		electron.ipcRenderer.on("url", (e, url: string) => {
+			if (url == null) return;
+			url = url.toLowerCase();
+
+			if (!url.startsWith("tivoli://")) return;
+			url = url.slice("tivoli://".length);
+
+			this.launch(url);
+		});
 	}
 
 	private currentDomainId = null;
@@ -109,7 +120,6 @@ export class InterfaceService {
 				return;
 			}
 
-			console.log("setting activity");
 			this.rpc.setActivity({
 				details: json.domain.label,
 				state: json.domain.description,
@@ -172,11 +182,10 @@ export class InterfaceService {
 		}
 	}
 
-	launch() {
+	launch(url?: string) {
 		if (this.running$.value == true) return;
 
 		const platform = os.platform();
-
 		const executable = (() => {
 			switch (process.platform) {
 				case "win32":
@@ -255,7 +264,7 @@ export class InterfaceService {
 				"https://tivolicloud.s3-us-west-2.amazonaws.com/defaultScripts/defaultScripts.js",
 
 				"--url",
-				"alpha.tivolicloud.com:50162/0,0.5,0",
+				url != null ? url : "alpha.tivolicloud.com:50162/0,0.5,0",
 
 				"--tokens",
 				JSON.stringify(this.user.token),

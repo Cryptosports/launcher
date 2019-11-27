@@ -17,6 +17,12 @@
 		"appId": "com.tivolicloud.launcher",
 		"productName": "Tivoli Cloud",
 		"asar": false,
+		"protocols": {
+			"name": "tivoli-cloud",
+			"schemes": [
+				"tivoli"
+			]
+		},
 		"publish": [
 			{
 				"provider": "generic",
