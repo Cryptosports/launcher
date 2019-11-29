@@ -60,6 +60,7 @@ export class AuthService {
 		const sub = this.http
 			.get<{
 				status: boolean;
+				statusCode?: 401; // unauthorized
 				data: {
 					user: {
 						username: string;
@@ -78,6 +79,11 @@ export class AuthService {
 			})
 			.subscribe(
 				async profile => {
+					if (profile.statusCode == 401) {
+						this.autoLoggingIn$.next(false);
+						return;
+					}
+
 					const { id, username, email, minutes } = profile.data.user;
 
 					const user = new User(id, username, email, minutes, token);
