@@ -8,6 +8,7 @@ const process = (window as any).process;
 
 const DiscordRPC = require("discord-rpc");
 const childProcess = require("child_process");
+const readline = require("readline");
 const electron = require("electron");
 const path = require("path");
 const os = require("os");
@@ -248,7 +249,7 @@ export class InterfaceService {
 			//"Avatar/fullAvatarURL": "https://maki.cat/hifi/avatars/kyouko/juniper.fst",
 		});
 
-		this.child = childProcess.execFile(
+		this.child = childProcess.spawn(
 			executable,
 			[
 				"--no-updater",
@@ -275,6 +276,7 @@ export class InterfaceService {
 					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
 					HIFI_ENABLE_MATERIAL_PROCEDURAL_SHADERS: false,
 				},
+				detached: false,
 			},
 		);
 
@@ -287,26 +289,28 @@ export class InterfaceService {
 			stopRunning();
 		});
 
-		let lastData = "";
-		this.child.stdout.on("data", data => {
-			const lines = (lastData + data).split("\n");
-			lastData = data;
+		const rl = readline.createInterface({
+			input: this.child.stdout,
+			terminal: false,
+			historySize: 10,
+		});
 
-			for (let line of lines) {
-				const updatedDomainIdMatches = line.match(
-					/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
-				);
-				if (updatedDomainIdMatches != null) {
-					if (updatedDomainIdMatches.length >= 2) {
-						this.rpcUpdateDomainId(updatedDomainIdMatches[1]);
-					}
+		rl.on("line", (line: string) => {
+			// discord rpc
+			const updatedDomainIdMatches = line.match(
+				/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
+			);
+			if (updatedDomainIdMatches != null) {
+				if (updatedDomainIdMatches.length >= 2) {
+					this.rpcUpdateDomainId(updatedDomainIdMatches[1]);
 				}
+			}
 
-				if (/\[hifi\.interface\] Created Display Window/i.test(line)) {
-					const win = electron.remote.getCurrentWindow();
-					if (win.isMinimized() == false) {
-						win.minimize();
-					}
+			// minimize launcher when interface opens
+			if (/\[hifi\.interface\] Created Display Window/i.test(line)) {
+				const win = electron.remote.getCurrentWindow();
+				if (win.isMinimized() == false) {
+					win.minimize();
 				}
 			}
 		});
