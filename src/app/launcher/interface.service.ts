@@ -249,26 +249,33 @@ export class InterfaceService {
 			//"Avatar/fullAvatarURL": "https://maki.cat/hifi/avatars/kyouko/juniper.fst",
 		});
 
+		const userLaunchArgs = this.settingsService
+			.getSetting<String>("launchArgs")
+			.value.split(" ");
+
 		this.child = childProcess.spawn(
 			executable,
 			[
-				"--no-updater",
-				"--no-launcher",
-				"--no-login-suggestion",
-				"--suppress-settings-reset",
-				process.env.DEV != null ? "--allowMultipleInstances" : "",
+				...[
+					"--no-updater",
+					"--no-launcher",
+					"--no-login-suggestion",
+					"--suppress-settings-reset",
+					process.env.DEV != null ? "--allowMultipleInstances" : "",
 
-				"--displayName",
-				this.user.username,
+					"--displayName",
+					this.user.username,
 
-				"--defaultScriptsOverride",
-				"https://cdn.tivolicloud.com/defaultScripts/defaultScripts.js",
+					"--defaultScriptsOverride",
+					"https://cdn.tivolicloud.com/defaultScripts/defaultScripts.js",
 
-				"--url",
-				url != null ? url : "alpha.tivolicloud.com:50162/0,0.5,0",
+					"--url",
+					url != null ? url : "alpha.tivolicloud.com:50162/0,0.5,0",
 
-				"--tokens",
-				JSON.stringify(this.user.token),
+					"--tokens",
+					JSON.stringify(this.user.token),
+				],
+				...userLaunchArgs,
 			],
 			{
 				env: {

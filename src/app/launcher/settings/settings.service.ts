@@ -67,6 +67,8 @@ export class SettingsService {
 		this.setDefaultSettings({
 			// general
 			discordRichPresence: true,
+			// developer
+			launchArgs: "",
 			// experimental
 			videoStreaming: false,
 		});

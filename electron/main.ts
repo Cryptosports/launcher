@@ -9,8 +9,8 @@ let win: BrowserWindow;
 const PLATFORM = os.platform();
 const DEV = process.env.DEV != null;
 
-const appLock = app.requestSingleInstanceLock();
-if (!appLock && !DEV) app.quit();
+const appLock = !DEV ? app.requestSingleInstanceLock() : true;
+if (!appLock) app.quit();
 
 if (appLock || DEV) {
 	// setup some constants

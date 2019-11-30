@@ -10,7 +10,12 @@ import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 export class SettingsComponent {
 	constructor(public settingsService: SettingsService) {}
 
-	updateSetting(key: string, event: MatSlideToggleChange) {
+	updateSettingChecked(key: string, event: MatSlideToggleChange) {
 		this.settingsService.setSetting(key, event.checked);
+	}
+
+	updateSettingString(key: string, event: Event) {
+		const input = event.currentTarget as HTMLInputElement;
+		this.settingsService.setSetting(key, input.value);
 	}
 }
