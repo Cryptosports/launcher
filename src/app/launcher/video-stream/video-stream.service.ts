@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { WebmConverter } from "./libs/webmConverter";
 import { WebRTCHost } from "./libs/webrtcHost";
+import { MatDialog } from "@angular/material/dialog";
+import { MediaStreamPickerComponent } from "../../media-stream-picker/media-stream-picker.component";
 
 @Injectable({
 	providedIn: "root",
@@ -14,13 +16,27 @@ export class VideoStreamService {
 	webmStream: MediaStream = null;
 	active = false;
 
-	private getMediaStream(width = 1280, height = 720, frameRate = 30) {
-		return navigator.mediaDevices.getUserMedia({
-			video: {
-				width: { ideal: width },
-				height: { ideal: height },
-				frameRate,
-			},
+	constructor(private dialog: MatDialog) {}
+
+	getStream() {
+		return new Promise<MediaStream>(resolve => {
+			const dialog = this.dialog.open(MediaStreamPickerComponent, {
+				data: {
+					width: 1280,
+					height: 720,
+					frameRate: 30,
+				},
+			});
+
+			const sub = dialog.componentInstance.mediaStream.subscribe(
+				stream => {
+					resolve(stream);
+				},
+				err => {},
+				() => {
+					sub.unsubscribe();
+				},
+			);
 		});
 	}
 
@@ -28,7 +44,7 @@ export class VideoStreamService {
 		if (this.active) return;
 		this.active = true;
 
-		this.stream = await this.getMediaStream(854, 480, 24);
+		this.stream = await this.getStream();
 		this.webm = new WebmConverter(this.stream);
 
 		this.webmStream = await this.webm.getMediaStream();

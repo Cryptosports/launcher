@@ -1,0 +1,19 @@
+.settings {
+	h2 > mat-icon {
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+
+	mat-slide-toggle {
+		margin-bottom: 8px;
+
+		span {
+			font-size: 0.8em;
+			opacity: 0.8;
+		}
+	}
+
+	mat-form-field {
+		width: 100%;
+	}
+}

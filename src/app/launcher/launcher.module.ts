@@ -5,8 +5,10 @@ import { MaterialModule } from "../material.module";
 import { HomeComponent } from "./home/home.component";
 import { LaunchBarComponent } from "./launch-bar/launch-bar.component";
 import { LauncherComponent } from "./launcher.component";
-import { VideoStreamComponent } from "./video-stream/video-stream.component";
 import { SettingsComponent } from "./settings/settings.component";
+import { TokboxStreamComponent } from "./tokbox-stream/tokbox-stream.component";
+import { VideoStreamComponent } from "./video-stream/video-stream.component";
+import { TokboxSettingsComponent } from "./tokbox-stream/tokbox-settings/tokbox-settings.component";
 
 const routes: Routes = [
 	{
@@ -16,6 +18,7 @@ const routes: Routes = [
 			{ path: "home", component: HomeComponent },
 			{ path: "settings", component: SettingsComponent },
 			{ path: "video-stream", component: VideoStreamComponent },
+			{ path: "tokbox-stream", component: TokboxStreamComponent },
 		],
 	},
 ];
@@ -27,7 +30,10 @@ const routes: Routes = [
 		HomeComponent,
 		VideoStreamComponent,
 		SettingsComponent,
+		TokboxStreamComponent,
+		TokboxSettingsComponent,
 	],
 	imports: [CommonModule, MaterialModule, RouterModule.forChild(routes)],
+	entryComponents: [TokboxSettingsComponent],
 })
 export class LauncherModule {}

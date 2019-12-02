@@ -71,6 +71,15 @@ export class SettingsService {
 			launchArgs: "",
 			// experimental
 			videoStreaming: false,
+			tokboxStreaming: false,
+			// tokbox
+			"tokbox.apiKey": "",
+			"tokbox.sessionID": "",
+			"tokbox.publisherToken": "",
+			"tokbox.subscriberToken": "",
+			"tokbox.width": 1920,
+			"tokbox.height": 1080,
+			"tokbox.frameRate": 30,
 		});
 	}
 }

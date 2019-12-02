@@ -4,8 +4,9 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
-import { UpdateAvailableComponent } from "./update-available/update-available.component";
 import { MaterialModule } from "./material.module";
+import { UpdateAvailableComponent } from "./update-available/update-available.component";
+import { MediaStreamPickerComponent } from "./media-stream-picker/media-stream-picker.component";
 
 const routes: Routes = [
 	{
@@ -21,7 +22,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-	declarations: [AppComponent, UpdateAvailableComponent],
+	declarations: [
+		AppComponent,
+		UpdateAvailableComponent,
+		MediaStreamPickerComponent,
+	],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
@@ -29,7 +34,7 @@ const routes: Routes = [
 		HttpClientModule,
 		RouterModule.forRoot(routes),
 	],
-	entryComponents: [UpdateAvailableComponent],
+	entryComponents: [UpdateAvailableComponent, MediaStreamPickerComponent],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

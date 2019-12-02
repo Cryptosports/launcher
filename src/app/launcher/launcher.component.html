@@ -13,6 +13,15 @@
 			<mat-icon>screen_share</mat-icon> Stream Video
 		</button>
 
+		<button
+			*ngIf="settingsService.getSetting('tokboxStreaming') | async"
+			mat-button
+			routerLink="tokbox-stream"
+			routerLinkActive="active"
+		>
+			<mat-icon>screen_share</mat-icon> Stream Video (TokBox)
+		</button>
+
 		<span style="flex-grow: 1;"></span>
 
 		<button mat-button routerLink="settings" routerLinkActive="active">

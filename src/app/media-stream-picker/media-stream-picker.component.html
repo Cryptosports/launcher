@@ -1,0 +1,18 @@
+<h2 style="margin-top: 0;">Share your screen or camera</h2>
+<div class="sources">
+	<div
+		class="source"
+		*ngFor="let source of availableSources"
+		(click)="onSourceSelected(source)"
+	>
+		<div
+			class="preview"
+			[style.backgroundImage]="'url(' + source.thumbnail + ')'"
+		></div>
+		{{ source.name }}
+	</div>
+</div>
+<ng-container *ngIf="loading">
+	<br />
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-container>

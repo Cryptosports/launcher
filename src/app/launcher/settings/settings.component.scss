@@ -19,9 +19,13 @@
 			margin-bottom: 4px;
 		}
 
-		mat-slide-toggle span {
-			font-size: 0.8em;
-			opacity: 0.8;
+		mat-slide-toggle {
+			margin-bottom: 8px;
+
+			span {
+				font-size: 0.8em;
+				opacity: 0.8;
+			}
 		}
 
 		mat-form-field {

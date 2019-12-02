@@ -33,8 +33,17 @@
 			<mat-slide-toggle
 				[checked]="settingsService.getSetting('videoStreaming') | async"
 				(change)="updateSettingChecked('videoStreaming', $event)"
+				style="text-decoration: line-through;"
 			>
-				Video streaming <span>(using WebRTC and WebM)</span>
+				Video streaming <span>(p2p w/ WebRTC, WebM)</span>
+			</mat-slide-toggle>
+			<mat-slide-toggle
+				[checked]="
+					settingsService.getSetting('tokboxStreaming') | async
+				"
+				(change)="updateSettingChecked('tokboxStreaming', $event)"
+			>
+				TokBox streaming <span>(distributed w/ tokbox.com)</span>
 			</mat-slide-toggle>
 		</div>
 	</div>

@@ -1,0 +1,97 @@
+<div class="settings">
+	<h2 style="margin-top: 0;">
+		<mat-icon>screen_share</mat-icon> TokBox video streaming settings
+	</h2>
+
+	<mat-form-field>
+		<input
+			matInput
+			placeholder="API Key"
+			[value]="settingsService.getSetting('tokbox.apiKey') | async"
+			(change)="updateSetting('tokbox.apiKey', $event)"
+		/>
+	</mat-form-field>
+
+	<mat-form-field>
+		<input
+			matInput
+			placeholder="Session ID"
+			[value]="settingsService.getSetting('tokbox.sessionID') | async"
+			(change)="updateSetting('tokbox.sessionID', $event)"
+		/>
+	</mat-form-field>
+
+	<mat-form-field>
+		<input
+			matInput
+			placeholder="Publisher Token"
+			[value]="
+				settingsService.getSetting('tokbox.publisherToken') | async
+			"
+			(change)="updateSetting('tokbox.publisherToken', $event)"
+		/>
+	</mat-form-field>
+
+	<mat-form-field>
+		<input
+			matInput
+			placeholder="Subscriber Token"
+			[value]="
+				settingsService.getSetting('tokbox.subscriberToken') | async
+			"
+			(change)="updateSetting('tokbox.subscriberToken', $event)"
+		/>
+	</mat-form-field>
+
+	<table>
+		<tr>
+			<td>
+				<mat-form-field>
+					<input
+						matInput
+						placeholder="Width"
+						[value]="
+							settingsService.getSetting('tokbox.width') | async
+						"
+						(change)="updateSetting('tokbox.width', $event)"
+					/>
+				</mat-form-field>
+			</td>
+			<td>
+				<mat-form-field>
+					<input
+						matInput
+						placeholder="Height"
+						[value]="
+							settingsService.getSetting('tokbox.height') | async
+						"
+						(change)="updateSetting('tokbox.height', $event)"
+					/>
+				</mat-form-field>
+			</td>
+			<td>
+				<mat-form-field>
+					<input
+						matInput
+						placeholder="Frame rate"
+						[value]="
+							settingsService.getSetting('tokbox.frameRate')
+								| async
+						"
+						(change)="updateSetting('tokbox.frameRate', $event)"
+					/>
+				</mat-form-field>
+			</td>
+		</tr>
+	</table>
+
+	<div style="text-align: right;">
+		<button mat-flat-button (click)="onPasteJSON()">
+			<mat-icon>save_alt</mat-icon> Paste JSON
+		</button>
+		<span style="padding: 0 4px"></span>
+		<button mat-flat-button color="primary" (click)="onSave()">
+			<mat-icon>save</mat-icon> Save
+		</button>
+	</div>
+</div>

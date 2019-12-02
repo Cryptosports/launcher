@@ -1,0 +1,24 @@
+.sources {
+	width: 600px;
+	margin: -8px;
+
+	.source {
+		width: calc(150px - 16px);
+		display: inline-block;
+		overflow: hidden;
+		white-space: nowrap;
+		margin: 8px;
+		cursor: pointer;
+
+		.preview {
+			width: 100%;
+			height: 80px;
+			border-radius: 4px;
+			margin-bottom: 8px;
+			background-color: rgba(#000, 0.1);
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+	}
+}
