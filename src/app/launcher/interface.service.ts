@@ -192,6 +192,45 @@ export class InterfaceService {
 		}
 	}
 
+	private setDefaultEmptyAvatarBookmarks() {
+		try {
+			const interfacePath = (() => {
+				switch (process.platform) {
+					case "win32":
+						return path.resolve(
+							process.env.APPDATA,
+							"High Fidelity",
+						);
+					case "darwin":
+						return path.resolve(
+							process.env.HOME,
+							".config/highfidelity.io",
+						);
+					default:
+						return null;
+				}
+			})();
+
+			if (interfacePath == null) throw Error();
+			if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
+
+			const interfaceInterfacePath = path.join(
+				interfacePath,
+				"Interface",
+			);
+			if (!fs.existsSync(interfaceInterfacePath))
+				fs.mkdirSync(interfaceInterfacePath);
+
+			const avatarBookmarksPath = path.resolve(
+				interfaceInterfacePath,
+				"avatarbookmarks.json",
+			);
+
+			if (!fs.existsSync(avatarBookmarksPath))
+				fs.writeFileSync(avatarBookmarksPath, JSON.stringify({}));
+		} catch (err) {}
+	}
+
 	launch(url?: string) {
 		if (this.running$.value == true) return;
 
@@ -269,6 +308,8 @@ export class InterfaceService {
 				use3DKeyboard: false,
 			},
 		);
+
+		this.setDefaultEmptyAvatarBookmarks();
 
 		const userLaunchArgs = this.settingsService
 			.getSetting<String>("launchArgs")
