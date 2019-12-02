@@ -204,7 +204,7 @@ export class InterfaceService {
 					case "darwin":
 						return path.resolve(
 							process.env.HOME,
-							".config/highfidelity.io",
+							"Library/Application Support/High Fidelity",
 						);
 					default:
 						return null;
@@ -214,7 +214,7 @@ export class InterfaceService {
 			if (interfacePath == null) throw Error();
 			if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
 
-			const interfaceInterfacePath = path.join(
+			const interfaceInterfacePath = path.resolve(
 				interfacePath,
 				"Interface",
 			);
