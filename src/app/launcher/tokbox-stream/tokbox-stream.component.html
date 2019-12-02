@@ -1,72 +1,66 @@
 <div class="content">
-	<!-- <div>
-		<video #preview class="preview" controls autoplay></video>
-		<br />
-		<ng-container *ngIf="id">
-			<p style="margin-bottom: 0;">Share this link:</p>
-			<mat-form-field style="width: 100%;">
-				<input matInput [value]="id" />
-			</mat-form-field>
-		</ng-container>
-	</div>
-
-	<div class="controls" style="margin-left: 16px;">
-		<button mat-stroked-button (click)="startHosting()">
-			<mat-icon>play_arrow</mat-icon> Start sharing
-		</button>
-	</div> -->
-
 	<div>
 		<video
 			#preview
 			class="preview"
 			autoplay
-			[srcObject]="previewStream"
+			[srcObject]="
+				tokboxStreamService.ready ? tokboxStreamService.stream : null
+			"
 		></video>
 		<mat-progress-bar
 			mode="indeterminate"
-			*ngIf="loading"
+			*ngIf="tokboxStreamService.active && !tokboxStreamService.ready"
 		></mat-progress-bar>
-		<br *ngIf="!loading" />
+		<br *ngIf="!tokboxStreamService.active && !tokboxStreamService.ready" />
 		<div style="margin-top: 8px;">
 			<table style="width: 100%; height: 72px">
 				<tr style="vertical-align: top;">
 					<td style="width: 0;">
 						<button
-							*ngIf="!active"
+							*ngIf="!tokboxStreamService.ready"
 							mat-stroked-button
 							(click)="onStart()"
-							[disabled]="loading"
+							[disabled]="
+								tokboxStreamService.active &&
+								!tokboxStreamService.ready
+							"
 						>
 							<mat-icon>play_arrow</mat-icon> Start sharing
 						</button>
 						<button
-							*ngIf="active"
+							*ngIf="tokboxStreamService.ready"
 							mat-stroked-button
 							(click)="onStop()"
-							[disabled]="loading"
+							[disabled]="
+								tokboxStreamService.active &&
+								!tokboxStreamService.ready
+							"
 						>
 							<mat-icon>stop</mat-icon> Stop sharing
 						</button>
 						<button
 							style="margin-left: 16px"
-							*ngIf="!active"
+							*ngIf="!tokboxStreamService.ready"
 							mat-stroked-button
 							(click)="onSettings()"
-							[disabled]="loading"
+							[disabled]="
+								tokboxStreamService.active &&
+								!tokboxStreamService.ready
+							"
 						>
 							<mat-icon>settings</mat-icon> Settings
 						</button>
 					</td>
 					<td
-						*ngIf="viewerLink"
+						*ngIf="tokboxStreamService.viewerLink"
 						style="width: 100%; padding-left: 16px;"
 					>
 						<mat-form-field style="width: 100%;">
 							<input
 								matInput
 								placeholder="Shareable link"
-								[value]="viewerLink"
+								[value]="tokboxStreamService.viewerLink"
 							/>
 						</mat-form-field>
 					</td>

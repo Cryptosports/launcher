@@ -19,6 +19,9 @@ export class TokboxStreamService {
 	frameRate = 0;
 
 	active = false;
+	ready = false;
+	viewerLink = "";
+
 	stream: MediaStream = null;
 	session: any = null;
 
@@ -27,7 +30,7 @@ export class TokboxStreamService {
 		private settingsService: SettingsService,
 	) {}
 
-	getSettings() {
+	private getSettings() {
 		this.apiKey = this.settingsService.getSetting<string>(
 			"tokbox.apiKey",
 		).value;
@@ -52,7 +55,7 @@ export class TokboxStreamService {
 		).value;
 	}
 
-	getStream() {
+	private getStream() {
 		return new Promise<MediaStream>(resolve => {
 			const dialog = this.dialog.open(MediaStreamPickerComponent, {
 				data: {
@@ -74,8 +77,22 @@ export class TokboxStreamService {
 		});
 	}
 
+	private makeViewerLink() {
+		this.viewerLink =
+			"https://tivolicloud.com/stream?data=" +
+			btoa(
+				JSON.stringify({
+					apiKey: this.apiKey,
+					sessionID: this.sessionID,
+					subscriberToken: this.subscriberToken,
+				}),
+			);
+	}
+
 	destroy = () => {
 		this.active = false;
+		this.ready = false;
+		this.viewerLink = "";
 
 		if (this.session != null) {
 			this.session.disconnect();
@@ -87,59 +104,49 @@ export class TokboxStreamService {
 		}
 	};
 
-	start() {
-		return new Promise(async (resolve, reject) => {
-			if (this.active) return reject();
-			if (!this.OT) return reject();
-			this.active = true;
+	async start() {
+		if (this.active) return;
+		if (!this.OT) return;
+		this.active = true;
 
-			this.getSettings();
+		this.getSettings();
 
-			this.stream = await this.getStream();
-			if (this.stream == null) {
-				this.destroy();
-				return reject();
-			}
+		this.stream = await this.getStream();
+		if (this.stream == null) return this.destroy();
 
-			this.session = this.OT.initSession(this.apiKey, this.sessionID);
+		this.session = this.OT.initSession(this.apiKey, this.sessionID);
 
-			this.session.on("sessionDisconnected", () => {
-				this.destroy();
-			});
+		this.session.on("sessionDisconnected", () => {
+			this.destroy();
+		});
 
-			this.session.connect(this.publisherToken, async err => {
-				if (err) {
-					this.destroy();
-					return reject(err);
-				}
+		this.session.connect(this.publisherToken, async err => {
+			if (err) return this.destroy();
 
-				const publisher = this.OT.initPublisher(
-					null,
-					{
-						videoSource: this.stream.getVideoTracks()[0],
+			const publisher = this.OT.initPublisher(
+				null,
+				{
+					videoSource: this.stream.getVideoTracks()[0],
 
-						audioSource: null,
-						disableAudioProcessing: true, // echo cancellation
-						publishAudio: false,
+					audioSource: null,
+					disableAudioProcessing: true, // echo cancellation
+					publishAudio: false,
 
-						width: this.width,
-						height: this.height,
-						frameRate: this.frameRate,
-					},
-					err => {
-						if (err) return console.log(err);
+					width: this.width,
+					height: this.height,
+					frameRate: this.frameRate,
+				},
+				err => {
+					if (err) return console.log(err);
 
-						this.session.publish(publisher, err => {
-							if (err) {
-								this.destroy();
-								return reject(err);
-							}
+					this.session.publish(publisher, err => {
+						if (err) return this.destroy();
 
-							resolve();
-						});
-					},
-				);
-			});
+						this.makeViewerLink();
+						this.ready = true;
+					});
+				},
+			);
 		});
 	}
 }
