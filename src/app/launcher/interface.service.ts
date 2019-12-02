@@ -136,7 +136,10 @@ export class InterfaceService {
 		}
 	}
 
-	private patchInterfaceSettings(settings: { [s: string]: any }) {
+	private setInterfaceSettings(
+		defaults: { [s: string]: any },
+		overwrite: { [s: string]: any },
+	) {
 		try {
 			const interfacePath = (() => {
 				switch (process.platform) {
@@ -162,15 +165,21 @@ export class InterfaceService {
 			if (!fs.existsSync(jsonPath)) {
 				fs.writeFileSync(
 					jsonPath,
-					JSON.stringify(settings, null, 4) + "\n",
+					JSON.stringify({ ...defaults, ...overwrite }, null, 4) +
+						"\n",
 				);
 			} else {
 				const jsonStr = fs.readFileSync(jsonPath, "utf8");
 				const json = JSON.parse(jsonStr);
 
-				const settingsKeys = Object.keys(settings);
-				for (let key of settingsKeys) {
-					json[key] = settings[key];
+				const defaultsKeys = Object.keys(defaults);
+				for (let key of defaultsKeys) {
+					if (json[key] == null) json[key] = defaults[key];
+				}
+
+				const overwriteKeys = Object.keys(overwrite);
+				for (let key of overwriteKeys) {
+					json[key] = overwrite[key];
 				}
 
 				fs.writeFileSync(
@@ -206,48 +215,60 @@ export class InterfaceService {
 		if (executable == null) return;
 		this.running$.next(true);
 
-		this.patchInterfaceSettings({
-			"Maximum Texture Memory/4 MB": false,
-			"Maximum Texture Memory/64 MB": false,
-			"Maximum Texture Memory/256 MB": false,
-			"Maximum Texture Memory/512 MB": false,
-			"Maximum Texture Memory/1024 MB": false,
-			"Maximum Texture Memory/2048 MB": false,
-			"Maximum Texture Memory/4096 MB": true,
-			"Maximum Texture Memory/6144 MB": false,
-			"Maximum Texture Memory/8192 MB": false,
-			"Maximum Texture Memory/Automatic Texture Memory": false,
-			"Developer/Render/Maximum Texture Memory/4 MB": false,
-			"Developer/Render/Maximum Texture Memory/64 MB": false,
-			"Developer/Render/Maximum Texture Memory/256 MB": false,
-			"Developer/Render/Maximum Texture Memory/512 MB": false,
-			"Developer/Render/Maximum Texture Memory/1024 MB": false,
-			"Developer/Render/Maximum Texture Memory/2048 MB": false,
-			"Developer/Render/Maximum Texture Memory/4096 MB": true,
-			"Developer/Render/Maximum Texture Memory/6144 MB": false,
-			"Developer/Render/Maximum Texture Memory/8192 MB": false,
-			"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
+		this.setInterfaceSettings(
+			{
+				"Maximum Texture Memory/4 MB": false,
+				"Maximum Texture Memory/64 MB": false,
+				"Maximum Texture Memory/256 MB": false,
+				"Maximum Texture Memory/512 MB": false,
+				"Maximum Texture Memory/1024 MB": false,
+				"Maximum Texture Memory/2048 MB": false,
+				"Maximum Texture Memory/4096 MB": true,
+				"Maximum Texture Memory/6144 MB": false,
+				"Maximum Texture Memory/8192 MB": false,
+				"Maximum Texture Memory/Automatic Texture Memory": false,
+				"Developer/Render/Maximum Texture Memory/4 MB": false,
+				"Developer/Render/Maximum Texture Memory/64 MB": false,
+				"Developer/Render/Maximum Texture Memory/256 MB": false,
+				"Developer/Render/Maximum Texture Memory/512 MB": false,
+				"Developer/Render/Maximum Texture Memory/1024 MB": false,
+				"Developer/Render/Maximum Texture Memory/2048 MB": false,
+				"Developer/Render/Maximum Texture Memory/4096 MB": true,
+				"Developer/Render/Maximum Texture Memory/6144 MB": false,
+				"Developer/Render/Maximum Texture Memory/8192 MB": false,
+				"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
 
-			// necessary for disabling anti aliasing
-			"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
-			antialiasingEnabled: true,
+				"Display/Disable Preview": false,
+				disableHmdPreview: false,
 
-			"Display/Disable Preview": false,
-			disableHmdPreview: false,
+				"com.tivolicloud.firstTimeAvatar": true,
 
-			// no, its unethical
-			"Developer/Network/Disable Activity Logger": true,
-			"Network/Disable Activity Logger": true,
-			UserActivityLoggerDisabled: true,
+				"Avatar/fullAvatarURL":
+					"https://cdn.tivolicloud.com/defaultAvatars/Robimo_white/Robimo_white.fst",
+				"Avatar/scale": 1.333,
 
-			"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
-			"Avatar/flyingHMD": true,
-			allowTeleporting: false,
-			miniTabletEnabled: false,
-			use3DKeyboard: false,
+				"AddressManager/address":
+					"hifi://alpha.tivolicloud.com:50162/0,0.5,0",
+			},
+			{
+				// necessary for disabling anti aliasing
+				"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
+				antialiasingEnabled: true,
 
-			//"Avatar/fullAvatarURL": "https://maki.cat/hifi/avatars/kyouko/juniper.fst",
-		});
+				"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
+
+				// no, its unethical
+				"Developer/Network/Disable Activity Logger": true,
+				"Network/Disable Activity Logger": true,
+				UserActivityLoggerDisabled: true,
+
+				"Avatar/flyingHMD": true,
+				allowTeleporting: false,
+
+				miniTabletEnabled: false,
+				use3DKeyboard: false,
+			},
+		);
 
 		const userLaunchArgs = this.settingsService
 			.getSetting<String>("launchArgs")
@@ -266,8 +287,8 @@ export class InterfaceService {
 					"--displayName",
 					this.user.username,
 
-					"--defaultScriptsOverride",
-					"https://cdn.tivolicloud.com/defaultScripts/defaultScripts.js",
+					// "--defaultScriptsOverride",
+					// "https://cdn.tivolicloud.com/defaultScripts/awdefaultScripts.js",
 
 					"--url",
 					url != null ? url : "alpha.tivolicloud.com:50162/0,0.5,0",
