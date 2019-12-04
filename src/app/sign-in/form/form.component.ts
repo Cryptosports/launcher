@@ -71,7 +71,7 @@ export class FormComponent implements OnInit {
 				Validators.required,
 				this.usernameValidator,
 				Validators.minLength(4),
-				Validators.maxLength(24),
+				Validators.maxLength(16),
 			]),
 			token: new FormControl(null),
 			imageUrl: new FormControl(null),
