@@ -2,11 +2,13 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 import { SettingsService } from "./settings/settings.service";
+import { HttpClient } from "@angular/common/http";
+import { DiscordService } from "./discord.service";
+import { InterfaceSettingsService } from "./interfaceSettings.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
 
-const DiscordRPC = require("discord-rpc");
 const childProcess = require("child_process");
 const readline = require("readline");
 const electron = require("electron");
@@ -31,39 +33,25 @@ export class InterfaceService {
 
 	private child = null;
 
-	private rpc = null;
-
 	constructor(
 		private authService: AuthService,
 		private settingsService: SettingsService,
+		private discordService: DiscordService,
+		private interfaceSettingsService: InterfaceSettingsService,
+		private http: HttpClient,
 	) {
 		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
 		});
 
-		this.settingsService
-			.getSetting("discordRichPresence")
-			.subscribe(enabled => {
-				if (enabled) {
-					this.rpc = new DiscordRPC.Client({ transport: "ipc" });
-					this.rpc
-						.login({
-							clientId: "626510915843653638",
-						})
-						.catch(err => {
-							console.log(err);
-						})
-						.then(() => {
-							this.rpcAtLauncher();
-						});
-				} else {
-					if (this.rpc != null) {
-						this.rpc.destroy();
-						this.rpc = null;
-					}
-				}
-			});
+		this.discordService.initialize();
 
+		// setInterval(() => {
+		// 	if (!this.running$.value) return;
+		// 	this.interfaceSettingsService.uploadSettings();
+		// }, 1000 * 60 * 5);
+
+		// needs to be fixed
 		electron.ipcRenderer.send("url", "get-url");
 		electron.ipcRenderer.on("url", (e, url: string) => {
 			if (url == null) return;
@@ -76,165 +64,9 @@ export class InterfaceService {
 		});
 	}
 
-	private currentDomainId = null;
-
-	rpcAtLauncher() {
-		this.currentDomainId = null;
-
-		if (this.rpc == null) return;
-		this.rpc.setActivity({
-			details: "Waiting at the launcher...",
-		});
-	}
-
-	async rpcUpdateDomainId(domainId: string) {
-		if (this.currentDomainId == domainId) return;
-		this.currentDomainId = domainId;
-		//console.log("new domain! " + this.currentDomainId);
-
-		if (this.rpc == null) return;
-		if (this.rpc.user == null) return;
-		try {
-			const res = await fetch(
-				this.authService.metaverseUrl +
-					"/api/v1/domains/" +
-					this.currentDomainId,
-			);
-
-			const json: {
-				status: "success" | "fail";
-				domain: {
-					label: string;
-					description: string;
-					restriction: "open" | "hifi" | "acl";
-				};
-			} = await res.json();
-
-			if (json.status != "success") throw new Error();
-			if (json.domain.restriction == "acl") {
-				this.rpc.setActivity({
-					details: "Private domain",
-					largeImageKey: "header",
-					smallImageKey: "logo",
-					startTimestamp: new Date(),
-				});
-				return;
-			}
-
-			this.rpc.setActivity({
-				details: json.domain.label,
-				state: json.domain.description,
-				largeImageKey: "header",
-				smallImageKey: "logo",
-				//joinSecret: this.currentDomainId,
-				startTimestamp: new Date(),
-			});
-		} catch (err) {
-			try {
-				this.rpc.clearActivity({});
-			} catch (err) {}
-		}
-	}
-
-	private setInterfaceSettings(
-		defaults: { [s: string]: any },
-		overwrite: { [s: string]: any },
-	) {
-		try {
-			const interfacePath = (() => {
-				switch (process.platform) {
-					case "win32":
-						return path.resolve(
-							process.env.APPDATA,
-							"High Fidelity",
-						);
-					case "darwin":
-						return path.resolve(
-							process.env.HOME,
-							".config/highfidelity.io",
-						);
-					default:
-						return null;
-				}
-			})();
-			if (interfacePath == null) throw Error();
-			if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
-
-			const jsonPath = path.resolve(interfacePath, "Interface.json");
-
-			if (!fs.existsSync(jsonPath)) {
-				fs.writeFileSync(
-					jsonPath,
-					JSON.stringify({ ...defaults, ...overwrite }, null, 4) +
-						"\n",
-				);
-			} else {
-				const jsonStr = fs.readFileSync(jsonPath, "utf8");
-				const json = JSON.parse(jsonStr);
-
-				const defaultsKeys = Object.keys(defaults);
-				for (let key of defaultsKeys) {
-					if (json[key] == null) json[key] = defaults[key];
-				}
-
-				const overwriteKeys = Object.keys(overwrite);
-				for (let key of overwriteKeys) {
-					json[key] = overwrite[key];
-				}
-
-				fs.writeFileSync(
-					jsonPath,
-					JSON.stringify(json, null, 4) + "\n",
-				);
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	}
-
-	private setDefaultEmptyAvatarBookmarks() {
-		try {
-			const interfacePath = (() => {
-				switch (process.platform) {
-					case "win32":
-						return path.resolve(
-							process.env.APPDATA,
-							"High Fidelity",
-						);
-					case "darwin":
-						return path.resolve(
-							process.env.HOME,
-							"Library/Application Support/High Fidelity",
-						);
-					default:
-						return null;
-				}
-			})();
-
-			if (interfacePath == null) throw Error();
-			if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
-
-			const interfaceInterfacePath = path.resolve(
-				interfacePath,
-				"Interface",
-			);
-			if (!fs.existsSync(interfaceInterfacePath))
-				fs.mkdirSync(interfaceInterfacePath);
-
-			const avatarBookmarksPath = path.resolve(
-				interfaceInterfacePath,
-				"avatarbookmarks.json",
-			);
-
-			if (!fs.existsSync(avatarBookmarksPath))
-				fs.writeFileSync(avatarBookmarksPath, JSON.stringify({}));
-		} catch (err) {}
-	}
-
-	launch(url?: string) {
+	async launch(url?: string) {
 		if (this.running$.value == true) return;
 
-		const platform = os.platform();
 		const executable = (() => {
 			switch (process.platform) {
 				case "win32":
@@ -254,7 +86,11 @@ export class InterfaceService {
 		if (executable == null) return;
 		this.running$.next(true);
 
-		this.setInterfaceSettings(
+		// ensure settings are synced
+		//await this.interfaceSettingsService.downloadSettings();
+
+		// ensure default settings
+		this.interfaceSettingsService.setInterfaceSettings(
 			{
 				"Maximum Texture Memory/4 MB": false,
 				"Maximum Texture Memory/64 MB": false,
@@ -287,32 +123,38 @@ export class InterfaceService {
 				"Avatar/scale": 1.2,
 
 				"AddressManager/address":
-					"alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
+					"hifi://alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
 			},
 			{
 				// necessary for disabling anti aliasing
 				"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
 				antialiasingEnabled: true,
 
-				"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
+				// necessary for default location
+				firstRun: false,
 
-				// no, its unethical
+				// 100% unethical
 				"Developer/Network/Disable Activity Logger": true,
 				"Network/Disable Activity Logger": true,
 				UserActivityLoggerDisabled: true,
 
+				// for convinence
+				"Display/Fullscreen": false,
+
+				// terrible
+				"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
 				"Avatar/flyingHMD": true,
 				allowTeleporting: false,
-
 				miniTabletEnabled: false,
 				use3DKeyboard: false,
 
+				// usernames dont change
 				"Avatar/displayName": this.user.username,
 			},
 		);
+		this.interfaceSettingsService.setDefaultAvatarBookmarks();
 
-		this.setDefaultEmptyAvatarBookmarks();
-
+		// launch!
 		const userLaunchArgs = this.settingsService
 			.getSetting<String>("launchArgs")
 			.value.split(" ");
@@ -348,7 +190,7 @@ export class InterfaceService {
 
 		const stopRunning = () => {
 			this.running$.next(false);
-			this.rpcAtLauncher();
+			this.discordService.atLauncher();
 		};
 
 		this.child.on("exit", () => {
@@ -368,7 +210,9 @@ export class InterfaceService {
 			);
 			if (updatedDomainIdMatches != null) {
 				if (updatedDomainIdMatches.length >= 2) {
-					this.rpcUpdateDomainId(updatedDomainIdMatches[1]);
+					this.discordService.updateDomainId(
+						updatedDomainIdMatches[1],
+					);
 				}
 			}
 
@@ -386,5 +230,6 @@ export class InterfaceService {
 		if (this.running$.value == false) return;
 		if (this.child == null) return;
 		this.child.kill("SIGKILL");
+		//this.interfaceSettingsService.uploadSettings();
 	}
 }

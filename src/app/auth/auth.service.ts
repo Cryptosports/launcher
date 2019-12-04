@@ -38,6 +38,7 @@ export class AuthService {
 	private tokenExpirationTimer: any;
 	private jwtHelper = new JwtHelperService();
 
+	//readonly metaverseUrl = "http://127.0.0.1:3000";
 	readonly metaverseUrl = "https://alpha.tivolicloud.com";
 
 	constructor(private http: HttpClient, private router: Router) {}

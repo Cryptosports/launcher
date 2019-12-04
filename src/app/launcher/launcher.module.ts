@@ -9,6 +9,7 @@ import { SettingsComponent } from "./settings/settings.component";
 import { TokboxStreamComponent } from "./tokbox-stream/tokbox-stream.component";
 import { VideoStreamComponent } from "./video-stream/video-stream.component";
 import { TokboxSettingsComponent } from "./tokbox-stream/tokbox-settings/tokbox-settings.component";
+import { HttpClientModule } from "@angular/common/http";
 
 const routes: Routes = [
 	{
