@@ -67,7 +67,7 @@ export class SettingsService {
 		this.setDefaultSettings({
 			// general
 			discordRichPresence: true,
-			settingsSyncing: true,
+			//settingsSyncing: true,
 			// developer
 			launchArgs: "",
 			// experimental
