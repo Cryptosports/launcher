@@ -28,16 +28,7 @@ export class FormComponent implements OnInit {
 	usernameValidator(control: FormControl): { [s: string]: boolean } | null {
 		let value: string = control.value + "";
 
-		if (!/^[a-zA-Z0-9\.\_]+$/.test(value)) return { badCharacters: true };
-
-		if (!/^[^\.\_][a-zA-Z0-9\.\_]*[^\.\_]$/.test(value))
-			return { startEndDotUnderscore: true };
-
-		if (value.includes("..") || value.includes("__"))
-			return { repeatingDotsUnderscores: true };
-
-		if (value.includes("._") || value.includes("_."))
-			return { nextToDotsUnderscores: true };
+		if (!/^[a-zA-Z0-9\_]+$/.test(value)) return { badCharacters: true };
 
 		return null;
 	}
@@ -66,7 +57,7 @@ export class FormComponent implements OnInit {
 				Validators.required,
 				this.usernameValidator,
 				Validators.minLength(4),
-				Validators.maxLength(24),
+				Validators.maxLength(16),
 			]),
 			password: new FormControl(null, [
 				Validators.required,
