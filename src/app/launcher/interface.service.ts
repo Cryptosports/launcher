@@ -284,10 +284,10 @@ export class InterfaceService {
 
 				"Avatar/fullAvatarURL":
 					"https://cdn.tivolicloud.com/defaultAvatars/Robimo_white/Robimo_white.fst",
-				"Avatar/scale": 1.333,
+				"Avatar/scale": 1.2,
 
 				"AddressManager/address":
-					"hifi://alpha.tivolicloud.com:50162/0,0.5,0",
+					"alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
 			},
 			{
 				// necessary for disabling anti aliasing
@@ -306,6 +306,8 @@ export class InterfaceService {
 
 				miniTabletEnabled: false,
 				use3DKeyboard: false,
+
+				"Avatar/displayName": this.user.username,
 			},
 		);
 
@@ -325,18 +327,13 @@ export class InterfaceService {
 					"--suppress-settings-reset",
 					process.env.DEV != null ? "--allowMultipleInstances" : "",
 
-					"--displayName",
-					this.user.username,
-
+					// "--displayName",
 					// "--defaultScriptsOverride",
-					// "https://cdn.tivolicloud.com/defaultScripts/awdefaultScripts.js",
-
-					"--url",
-					url != null ? url : "alpha.tivolicloud.com:50162/0,0.5,0",
 
 					"--tokens",
 					JSON.stringify(this.user.token),
 				],
+				...(url != null ? ["--url", url] : []),
 				...userLaunchArgs,
 			],
 			{
