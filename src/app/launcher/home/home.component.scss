@@ -19,26 +19,26 @@
 				rgba(29, 31, 33, 0.4),
 				rgba(29, 31, 33, 0.8)
 			),
-			url(../../../assets/wxr.jpg);
+			url(../../../assets/bg.jpg);
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
 		filter: blur($blur);
 	}
 
-	.logo {
-		position: absolute;
-		bottom: 16px;
-		right: 16px;
-		width: 250px;
-		height: 155px;
+	// .logo {
+	// 	position: absolute;
+	// 	bottom: 16px;
+	// 	right: 16px;
+	// 	width: 250px;
+	// 	height: 155px;
 
-		background-image: url(../../../assets/wxr.png);
-		background-position: center;
-		background-size: contain;
-		background-repeat: no-repeat;
-		opacity: 0.5;
-	}
+	// 	background-image: url(../../../assets/wxr.png);
+	// 	background-position: center;
+	// 	background-size: contain;
+	// 	background-repeat: no-repeat;
+	// 	opacity: 0.5;
+	// }
 
 	.text {
 		position: absolute;
