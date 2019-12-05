@@ -29,7 +29,7 @@ export class InterfaceService {
 		electron.remote.app.getAppPath(),
 		"interface",
 	);
-	readonly interfaceVersion = "0.85.0";
+	readonly interfaceVersion = "0.86.0";
 
 	private child = null;
 
