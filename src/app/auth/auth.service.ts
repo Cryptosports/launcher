@@ -50,6 +50,28 @@ export class AuthService {
 			return throwError("Invalid username and password");
 	};
 
+	getUserProfile = (jwt: string) => {
+		return this.http.get<{
+			status: boolean;
+			statusCode?: 401; // unauthorized
+			data: {
+				user: {
+					username: string;
+					roles: string;
+
+					id: string;
+					email: string;
+					minutes: number;
+				};
+			};
+		}>(this.metaverseUrl + "/api/v1/user/profile", {
+			headers: new HttpHeaders({
+				// user isnt available yet in the auth interceptor
+				Authorization: "Bearer " + jwt,
+			}),
+		});
+	};
+
 	handleAuthentication = (token: AuthToken) => {
 		const jwt = token.access_token;
 
@@ -58,55 +80,35 @@ export class AuthService {
 			return throwError("Token expired");
 		}
 
-		const sub = this.http
-			.get<{
-				status: boolean;
-				statusCode?: 401; // unauthorized
-				data: {
-					user: {
-						username: string;
-						roles: string;
-
-						id: string;
-						email: string;
-						minutes: number;
-					};
-				};
-			}>(this.metaverseUrl + "/api/v1/user/profile", {
-				headers: new HttpHeaders({
-					// user isnt available yet in the auth interceptor
-					Authorization: "Bearer " + jwt,
-				}),
-			})
-			.subscribe(
-				async profile => {
-					if (profile.statusCode == 401) {
-						this.autoLoggingIn$.next(false);
-						return;
-					}
-
-					const { id, username, email, minutes } = profile.data.user;
-
-					const user = new User(id, username, email, minutes, token);
-
-					const payload = this.jwtHelper.decodeToken(jwt);
-					const msTillExpire =
-						+new Date(payload.exp * 1000) - +new Date();
-
-					this.autoLogout(msTillExpire);
-					this.user$.next(user);
-					localStorage.setItem("auth", JSON.stringify(token));
-
-					await this.router.navigateByUrl("/launcher");
+		const sub = this.getUserProfile(jwt).subscribe(
+			async profile => {
+				if (profile.statusCode == 401) {
 					this.autoLoggingIn$.next(false);
-				},
-				() => {
-					this.autoLoggingIn$.next(false);
-				},
-				() => {
-					sub.unsubscribe();
-				},
-			);
+					return;
+				}
+
+				const { id, username, email, minutes } = profile.data.user;
+
+				const user = new User(id, username, email, minutes, token);
+
+				const payload = this.jwtHelper.decodeToken(jwt);
+				const msTillExpire =
+					+new Date(payload.exp * 1000) - +new Date();
+
+				this.autoLogout(msTillExpire);
+				this.user$.next(user);
+				localStorage.setItem("auth", JSON.stringify(token));
+
+				await this.router.navigateByUrl("/launcher");
+				this.autoLoggingIn$.next(false);
+			},
+			() => {
+				this.autoLoggingIn$.next(false);
+			},
+			() => {
+				sub.unsubscribe();
+			},
+		);
 	};
 
 	signIn(signInDto: { username: string; password: string }) {

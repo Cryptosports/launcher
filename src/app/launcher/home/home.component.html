@@ -1,14 +1,42 @@
 <div class="home">
 	<div class="background"></div>
 	<!-- <div class="logo"></div> -->
-	<div class="text">
+	<div class="info">
+		<div class="text">
+			<span style="flex-grow: 1;"></span>
+			<h1>
+				<span>
+					Welcome back, <b>{{ user.username }}</b>
+				</span>
+			</h1>
+			<h3>
+				<mat-icon>access_time</mat-icon>
+				<span>
+					You've been online for
+					<b>{{ displayMinutes(user.minutes) }}</b>
+				</span>
+			</h3>
+			<p>
+				<mat-icon>supervisor_account</mat-icon>
+				<span>
+					There
+					{{ domainStats.onlineUsers == 1 ? "is" : "are" }}
+					<b>{{
+						displayPlural(domainStats.onlineUsers, "online user")
+					}}</b>
+					across
+					<b>{{
+						displayPlural(
+							domainStats.onlineDomains,
+							"online domain"
+						)
+					}}</b>
+				</span>
+			</p>
+		</div>
 		<span style="flex-grow: 1;"></span>
-		<h1>
-			Welcome back, <b>{{ user.username }}</b>
-		</h1>
-		<h3>
-			You've been online for
-			<b>{{ displayMinutes(user.minutes) }}</b>
-		</h3>
+		<button mat-button (click)="onReloadStats()">
+			<mat-icon>refresh</mat-icon> Reload stats
+		</button>
 	</div>
 </div>
