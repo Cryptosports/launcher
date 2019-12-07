@@ -151,6 +151,7 @@ export class InterfaceService {
 				// usernames dont change
 				"Avatar/displayName": this.user.username,
 			},
+			["file:///~//defaultScripts.js"],
 		);
 		this.interfaceSettingsService.setDefaultAvatarBookmarks();
 

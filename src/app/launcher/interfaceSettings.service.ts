@@ -70,13 +70,18 @@ export class InterfaceSettingsService {
 	setInterfaceSettings(
 		defaults: { [s: string]: any },
 		overwrite: { [s: string]: any },
+		ensureRunningScripts: string[],
 	) {
 		try {
 			const interfaceSettings = this.readInterfaceSettings();
 
 			if (interfaceSettings == null) {
 				// create new interface.json file
-				this.writeInterfaceSettings({ ...defaults, ...overwrite });
+				this.writeInterfaceSettings({
+					...defaults,
+					...overwrite,
+					RunningScripts: ensureRunningScripts,
+				});
 			} else {
 				// patch interface.json with defaults
 				const defaultsKeys = Object.keys(defaults);
@@ -89,6 +94,15 @@ export class InterfaceSettingsService {
 				const overwriteKeys = Object.keys(overwrite);
 				for (let key of overwriteKeys) {
 					interfaceSettings[key] = overwrite[key];
+				}
+
+				// ensure running scripts
+				if (interfaceSettings.RunningScripts == null)
+					interfaceSettings.RunningScripts = [];
+
+				for (let scriptUrl of ensureRunningScripts) {
+					if (!interfaceSettings.RunningScripts.includes(scriptUrl))
+						interfaceSettings.RunningScripts.push(scriptUrl);
 				}
 
 				this.writeInterfaceSettings(interfaceSettings);
