@@ -37,9 +37,11 @@
 	></mat-progress-bar>
 	<table class="download-progress">
 		<tr>
-			<td style="text-align: left;">{{ downloadPercent }}%</td>
+			<td style="text-align: left;">
+				{{ downloadTransferred }} MB / {{ downloadTotal }} MB
+			</td>
 			<td style="text-align: right;">
-				{{ downloadRemaining }} MB remaining
+				{{ downloadSpeed }}
 			</td>
 		</tr>
 	</table>

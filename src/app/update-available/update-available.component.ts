@@ -10,10 +10,12 @@ export class UpdateAvailableComponent {
 	private readonly ipcRenderer = (window as any).require("electron")
 		.ipcRenderer;
 
-	public updateState: 0 | 1 | 2 = 0; // ask, updating, error
+	updateState: 0 | 1 | 2 = 0; // ask, updating, error
 
-	public downloadPercent = 0; // %
-	public downloadRemaining = 0; // mb
+	downloadPercent = 0; // %
+	downloadTransferred = 0; // mb
+	downloadTotal = 0; // mb
+	downloadSpeed = "0 B/s";
 
 	private sendMessageToUpdater(msg: string) {
 		this.ipcRenderer.send("updater", msg);
@@ -21,6 +23,27 @@ export class UpdateAvailableComponent {
 
 	private bytesToMB(bytes: number) {
 		return Math.floor(bytes / 1000 / 1000);
+	}
+
+	private bytesToSpeedStr(bytes: number) {
+		if (bytes < 1000) {
+			return Math.floor(bytes) + " B/s";
+		}
+
+		const kb = bytes / 1000;
+		if (kb < 1000) {
+			return Math.floor(kb) + " KB/s";
+		}
+
+		const mb = kb / 1000;
+		if (mb < 1000) {
+			return Math.floor(mb) + " MB/s";
+		}
+
+		const gb = mb / 1000;
+		if (gb < 1000) {
+			return Math.floor(gb) + " GB/s";
+		}
 	}
 
 	constructor(
@@ -33,8 +56,12 @@ export class UpdateAvailableComponent {
 					case "download-progress":
 						this.updateState = 1;
 						this.downloadPercent = Math.floor(info.percent);
-						this.downloadRemaining = this.bytesToMB(
-							info.total - info.transferred,
+						this.downloadTransferred = this.bytesToMB(
+							info.transferred,
+						);
+						this.downloadTotal = this.bytesToMB(info.total);
+						this.downloadSpeed = this.bytesToSpeedStr(
+							info.bytesPerSecond,
 						);
 						break;
 
@@ -48,6 +75,7 @@ export class UpdateAvailableComponent {
 
 	onDismiss() {
 		this.dialogRef.close();
+		this.sendMessageToUpdater("dismiss-update");
 	}
 
 	onUpdate() {

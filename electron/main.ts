@@ -117,24 +117,32 @@ if (appLock || DEV) {
 
 	ipcMain.on("updater", (e, msg: string) => {
 		if (msg == "check-for-update") {
-			if (!DEV) autoUpdater.checkForUpdates();
+			autoUpdater.checkForUpdates();
+			return;
+		}
+		if (msg == "dismiss-update") {
+			if (win != null) win.setProgressBar(-1); // off
 			return;
 		}
 		if (msg == "start-download") {
+			if (win != null) win.setProgressBar(0); // 0%
 			autoUpdater.downloadUpdate();
 			return;
 		}
 	});
 
 	autoUpdater.on("update-available", e => {
+		if (win != null) win.setProgressBar(2); // indeterminate
 		sendUpdateMessage("update-available");
 	});
 	// autoUpdater.on("update-not-available", e => {});
 
 	autoUpdater.on("error", e => {
+		if (win != null) win.setProgressBar(-1); // off
 		sendUpdateMessage("error", e);
 	});
 	autoUpdater.on("download-progress", e => {
+		if (win != null) win.setProgressBar(e.percent / 100); // x%
 		sendUpdateMessage("download-progress", e);
 	});
 
