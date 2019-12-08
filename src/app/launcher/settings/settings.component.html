@@ -41,7 +41,6 @@
 			<mat-slide-toggle
 				[checked]="settingsService.getSetting('videoStreaming') | async"
 				(change)="updateSettingChecked('videoStreaming', $event)"
-				style="text-decoration: line-through;"
 			>
 				Video streaming <span>(p2p w/ WebRTC, WebM)</span>
 			</mat-slide-toggle>
