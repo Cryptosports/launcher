@@ -40,6 +40,11 @@ export class LauncherComponent implements OnInit, OnDestroy {
 		// 	});
 	}
 
+	onCheckForUpdates() {
+		const ipcRenderer = (window as any).require("electron").ipcRenderer;
+		ipcRenderer.send("updater", "check-for-update");
+	}
+
 	onForceClose() {
 		this.interfaceService.forceClose();
 	}
