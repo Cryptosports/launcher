@@ -27,22 +27,22 @@ export class UpdateAvailableComponent {
 
 	private bytesToSpeedStr(bytes: number) {
 		if (bytes < 1000) {
-			return Math.floor(bytes) + " B/s";
+			return bytes.toFixed(2) + " B/s";
 		}
 
 		const kb = bytes / 1000;
 		if (kb < 1000) {
-			return Math.floor(kb) + " KB/s";
+			return kb.toFixed(2) + " KB/s";
 		}
 
 		const mb = kb / 1000;
 		if (mb < 1000) {
-			return Math.floor(mb) + " MB/s";
+			return mb.toFixed(2) + " MB/s";
 		}
 
 		const gb = mb / 1000;
 		if (gb < 1000) {
-			return Math.floor(gb) + " GB/s";
+			return gb.toFixed(2) + " GB/s";
 		}
 	}
 
