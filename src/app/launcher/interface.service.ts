@@ -130,9 +130,11 @@ export class InterfaceService {
 				"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
 				antialiasingEnabled: true,
 
-				// :)
 				"Developer/Render/Enable Procedural Materials": true,
 				"Render/Enable Procedural Materials": true,
+
+				"Developer/Render/Throttle FPS If Not Focus": false,
+				"Render/Throttle FPS If Not Focus": false,
 
 				// necessary for default location
 				firstRun: false,
