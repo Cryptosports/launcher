@@ -116,7 +116,7 @@ export class InterfaceService {
 				"Display/Disable Preview": false,
 				disableHmdPreview: false,
 
-				"com.tivolicloud.firstTimeAvatar": true,
+				"com.tivolicloud.firstTime": true,
 
 				"Avatar/fullAvatarURL":
 					"https://cdn.tivolicloud.com/defaultAvatars/Robimo_white/Robimo_white.fst",
