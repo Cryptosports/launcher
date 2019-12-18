@@ -24,15 +24,45 @@ export class DiscordService {
 			.getSetting("discordRichPresence")
 			.subscribe(enabled => {
 				if (enabled) {
-					this.rpc = new DiscordRPC.Client({ transport: "ipc" });
-					this.rpc
-						.login({
-							clientId: "626510915843653638",
-						})
-						.catch(err => {})
-						.then(() => {
-							this.atLauncher();
-						});
+					const initialize = () => {
+						let failed = false;
+
+						this.rpc = new DiscordRPC.Client({ transport: "ipc" });
+						this.rpc
+							.login({
+								clientId: "626510915843653638",
+							})
+							.catch(err => {
+								console.log("failed to init");
+								this.rpc == null;
+								failed = true;
+							})
+							.then(() => {
+								if (failed) return;
+
+								if (this.currentDomainId == null) {
+									this.atLauncher();
+								} else {
+									this.updateDomainId(
+										this.currentDomainId,
+										true,
+									);
+								}
+								console.log(this.rpc);
+							});
+					};
+
+					initialize();
+
+					setInterval(() => {
+						if (this.rpc.user == null) {
+							initialize();
+						} else {
+							if (this.rpc.transport.socket.writable == false) {
+								initialize();
+							}
+						}
+					}, 1000 * 60);
 				} else {
 					if (this.rpc != null) {
 						this.rpc.destroy();
@@ -51,8 +81,8 @@ export class DiscordService {
 		});
 	}
 
-	async updateDomainId(domainId: string) {
-		if (this.currentDomainId == domainId) return;
+	async updateDomainId(domainId: string, forceUpdate = false) {
+		if (forceUpdate == false && this.currentDomainId == domainId) return;
 		this.currentDomainId = domainId;
 
 		if (this.rpc == null) return;

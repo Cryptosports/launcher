@@ -4,7 +4,7 @@ import { AuthService, User } from "../auth/auth.service";
 import { SettingsService } from "./settings/settings.service";
 import { HttpClient } from "@angular/common/http";
 import { DiscordService } from "./discord.service";
-import { InterfaceSettingsService } from "./interfaceSettings.service";
+import { InterfaceSettingsService } from "./interface-settings.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -13,8 +13,6 @@ const childProcess = require("child_process");
 const readline = require("readline");
 const electron = require("electron");
 const path = require("path");
-const os = require("os");
-const fs = require("fs");
 
 @Injectable({
 	providedIn: "root",
