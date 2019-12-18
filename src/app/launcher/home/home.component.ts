@@ -66,7 +66,7 @@ export class HomeComponent implements OnDestroy {
 			.getUserProfile(this.user.token.access_token)
 			.subscribe(
 				profile => {
-					this.user.minutes = profile.data.user.minutes;
+					this.user.profile.minutes = profile.data.user.minutes;
 				},
 				err => {},
 				() => {

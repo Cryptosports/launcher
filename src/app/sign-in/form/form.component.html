@@ -1,6 +1,5 @@
-<h2 *ngIf="mode == 'signIn'" style="margin-top: 0;">Sign in</h2>
-<h2 *ngIf="mode == 'signUp'" style="margin-top: 0;">Create a new account</h2>
-<h2 *ngIf="mode == 'extSignUp'" style="margin-top: 0;">
+<h2 *ngIf="!isExtSignUp" style="margin-top: 0;">Sign in</h2>
+<h2 *ngIf="isExtSignUp" style="margin-top: 0;">
 	Choose an account username
 </h2>
 
@@ -18,7 +17,7 @@
 	{{ errorMessage }}
 </mat-card>
 
-<form *ngIf="mode == 'signIn'" [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+<form *ngIf="!isExtSignUp" [formGroup]="signInForm" (ngSubmit)="onSubmit()">
 	<mat-form-field style="width: 100%;">
 		<input
 			matInput
@@ -70,7 +69,7 @@
 	<button
 		type="button"
 		mat-button
-		(click)="onToggleSignUp()"
+		(click)="onSignUp()"
 		[disabled]="isLoading"
 	>
 		Create a new account
@@ -92,92 +91,7 @@
 	</span>
 </form>
 
-<form *ngIf="mode == 'signUp'" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-	<mat-form-field style="width: 100%;">
-		<input
-			matInput
-			type="email"
-			placeholder="Email"
-			required
-			formControlName="email"
-		/>
-		<mat-error *ngIf="signUpForm.hasError('required', 'email')">
-			Email is required
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('email', 'email')">
-			Email is invalid
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('maxlength', 'email')">
-			Email is too long
-		</mat-error>
-	</mat-form-field>
-
-	<mat-form-field style="width: 100%;">
-		<input
-			matInput
-			placeholder="Username"
-			required
-			formControlName="username"
-		/>
-		<mat-error *ngIf="signUpForm.hasError('required', 'username')">
-			Username is required
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('minlength', 'username')">
-			Username is too short
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('maxlength', 'username')">
-			Username is too long
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('badCharacters', 'username')">
-			Letters, numbers and underscores only
-		</mat-error>
-	</mat-form-field>
-
-	<mat-form-field style="width: 100%;">
-		<input
-			matInput
-			type="password"
-			placeholder="Password"
-			required
-			formControlName="password"
-		/>
-		<mat-error *ngIf="signUpForm.hasError('required', 'password')">
-			Password is required
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('minlength', 'password')">
-			Password is too short
-		</mat-error>
-		<mat-error *ngIf="signUpForm.hasError('maxlength', 'password')">
-			Password is too long
-		</mat-error>
-	</mat-form-field>
-
-	<div style="margin: 16px 0;"></div>
-
-	<button
-		type="submit"
-		mat-flat-button
-		color="primary"
-		[disabled]="signUpForm.invalid || isLoading"
-	>
-		Create a new account
-	</button>
-	<span style="margin: 0 4px;"></span>
-	<button
-		type="button"
-		mat-button
-		(click)="onToggleSignUp()"
-		[disabled]="isLoading"
-	>
-		Sign in instead
-	</button>
-</form>
-
-<form
-	*ngIf="mode == 'extSignUp'"
-	[formGroup]="extSignUpForm"
-	(ngSubmit)="onSubmit()"
->
+<form *ngIf="isExtSignUp" [formGroup]="extSignUpForm" (ngSubmit)="onSubmit()">
 	<table style="margin-bottom: 16px;">
 		<tr>
 			<td>

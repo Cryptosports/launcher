@@ -12,18 +12,17 @@ const electron = (window as any).require("electron");
 export class FormComponent implements OnInit {
 	errorMessage = "";
 
-	mode: "signIn" | "signUp" | "extSignUp" = "signIn";
 	isLoading = false;
+	isExtSignUp = false;
 
-	signInForm: FormGroup = null as any;
-	signUpForm: FormGroup = null as any;
-	extSignUpForm: FormGroup = null as any;
+	signInForm: FormGroup;
+	extSignUpForm: FormGroup;
 
 	extServices = ["Google", "Discord", "GitHub"];
 	extEmail = "";
 	extImageUrl = "";
 
-	constructor(private authService: AuthService) {}
+	constructor(public authService: AuthService) {}
 
 	usernameValidator(control: FormControl): { [s: string]: boolean } | null {
 		let value: string = control.value + "";
@@ -47,25 +46,6 @@ export class FormComponent implements OnInit {
 			]),
 		});
 
-		this.signUpForm = new FormGroup({
-			email: new FormControl(null, [
-				Validators.required,
-				Validators.email,
-				Validators.maxLength(64),
-			]),
-			username: new FormControl(null, [
-				Validators.required,
-				this.usernameValidator,
-				Validators.minLength(4),
-				Validators.maxLength(16),
-			]),
-			password: new FormControl(null, [
-				Validators.required,
-				Validators.minLength(6),
-				Validators.maxLength(64),
-			]),
-		});
-
 		this.extSignUpForm = new FormGroup({
 			username: new FormControl(null, [
 				Validators.required,
@@ -79,21 +59,12 @@ export class FormComponent implements OnInit {
 	}
 
 	onSubmit() {
-		let form = null;
-		if (this.mode == "signIn") form = this.signInForm;
-		if (this.mode == "signUp") form = this.signUpForm;
-		if (this.mode == "extSignUp") form = this.extSignUpForm;
-		if (form == null) return;
+		const form = this.isExtSignUp ? this.extSignUpForm : this.signInForm;
 		if (form.invalid) return;
 
-		let service = null;
-		if (this.mode == "signIn")
-			service = this.authService.signIn({ ...form.value });
-		if (this.mode == "signUp")
-			service = this.authService.signUp({ ...form.value });
-		if (this.mode == "extSignUp")
-			service = this.authService.extSignUp({ ...form.value });
-		if (service == null) return;
+		const service = this.isExtSignUp
+			? this.authService.extSignUp(form.value)
+			: this.authService.signIn(form.value);
 
 		this.isLoading = true;
 		form.disable();
@@ -157,7 +128,7 @@ export class FormComponent implements OnInit {
 				this.isLoading = false;
 
 				this.errorMessage = "";
-				this.mode = "extSignUp";
+				this.isExtSignUp = true;
 				return;
 			}
 		};
@@ -173,8 +144,9 @@ export class FormComponent implements OnInit {
 		}, 100);
 	}
 
-	onToggleSignUp() {
-		this.errorMessage = "";
-		this.mode = this.mode == "signIn" ? "signUp" : "signIn";
+	onSignUp() {
+		(window as any)
+			.require("electron")
+			.shell.openExternal(this.authService.metaverseUrl + "?signUp");
 	}
 }

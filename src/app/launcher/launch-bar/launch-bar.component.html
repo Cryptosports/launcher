@@ -62,16 +62,21 @@
 					<div
 						style="display: inline-block; text-align: right; margin-right: 8px;"
 					>
-						Signed in as <b>{{ user.username }}</b>
+						Signed in as <b>{{ user.profile.username }}</b>
 						<br />
 						<div style="opacity: 0.5; margin-top: -16px;">
-							{{ user.email }}
+							{{ user.profile.email }}
 						</div>
 					</div>
 					<img
 						class="user-image"
-						[src]="metaverseUrl + '/api/user/' + user.id + '/image'"
-						[alt]="'User image of ' + user.username"
+						[src]="
+							metaverseUrl +
+							'/api/user/' +
+							user.profile.id +
+							'/image'
+						"
+						[alt]="'User image of ' + user.profile.username"
 					/>
 				</button>
 

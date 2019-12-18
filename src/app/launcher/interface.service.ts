@@ -153,7 +153,7 @@ export class InterfaceService {
 				use3DKeyboard: false,
 
 				// usernames dont change
-				"Avatar/displayName": this.user.username,
+				"Avatar/displayName": this.user.profile.username,
 			},
 			["file:///~//defaultScripts.js"],
 		);

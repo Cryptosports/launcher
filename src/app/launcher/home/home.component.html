@@ -6,14 +6,14 @@
 			<span style="flex-grow: 1;"></span>
 			<h1>
 				<span>
-					Welcome back, <b>{{ user.username }}</b>
+					Welcome back, <b>{{ user.profile.username }}</b>
 				</span>
 			</h1>
 			<h3>
 				<mat-icon>access_time</mat-icon>
 				<span>
 					You've been online for
-					<b>{{ displayMinutes(user.minutes) }}</b>
+					<b>{{ displayMinutes(user.profile.minutes) }}</b>
 				</span>
 			</h3>
 			<p>

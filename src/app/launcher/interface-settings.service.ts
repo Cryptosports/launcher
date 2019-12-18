@@ -14,12 +14,7 @@ const fs = require("fs");
 	providedIn: "root",
 })
 export class InterfaceSettingsService {
-	constructor(
-		private authService: AuthService,
-		private settingsService: SettingsService,
-		private discordService: DiscordService,
-		private http: HttpClient,
-	) {}
+	constructor() {}
 
 	readInterfaceSettings() {
 		const interfacePath = (() => {

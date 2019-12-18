@@ -1,0 +1,21 @@
+<h2 style="margin-top: 0;">Verify your email to continue</h2>
+<p>
+	In order to use Tivoli, you must confirm your email address.
+</p>
+
+<div class="buttons">
+	<button mat-flat-button type="button" (click)="onLogout()">
+		Log out
+	</button>
+	<button mat-flat-button type="button" (click)="onRefresh()">
+		<mat-icon>refresh</mat-icon> Refresh
+	</button>
+	<button mat-flat-button (click)="onVerify()" color="primary">
+		<mat-icon>open_in_new</mat-icon> Verify email
+	</button>
+</div>
+
+<div *ngIf="isLoading">
+	<br />
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

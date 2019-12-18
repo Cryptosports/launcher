@@ -8,6 +8,8 @@ import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { BehaviorSubject, Observable, throwError, Subject } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
+import { MatDialog } from "@angular/material/dialog";
+import { VerifyEmailComponent } from "./verify-email/verify-email.component";
 
 export interface AuthToken {
 	access_token: string;
@@ -18,14 +20,16 @@ export interface AuthToken {
 	token_type: "Bearer";
 }
 
+export interface UserProfile {
+	id: string;
+	username: string;
+	email: string;
+	emailVerified: boolean;
+	minutes: number;
+}
+
 export class User {
-	constructor(
-		public id: string,
-		public username: string,
-		public email: string,
-		public minutes: number,
-		public token: AuthToken,
-	) {}
+	constructor(public token: AuthToken, public profile: UserProfile) {}
 }
 
 @Injectable({
@@ -41,7 +45,11 @@ export class AuthService {
 	//readonly metaverseUrl = "http://127.0.0.1:3000";
 	readonly metaverseUrl = "https://alpha.tivolicloud.com";
 
-	constructor(private http: HttpClient, private router: Router) {}
+	constructor(
+		private http: HttpClient,
+		private router: Router,
+		private dialog: MatDialog,
+	) {}
 
 	private handleError = (err: HttpErrorResponse): Observable<never> => {
 		//console.log(err);
@@ -50,18 +58,20 @@ export class AuthService {
 			return throwError("Invalid username and password");
 	};
 
+	openEmailVerifyDialog() {
+		this.dialog.open(VerifyEmailComponent, {
+			width: "400px",
+			disableClose: true,
+		});
+	}
+
 	getUserProfile = (jwt: string) => {
 		return this.http.get<{
 			status: boolean;
 			statusCode?: 401; // unauthorized
 			data: {
-				user: {
-					username: string;
-					roles: string;
-
-					id: string;
-					email: string;
-					minutes: number;
+				user: UserProfile & {
+					roles: string[];
 				};
 			};
 		}>(this.metaverseUrl + "/api/v1/user/profile", {
@@ -81,15 +91,16 @@ export class AuthService {
 		}
 
 		const sub = this.getUserProfile(jwt).subscribe(
-			async profile => {
-				if (profile.statusCode == 401) {
+			async res => {
+				if (res.statusCode == 401) {
 					this.autoLoggingIn$.next(false);
 					return;
 				}
+				const profile = res.data.user;
 
-				const { id, username, email, minutes } = profile.data.user;
-
-				const user = new User(id, username, email, minutes, token);
+				const user = new User(token, profile);
+				if (profile.emailVerified == false)
+					this.openEmailVerifyDialog();
 
 				const payload = this.jwtHelper.decodeToken(jwt);
 				const msTillExpire =
@@ -119,12 +130,6 @@ export class AuthService {
 				password: signInDto.password,
 				scope: "owner",
 			})
-			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
-	}
-
-	signUp(signUpDto: { email: string; username: string; password: string }) {
-		return this.http
-			.post<AuthToken>(this.metaverseUrl + "/api/auth/signup", signUpDto)
 			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
 	}
 

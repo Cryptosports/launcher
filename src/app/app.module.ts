@@ -1,13 +1,15 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
-import { MaterialModule } from "./material.module";
-import { UpdateAvailableComponent } from "./update-available/update-available.component";
-import { MediaStreamPickerComponent } from "./media-stream-picker/media-stream-picker.component";
 import { AuthInterceptorService } from "./auth/auth-interceptor";
+import { VerifyEmailComponent } from "./auth/verify-email/verify-email.component";
+import { MaterialModule } from "./material.module";
+import { MediaStreamPickerComponent } from "./media-stream-picker/media-stream-picker.component";
+import { UpdateAvailableComponent } from "./update-available/update-available.component";
 
 const routes: Routes = [
 	{
@@ -27,12 +29,14 @@ const routes: Routes = [
 		AppComponent,
 		UpdateAvailableComponent,
 		MediaStreamPickerComponent,
+		VerifyEmailComponent,
 	],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
 		MaterialModule,
 		HttpClientModule,
+		ReactiveFormsModule,
 		RouterModule.forRoot(routes),
 	],
 	providers: [
@@ -42,7 +46,11 @@ const routes: Routes = [
 			multi: true,
 		},
 	],
-	entryComponents: [UpdateAvailableComponent, MediaStreamPickerComponent],
+	entryComponents: [
+		UpdateAvailableComponent,
+		MediaStreamPickerComponent,
+		VerifyEmailComponent,
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
