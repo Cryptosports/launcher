@@ -1,0 +1,51 @@
+{
+	"appId": "com.tivolicloud.launcher",
+	"productName": "Tivoli Cloud",
+	"asar": false,
+	"protocols": {
+		"name": "tivoli-cloud",
+		"schemes": ["tivoli"]
+	},
+	"publish": [
+		{
+			"provider": "generic",
+			"url": "https://cdn.tivolicloud.com/releases"
+		}
+	],
+	"win": {
+		"artifactName": "tivoli-cloud.${ext}",
+		"target": "nsis",
+		"icon": "assets/windows/icon.ico"
+	},
+	"nsis": {
+		"oneClick": false,
+		"perMachine": true,
+		"allowToChangeInstallationDirectory": true,
+		"runAfterFinish": true,
+		"installerHeader": "assets/windows/installer-header.bmp",
+		"installerSidebar": "assets/windows/installer-sidebar.bmp"
+	},
+	"mac": {
+		"artifactName": "tivoli-cloud.${ext}",
+		"target": ["dmg", "zip"],
+		"icon": "assets/mac/icon.icns",
+		"category": "public.app-category.games"
+	},
+	"dmg": {
+		"background": "assets/mac/dmg.png",
+		"title": "Tivoli Cloud",
+		"contents": [
+			{
+				"x": 170,
+				"y": 190
+			},
+			{
+				"x": 370,
+				"y": 190,
+				"type": "link",
+				"path": "/Applications"
+			}
+		]
+	},
+	"files": ["out", "electron/dist", "interface/**/*"]
+}

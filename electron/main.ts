@@ -17,9 +17,9 @@ if (appLock || DEV) {
 	const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
 	const APP_ICON = (() => {
 		if (PLATFORM == "darwin")
-			return path.resolve(__dirname, "../../assets/icon.icns");
+			return path.resolve(__dirname, "../../assets/mac/icon.icns");
 		if (PLATFORM == "win32")
-			return path.resolve(__dirname, "../../assets/icon.ico");
+			return path.resolve(__dirname, "../../assets/windows/icon.ico");
 	})();
 
 	// auto reload in dev

@@ -3,12 +3,11 @@
 	"compilerOptions": {
 		"baseUrl": "./",
 		"outDir": "./dist",
-		"sourceMap": true,
+		"sourceMap": false,
 		"declaration": false,
+		"removeComments": true,
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
 		"target": "esnext",
 		"lib": ["es2018", "dom"],
 		"incremental": true

@@ -5,72 +5,14 @@
 	"description": "Tivoli Cloud Launcher",
 	"main": "electron/dist/main.js",
 	"scripts": {
-		"build:electron": "tsc --p electron",
 		"build:angular": "ng build --prod",
+		"build:electron": "rimraf electron/dist && tsc --p electron --incremental false && npm run build:electron:minify",
+		"build:electron:minify": "terser-folder electron/dist -e -x .js -o electron/dist --config-file terser.json",
 		"build": "npm run build:angular && npm run build:electron",
-		"dist": "electron-builder",
+		"dist": "electron-builder --config electron-builder.json",
 		"electron": "tsc --p electron && cross-env DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
 		"start": "ng build --watch"
-	},
-	"build": {
-		"appId": "com.tivolicloud.launcher",
-		"productName": "Tivoli Cloud",
-		"asar": false,
-		"protocols": {
-			"name": "tivoli-cloud",
-			"schemes": [
-				"tivoli"
-			]
-		},
-		"publish": [
-			{
-				"provider": "generic",
-				"url": "https://cdn.tivolicloud.com/releases"
-			}
-		],
-		"win": {
-			"artifactName": "tivoli-cloud-setup.exe",
-			"target": "nsis",
-			"icon": "assets/icon.ico"
-		},
-		"nsis": {
-			"oneClick": false,
-			"perMachine": true,
-			"allowToChangeInstallationDirectory": true,
-			"runAfterFinish": true,
-			"installerSidebar": "assets/installer-sidebar.bmp"
-		},
-		"mac": {
-			"artifactName": "tivoli-cloud.${ext}",
-			"target": [
-				"dmg",
-				"zip"
-			],
-			"icon": "assets/icon.icns",
-			"category": "public.app-category.games"
-		},
-		"dmg": {
-			"background": "assets/dmg.png",
-			"title": "Tivoli Cloud",
-			"contents": [
-				{
-					"x": 170,
-					"y": 190
-				},
-				{
-					"x": 370,
-					"y": 190,
-					"type": "link",
-					"path": "/Applications"
-				}
-			]
-		},
-		"files": [
-			"out",
-			"electron/dist",
-			"interface/**/*"
-		]
 	},
 	"dependencies": {
 		"@opentok/client": "^2.16.3",
@@ -105,11 +47,14 @@
 		"electron-builder": "^22.1.0",
 		"hammerjs": "^2.0.8",
 		"prettier": "^1.19.1",
+		"rimraf": "^3.0.0",
 		"rxjs": "~6.5.3",
+		"terser-folder": "^2.0.0",
 		"ts-node": "~7.0.0",
 		"tslib": "^1.10.0",
 		"tslint": "~5.15.0",
 		"typescript": "~3.5.3",
+		"uglify-js": "^3.7.3",
 		"zone.js": "~0.9.1"
 	}
 }
