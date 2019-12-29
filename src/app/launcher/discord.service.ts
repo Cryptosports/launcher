@@ -11,7 +11,9 @@ const DiscordRPC = require("discord-rpc");
 })
 export class DiscordService {
 	private rpc = null;
-	private currentDomainId = null;
+	private currentDomainId: string = null;
+
+	private timeSinceStarted: Date = null;
 
 	constructor(
 		private authService: AuthService,
@@ -74,6 +76,7 @@ export class DiscordService {
 
 	atLauncher() {
 		this.currentDomainId = null;
+		this.timeSinceStarted = null;
 
 		if (this.rpc == null) return;
 		this.rpc.setActivity({
@@ -83,6 +86,8 @@ export class DiscordService {
 
 	async updateDomainId(domainId: string, forceUpdate = false) {
 		if (forceUpdate == false && this.currentDomainId == domainId) return;
+
+		if (this.currentDomainId == null) this.timeSinceStarted = new Date();
 		this.currentDomainId = domainId;
 
 		if (this.rpc == null) return;
@@ -111,7 +116,7 @@ export class DiscordService {
 								details: "Private domain",
 								largeImageKey: "header",
 								smallImageKey: "logo",
-								startTimestamp: new Date(),
+								startTimestamp: this.timeSinceStarted,
 							});
 						} else {
 							this.rpc.setActivity({
@@ -120,7 +125,7 @@ export class DiscordService {
 								largeImageKey: "header",
 								smallImageKey: "logo",
 								//joinSecret: this.currentDomainId,
-								startTimestamp: new Date(),
+								startTimestamp: this.timeSinceStarted,
 							});
 						}
 					},
