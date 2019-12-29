@@ -9,6 +9,11 @@ let win: BrowserWindow;
 const PLATFORM = os.platform();
 const DEV = process.env.DEV != null;
 
+app.setPath(
+	"userData",
+	path.resolve(app.getPath("userData"), "../Tivoli Cloud/launcher"),
+);
+
 const appLock = !DEV ? app.requestSingleInstanceLock() : true;
 if (!appLock) app.quit();
 
