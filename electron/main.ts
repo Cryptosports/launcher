@@ -11,7 +11,7 @@ const DEV = process.env.DEV != null;
 
 app.setPath(
 	"userData",
-	path.resolve(app.getPath("userData"), "../Tivoli Cloud/launcher"),
+	path.resolve(app.getPath("userData"), "../Tivoli Cloud VR/launcher"),
 );
 
 const appLock = !DEV ? app.requestSingleInstanceLock() : true;
