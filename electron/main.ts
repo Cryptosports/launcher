@@ -27,19 +27,17 @@ if (appLock || DEV) {
 			return path.resolve(__dirname, "../../assets/windows/icon.ico");
 	})();
 
-	// auto reload in dev
 	if (DEV) {
+		// auto reload in dev
 		watchFile(APP_ROOT, { interval: 500 }, () => {
 			if (win != null) win.loadFile(APP_ROOT);
 		});
-	}
-
-	// remove menu in prod
-	if (!DEV) {
+	} else {
+		// remove menu in prod
 		Menu.setApplicationMenu(null);
 	}
 
-	// dont auto download!
+	// dont auto download yet!
 	autoUpdater.autoDownload = false;
 
 	// tivoli:// functionality
