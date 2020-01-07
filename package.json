@@ -9,10 +9,11 @@
 		"build:electron": "rimraf electron/dist && tsc --p electron --incremental false && npm run build:minify",
 		"build:minify": "terser-folder electron/dist -e -x .js -o electron/dist --config-file terser.json",
 		"build": "npm run build:angular && npm run build:electron",
-		"dist": "electron-builder --config electron-builder.json",
+		"package": "rimraf dist && electron-builder --config electron-builder.json",
 		"electron": "tsc --p electron && cross-env DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
-		"start": "ng build --watch"
+		"start": "ng build --watch",
+		"dist": "npm run build && npm run package"
 	},
 	"dependencies": {
 		"@opentok/client": "^2.16.3",
