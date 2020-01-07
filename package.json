@@ -6,8 +6,8 @@
 	"main": "electron/dist/main.js",
 	"scripts": {
 		"build:angular": "ng build --prod",
-		"build:electron": "rimraf electron/dist && tsc --p electron --incremental false && npm run build:electron:minify",
-		"build:electron:minify": "terser-folder electron/dist -e -x .js -o electron/dist --config-file terser.json",
+		"build:electron": "rimraf electron/dist && tsc --p electron --incremental false && npm run build:minify",
+		"build:minify": "terser-folder electron/dist -e -x .js -o electron/dist --config-file terser.json",
 		"build": "npm run build:angular && npm run build:electron",
 		"dist": "electron-builder --config electron-builder.json",
 		"electron": "tsc --p electron && cross-env DEV=true electron .",
