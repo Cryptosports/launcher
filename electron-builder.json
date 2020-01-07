@@ -13,7 +13,7 @@
 		}
 	],
 	"win": {
-		"artifactName": "tivoli-cloud.${ext}",
+		"artifactName": "Tivoli Cloud Setup.${ext}",
 		"target": "nsis",
 		"icon": "assets/windows/icon.ico"
 	},
@@ -26,7 +26,7 @@
 		"installerSidebar": "assets/windows/installer-sidebar.bmp"
 	},
 	"mac": {
-		"artifactName": "tivoli-cloud.${ext}",
+		"artifactName": "Tivoli Cloud.${ext}",
 		"target": ["dmg", "zip"],
 		"icon": "assets/mac/icon.icns",
 		"category": "public.app-category.games"
