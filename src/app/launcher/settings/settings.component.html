@@ -21,22 +21,6 @@
 
 			<div style="padding: 8px 0;"></div>
 
-			<h2><mat-icon>code</mat-icon> Developer</h2>
-			<mat-form-field>
-				<input
-					matInput
-					placeholder="Additional launch arguments"
-					[value]="settingsService.getSetting('launchArgs') | async"
-					(change)="updateSettingString('launchArgs', $event)"
-				/>
-			</mat-form-field>
-			<p
-				style="font-size: 0.8em; opacity: 0.8; margin: 0; margin-top: -12px;"
-			>
-				e.g. --remote-debugging-port=9222
-			</p>
-		</div>
-		<div>
 			<h2><mat-icon>developer_board</mat-icon> Experimental</h2>
 			<mat-slide-toggle
 				[checked]="settingsService.getSetting('videoStreaming') | async"
@@ -52,6 +36,33 @@
 			>
 				TokBox streaming <span>(distributed w/ tokbox.com)</span>
 			</mat-slide-toggle>
+		</div>
+		<div>
+			<h2 style="margin-bottom: 8px;">
+				<mat-icon>code</mat-icon> Developer
+			</h2>
+			<mat-form-field>
+				<mat-label>Additional launch arguments</mat-label>
+				<input
+					matInput
+					[value]="settingsService.getSetting('launchArgs') | async"
+					(change)="updateSettingString('launchArgs', $event)"
+				/>
+				<mat-hint>e.g. --remote-debugging-port=9222</mat-hint>
+			</mat-form-field>
+
+			<div style="padding: 8px 0;"></div>
+
+			<mat-form-field>
+				<mat-label>Custom interface path</mat-label>
+				<input
+					matInput
+					[value]="
+						settingsService.getSetting('interfacePath') | async
+					"
+					(change)="updateSettingString('interfacePath', $event)"
+				/>
+			</mat-form-field>
 		</div>
 	</div>
 </div>

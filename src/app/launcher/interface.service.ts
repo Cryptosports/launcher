@@ -23,11 +23,10 @@ export class InterfaceService {
 
 	running$ = new BehaviorSubject<boolean>(false);
 
-	readonly interfacePath = path.resolve(
+	readonly defaultInterfacePath = path.resolve(
 		electron.remote.app.getAppPath(),
 		"interface",
 	);
-	readonly interfaceVersion = "0.86.0";
 
 	private child = null;
 
@@ -65,18 +64,20 @@ export class InterfaceService {
 	async launch(url?: string) {
 		if (this.running$.value == true) return;
 
+		const interfacePath =
+			this.settingsService
+				.getSetting<String>("interfacePath")
+				.value.trim() || this.defaultInterfacePath;
+
 		const executable = (() => {
 			switch (process.platform) {
 				case "win32":
-					return path.resolve(
-						this.interfacePath,
-						this.interfaceVersion + "/interface.exe",
-					);
-				case "darwin":
-					return path.resolve(
-						this.interfacePath,
-						this.interfaceVersion + ".app/Contents/MacOS/interface",
-					);
+					return path.resolve(interfacePath, "interface.exe");
+				// case "darwin":
+				// 	return path.resolve(
+				// 		this.interfacePath,
+				// 		this.interfaceVersion + ".app/Contents/MacOS/interface",
+				// 	);
 				default:
 					return null;
 			}

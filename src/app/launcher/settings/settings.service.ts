@@ -68,11 +68,15 @@ export class SettingsService {
 			// general
 			discordRichPresence: true,
 			//settingsSyncing: true,
+
 			// developer
 			launchArgs: "",
+			interfacePath: "",
+
 			// experimental
 			videoStreaming: false,
 			tokboxStreaming: false,
+
 			// tokbox
 			"tokbox.apiKey": "",
 			"tokbox.sessionID": "",
