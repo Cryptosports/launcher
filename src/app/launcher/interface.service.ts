@@ -41,6 +41,10 @@ export class InterfaceService {
 			this.user = user;
 		});
 
+		this.running$.subscribe(running => {
+			electron.ipcRenderer.send("running", running);
+		});
+
 		this.discordService.initialize();
 
 		// setInterval(() => {

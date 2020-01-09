@@ -20,12 +20,7 @@ if (!appLock) app.quit();
 if (appLock || DEV) {
 	// setup some constants
 	const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
-	const APP_ICON = (() => {
-		if (PLATFORM == "darwin")
-			return path.resolve(__dirname, "../../assets/mac/icon.icns");
-		if (PLATFORM == "win32")
-			return path.resolve(__dirname, "../../assets/windows/icon.ico");
-	})();
+	const APP_ICON = path.resolve(__dirname, "../../assets/icon.ico");
 
 	if (DEV) {
 		// auto reload in dev
@@ -110,6 +105,21 @@ if (appLock || DEV) {
 		if (win && !DEV) {
 			if (win.isMinimized()) win.restore();
 			win.focus();
+		}
+	});
+
+	// running for changing window icon
+	let running = false;
+	ipcMain.on("running", (e, newRunning: boolean) => {
+		if (win == null) return;
+
+		if (running == newRunning) return;
+		running = newRunning;
+
+		if (running) {
+			win.setIcon(APP_ICON.replace("icon", "icon-gray"));
+		} else {
+			win.setIcon(APP_ICON);
 		}
 	});
 

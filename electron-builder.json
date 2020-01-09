@@ -15,24 +15,24 @@
 	"win": {
 		"artifactName": "Tivoli Cloud VR Setup.${ext}",
 		"target": "nsis",
-		"icon": "assets/windows/icon.ico"
+		"icon": "assets/icon.ico"
 	},
 	"nsis": {
 		"oneClick": false,
 		"perMachine": true,
 		"allowToChangeInstallationDirectory": true,
 		"runAfterFinish": true,
-		"installerHeader": "assets/windows/installer-header.bmp",
-		"installerSidebar": "assets/windows/installer-sidebar.bmp"
+		"installerHeader": "assets/installer-header.bmp",
+		"installerSidebar": "assets/installer-sidebar.bmp"
 	},
 	"mac": {
 		"artifactName": "Tivoli Cloud VR.${ext}",
 		"target": ["dmg", "zip"],
-		"icon": "assets/mac/icon.icns",
+		"icon": "assets/icon.icns",
 		"category": "public.app-category.games"
 	},
 	"dmg": {
-		"background": "assets/mac/dmg.png",
+		"background": "assets/dmg.png",
 		"title": "Tivoli Cloud VR",
 		"contents": [
 			{
@@ -47,5 +47,11 @@
 			}
 		]
 	},
-	"files": ["out", "electron/dist", "interface/**/*"]
+	"files": [
+		"out",
+		"electron/dist",
+		"interface/**/*",
+		"assets",
+		"!assets/private"
+	]
 }
