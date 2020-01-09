@@ -78,6 +78,7 @@ if (appLock || DEV) {
 
 			width: 1000,
 			height: 640,
+			resizable: false,
 
 			webPreferences: {
 				nodeIntegration: true,
