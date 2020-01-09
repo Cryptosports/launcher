@@ -14,7 +14,7 @@
 					<div class="launch-button__content">
 						<div class="launch-button__icon">
 							<mat-icon *ngIf="!running">
-								public
+								launch
 							</mat-icon>
 							<mat-progress-spinner
 								*ngIf="running"
@@ -27,14 +27,19 @@
 						</div>
 						<div class="launch-button__text">
 							<ng-container *ngIf="!running">
-								Take me in-world!
+								Launch Tivoli
 							</ng-container>
 							<ng-container *ngIf="running">
 								Tivoli is now running!
 							</ng-container>
 							<br />
-							<!-- <span>
-								using v{{ interfaceService.interfaceVersion }}
+							<!-- <span
+								*ngIf="
+									settingsService.getSetting('interfacePath')
+										| async
+								"
+							>
+								using custom path
 							</span> -->
 						</div>
 					</div>

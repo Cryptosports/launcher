@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, NgZone } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AuthService, User } from "../../auth/auth.service";
 import { InterfaceService } from "../interface.service";
+import { SettingsService } from "../settings/settings.service";
 
 @Component({
 	selector: "app-launch-bar",
@@ -20,6 +21,7 @@ export class LaunchBarComponent implements OnDestroy {
 	constructor(
 		private authService: AuthService,
 		public interfaceService: InterfaceService,
+		public settingsService: SettingsService,
 		private zone: NgZone, //private dialog: MatDialog,
 	) {
 		this.userSub = this.authService.user$.subscribe(user => {
