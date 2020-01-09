@@ -1,8 +1,4 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AuthService } from "../auth/auth.service";
-import { DiscordService } from "./discord.service";
-import { SettingsService } from "./settings/settings.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -16,22 +12,30 @@ const fs = require("fs");
 export class InterfaceSettingsService {
 	constructor() {}
 
-	readInterfaceSettings() {
-		const interfacePath = (() => {
-			switch (process.platform) {
-				case "win32":
-					return path.resolve(process.env.APPDATA, "High Fidelity");
-				case "darwin":
-					return path.resolve(
-						process.env.HOME,
-						".config/highfidelity.io",
-					);
-				default:
-					return null;
-			}
-		})();
+	getAppDataPath() {
+		switch (process.platform) {
+			case "win32":
+				return path.resolve(process.env.APPDATA, "Tivoli Cloud VR");
 
-		const jsonPath = path.resolve(interfacePath, "Interface.json");
+			// case "darwin":
+			// 	return path.resolve(
+			// 		process.env.HOME,
+			// 		".config/highfidelity.io",
+			// 	);
+			// 	return path.resolve(
+			// 		process.env.HOME,
+			// 		"Library/Application Support/Tivoli Cloud VR",
+			// 	);
+
+			default:
+				throw new Error("Can't find your AppData folder");
+		}
+	}
+
+	readInterfaceSettings() {
+		const appDataPath = this.getAppDataPath();
+		const jsonPath = path.resolve(appDataPath, "Interface.json");
+
 		try {
 			const jsonStr = fs.readFileSync(jsonPath, "utf8");
 			const json = JSON.parse(jsonStr);
@@ -42,23 +46,11 @@ export class InterfaceSettingsService {
 	}
 
 	writeInterfaceSettings(interfaceSettings: Object) {
-		const interfacePath = (() => {
-			switch (process.platform) {
-				case "win32":
-					return path.resolve(process.env.APPDATA, "High Fidelity");
-				case "darwin":
-					return path.resolve(
-						process.env.HOME,
-						".config/highfidelity.io",
-					);
-				default:
-					return null;
-			}
-		})();
-		if (interfacePath == null) throw Error();
-		if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
+		const appDataPath = this.getAppDataPath();
 
-		const jsonPath = path.resolve(interfacePath, "Interface.json");
+		if (!fs.existsSync(appDataPath)) fs.mkdirSync(appDataPath);
+
+		const jsonPath = path.resolve(appDataPath, "Interface.json");
 		fs.writeFileSync(jsonPath, JSON.stringify(interfaceSettings, null, 4));
 	}
 
@@ -108,22 +100,10 @@ export class InterfaceSettingsService {
 	}
 
 	readAvatarBookmarks() {
-		const interfacePath = (() => {
-			switch (process.platform) {
-				case "win32":
-					return path.resolve(process.env.APPDATA, "High Fidelity");
-				case "darwin":
-					return path.resolve(
-						process.env.HOME,
-						".config/highfidelity.io",
-					);
-				default:
-					return null;
-			}
-		})();
+		const appDataPath = this.getAppDataPath();
 
 		const jsonPath = path.resolve(
-			interfacePath,
+			appDataPath,
 			"Interface",
 			"avatarbookmarks.json",
 		);
@@ -137,24 +117,11 @@ export class InterfaceSettingsService {
 	}
 
 	writeAvatarBookmarks(avatarBookmarks: Object) {
-		const interfacePath = (() => {
-			switch (process.platform) {
-				case "win32":
-					return path.resolve(process.env.APPDATA, "High Fidelity");
-				case "darwin":
-					return path.resolve(
-						process.env.HOME,
-						"Library/Application Support/High Fidelity",
-					);
-				default:
-					return null;
-			}
-		})();
+		const appDataPath = this.getAppDataPath();
 
-		if (interfacePath == null) throw Error();
-		if (!fs.existsSync(interfacePath)) fs.mkdirSync(interfacePath);
+		if (!fs.existsSync(appDataPath)) fs.mkdirSync(appDataPath);
 
-		const interfaceInterfacePath = path.resolve(interfacePath, "Interface");
+		const interfaceInterfacePath = path.resolve(appDataPath, "Interface");
 		if (!fs.existsSync(interfaceInterfacePath))
 			fs.mkdirSync(interfaceInterfacePath);
 
