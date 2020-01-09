@@ -27,20 +27,20 @@
 						</div>
 						<div class="launch-button__text">
 							<ng-container *ngIf="!running">
-								Launch Tivoli
+								Launch Tivoli client
 							</ng-container>
 							<ng-container *ngIf="running">
 								Tivoli is now running!
 							</ng-container>
 							<br />
-							<!-- <span
+							<span
 								*ngIf="
 									settingsService.getSetting('interfacePath')
 										| async
 								"
 							>
-								using custom path
-							</span> -->
+								using custom path!
+							</span>
 						</div>
 					</div>
 				</button>
