@@ -1,6 +1,6 @@
 {
 	"appId": "com.tivolicloud.launcher",
-	"productName": "Tivoli Cloud",
+	"productName": "Tivoli Cloud VR",
 	"asar": false,
 	"protocols": {
 		"name": "tivoli-cloud",
@@ -13,7 +13,7 @@
 		}
 	],
 	"win": {
-		"artifactName": "Tivoli Cloud Setup.${ext}",
+		"artifactName": "Tivoli Cloud VR Setup.${ext}",
 		"target": "nsis",
 		"icon": "assets/windows/icon.ico"
 	},
@@ -26,14 +26,14 @@
 		"installerSidebar": "assets/windows/installer-sidebar.bmp"
 	},
 	"mac": {
-		"artifactName": "Tivoli Cloud.${ext}",
+		"artifactName": "Tivoli Cloud VR.${ext}",
 		"target": ["dmg", "zip"],
 		"icon": "assets/mac/icon.icns",
 		"category": "public.app-category.games"
 	},
 	"dmg": {
 		"background": "assets/mac/dmg.png",
-		"title": "Tivoli Cloud",
+		"title": "Tivoli Cloud VR",
 		"contents": [
 			{
 				"x": 170,
