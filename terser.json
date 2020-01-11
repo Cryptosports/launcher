@@ -1,5 +1,7 @@
 {
-	"compress": true,
+	"compress": {
+		"toplevel": true
+	},
 	"mangle": {
 		"toplevel": true
 	}

@@ -118,6 +118,7 @@ if (appLock || DEV) {
 
 		if (running) {
 			win.setIcon(APP_ICON.replace("icon", "icon-gray"));
+			win.setIcon;
 		} else {
 			win.setIcon(APP_ICON);
 		}
