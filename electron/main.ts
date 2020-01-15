@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, nativeImage } from "electron";
 import { autoUpdater } from "electron-updater";
 import { watchFile } from "fs";
 import * as os from "os";
@@ -18,9 +18,15 @@ const appLock = !DEV ? app.requestSingleInstanceLock() : true;
 if (!appLock) app.quit();
 
 if (appLock || DEV) {
-	// setup some constants
 	const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
-	const APP_ICON = path.resolve(__dirname, "../../assets/icon.ico");
+	const APP_ASSETS = path.resolve(__dirname, "../../assets");
+
+	const APP_ICON = nativeImage.createFromPath(
+		path.resolve(APP_ASSETS, "icon.ico"),
+	);
+	const RUNNING_ICON = nativeImage.createFromPath(
+		path.resolve(APP_ASSETS, "running.png"),
+	);
 
 	if (DEV) {
 		// auto reload in dev
@@ -69,7 +75,7 @@ if (appLock || DEV) {
 		if (win != null) return;
 
 		win = new BrowserWindow({
-			title: "Tivoli Cloud Launcher",
+			title: "Tivoli Cloud VR Launcher",
 
 			width: 1000,
 			height: 640,
@@ -116,12 +122,7 @@ if (appLock || DEV) {
 		if (running == newRunning) return;
 		running = newRunning;
 
-		if (running) {
-			win.setIcon(APP_ICON.replace("icon", "icon-gray"));
-			win.setIcon;
-		} else {
-			win.setIcon(APP_ICON);
-		}
+		win.setOverlayIcon(running ? RUNNING_ICON : null, "Running");
 	});
 
 	// updater
