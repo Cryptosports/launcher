@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnDestroy, NgZone } from "@angular/core";
+import {
+	ChangeDetectorRef,
+	Component,
+	OnDestroy,
+	NgZone,
+	OnInit,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { AuthService, User } from "../../auth/auth.service";
 import { InterfaceService } from "../interface.service";
@@ -9,7 +15,9 @@ import { SettingsService } from "../settings/settings.service";
 	templateUrl: "./launch-bar.component.html",
 	styleUrls: ["./launch-bar.component.scss"],
 })
-export class LaunchBarComponent implements OnDestroy {
+export class LaunchBarComponent implements OnInit, OnDestroy {
+	readonly electron = (window as any).require("electron");
+
 	user: User = null;
 	userSub: Subscription;
 
@@ -18,12 +26,16 @@ export class LaunchBarComponent implements OnDestroy {
 
 	metaverseUrl = this.authService.metaverseUrl;
 
+	currentVersion = this.electron.remote.app.getVersion();
+
 	constructor(
 		private authService: AuthService,
 		public interfaceService: InterfaceService,
 		public settingsService: SettingsService,
 		private zone: NgZone, //private dialog: MatDialog,
-	) {
+	) {}
+
+	ngOnInit() {
 		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
 		});
@@ -44,9 +56,7 @@ export class LaunchBarComponent implements OnDestroy {
 	}
 
 	openMetaversePage() {
-		(window as any)
-			.require("electron")
-			.shell.openExternal(this.metaverseUrl);
+		this.electron.shell.openExternal(this.metaverseUrl);
 	}
 
 	ngOnDestroy() {

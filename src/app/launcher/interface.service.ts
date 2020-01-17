@@ -68,10 +68,15 @@ export class InterfaceService {
 	async launch(url?: string) {
 		if (this.running$.value == true) return;
 
-		const interfacePath =
-			this.settingsService
-				.getSetting<String>("interfacePath")
-				.value.trim() || this.defaultInterfacePath;
+		const interfacePathEnabled = this.settingsService.getSetting<boolean>(
+			"interfacePathEnabled",
+		);
+
+		const interfacePath = interfacePathEnabled
+			? this.settingsService
+					.getSetting<string>("interfacePath")
+					.value.trim() || this.defaultInterfacePath
+			: this.defaultInterfacePath;
 
 		const executable = (() => {
 			switch (process.platform) {

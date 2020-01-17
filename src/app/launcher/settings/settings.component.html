@@ -53,16 +53,37 @@
 
 			<div style="padding: 8px 0;"></div>
 
-			<mat-form-field>
-				<mat-label>Custom interface path (to build folder)</mat-label>
-				<input
-					matInput
-					[value]="
-						settingsService.getSetting('interfacePath') | async
+			<div style="display: flex; align-items: center;">
+				<mat-slide-toggle
+					[checked]="
+						settingsService.getSetting('interfacePathEnabled')
+							| async
 					"
-					(change)="updateSettingString('interfacePath', $event)"
-				/>
-			</mat-form-field>
+					(change)="
+						updateSettingChecked('interfacePathEnabled', $event)
+					"
+				></mat-slide-toggle>
+				<div style="margin: 0 8px"></div>
+				<mat-form-field>
+					<mat-label>
+						Custom interface path (to build folder)
+					</mat-label>
+					<input
+						matInput
+						[disabled]="
+							!(
+								settingsService.getSetting(
+									'interfacePathEnabled'
+								) | async
+							)
+						"
+						[value]="
+							settingsService.getSetting('interfacePath') | async
+						"
+						(change)="updateSettingString('interfacePath', $event)"
+					/>
+				</mat-form-field>
+			</div>
 		</div>
 	</div>
 </div>

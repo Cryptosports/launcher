@@ -71,6 +71,8 @@ export class SettingsService {
 
 			// developer
 			launchArgs: "",
+
+			interfacePathEnabled: false,
 			interfacePath: "",
 
 			// experimental
