@@ -70,7 +70,7 @@ export class InterfaceService {
 
 		const interfacePathEnabled = this.settingsService.getSetting<boolean>(
 			"interfacePathEnabled",
-		);
+		).value;
 
 		const interfacePath = interfacePathEnabled
 			? this.settingsService
@@ -78,7 +78,7 @@ export class InterfaceService {
 					.value.trim() || this.defaultInterfacePath
 			: this.defaultInterfacePath;
 
-		const executable = (() => {
+		const executablePath = (() => {
 			switch (process.platform) {
 				case "win32":
 					return path.resolve(interfacePath, "interface.exe");
@@ -91,7 +91,8 @@ export class InterfaceService {
 					return null;
 			}
 		})();
-		if (executable == null) return;
+		if (executablePath == null) return;
+
 		this.running$.next(true);
 
 		// ensure settings are synced
@@ -175,7 +176,7 @@ export class InterfaceService {
 			.value.split(" ");
 
 		this.child = childProcess.spawn(
-			executable,
+			executablePath,
 			[
 				...[
 					"--no-updater",
