@@ -1,115 +1,90 @@
 <div class="launch-bar">
-	<table>
-		<tr>
-			<td>
-				<div class="logo"></div>
-			</td>
-			<td style="width: 250px;">
-				<button
-					class="launch-button"
-					mat-flat-button
-					(click)="onLaunch()"
-					[disabled]="running"
-				>
-					<div class="launch-button__content">
-						<div class="launch-button__icon">
-							<mat-icon *ngIf="!running">
-								launch
-							</mat-icon>
-							<mat-progress-spinner
-								*ngIf="running"
-								diameter="28"
-								strokeWidth="4"
-								color="primary"
-								mode="indeterminate"
-							>
-							</mat-progress-spinner>
-						</div>
-						<div class="launch-button__text">
-							<ng-container *ngIf="!running">
-								Launch Tivoli client
-							</ng-container>
-							<ng-container *ngIf="running">
-								Tivoli is now running!
-							</ng-container>
-							<br />
-							<span>
-								using
-								<ng-container
-									*ngIf="
-										(settingsService.getSetting(
-											'interfacePathEnabled'
-										) | async)
-											? (settingsService.getSetting(
-													'interfacePath'
-											  ) | async)
-											: false;
-										else currentVersionRef
-									"
-								>
-									<b
-										style="color: #f44336; font-weight: 700;"
-									>
-										custom path!
-									</b>
-								</ng-container>
-								<ng-template #currentVersionRef>
-									version {{ currentVersion }}
-								</ng-template>
-							</span>
-						</div>
-					</div>
-				</button>
-				<!-- <button
-					class="launch-button"
-					mat-flat-button
-					(click)="onLaunch()"
-					[disabled]="running"
-				>
-					<div class="launch-button__content">
-						<div class="launch-button__icon">
-							<mat-icon>get_app</mat-icon>
-						</div>
-						<div class="launch-button__text">
-							Download v0.85.0
-							<br />
-							<span>Latest Tivoli version</span>
-						</div>
-					</div>
-				</button> -->
-			</td>
-			<td style="text-align: right;">
-				<button mat-button [matMenuTriggerFor]="appMenu">
-					<div
-						style="display: inline-block; text-align: right; margin-right: 8px;"
-					>
-						Signed in as <b>{{ user.profile.username }}</b>
-						<br />
-						<div style="opacity: 0.5; margin-top: -16px;">
-							{{ user.profile.email }}
-						</div>
-					</div>
-					<img
-						class="user-image"
-						[src]="
-							metaverseUrl +
-							'/api/user/' +
-							user.profile.id +
-							'/image'
-						"
-						[alt]="'User image of ' + user.profile.username"
-					/>
-				</button>
+	<div class="logo"></div>
 
-				<mat-menu #appMenu="matMenu">
-					<button mat-menu-item (click)="openMetaversePage()">
-						<mat-icon>more_horiz</mat-icon> More settings
-					</button>
-					<button mat-menu-item (click)="onSignOut()">
-						<mat-icon>arrow_back</mat-icon> Sign out
-					</button>
-				</mat-menu>
-			</td>
-		</tr>
-	</table>
+	<div class="buttons">
+		<button
+			class="launch-button"
+			mat-flat-button
+			(click)="onLaunch()"
+			[disabled]="running"
+		>
+			<div class="launch-button__content">
+				<div class="launch-button__icon">
+					<mat-icon *ngIf="!running">
+						launch
+					</mat-icon>
+					<mat-progress-spinner
+						*ngIf="running"
+						diameter="28"
+						strokeWidth="4"
+						color="primary"
+						mode="indeterminate"
+					>
+					</mat-progress-spinner>
+				</div>
+				<div class="launch-button__text">
+					<ng-container *ngIf="!running">
+						Launch Tivoli client
+					</ng-container>
+					<ng-container *ngIf="running">
+						Tivoli is now running!
+					</ng-container>
+					<br />
+					<span>
+						using
+						<ng-container
+							*ngIf="
+								(settingsService.getSetting(
+									'interfacePathEnabled'
+								) | async)
+									? (settingsService.getSetting(
+											'interfacePath'
+									  ) | async)
+									: false;
+								else currentVersionRef
+							"
+						>
+							<b style="color: #f44336; font-weight: 700;">
+								custom path!
+							</b>
+						</ng-container>
+						<ng-template #currentVersionRef>
+							version {{ currentVersion }}
+						</ng-template>
+					</span>
+				</div>
+			</div>
+		</button>
+	</div>
+	<!-- <button mat-flat-button>
+					no
+					<br />
+					VR
+				</button> -->
+
+	<button mat-button [matMenuTriggerFor]="appMenu">
+		<div
+			style="display: inline-block; text-align: right; margin-right: 8px;"
+		>
+			Signed in as <b>{{ user.profile.username }}</b>
+			<br />
+			<div style="opacity: 0.5; margin-top: -16px;">
+				{{ user.profile.email }}
+			</div>
+		</div>
+		<img
+			class="user-image"
+			[src]="metaverseUrl + '/api/user/' + user.profile.id + '/image'"
+			[alt]="'User image of ' + user.profile.username"
+		/>
+	</button>
 </div>
+
+<mat-menu #appMenu="matMenu">
+	<button mat-menu-item (click)="openMetaversePage()">
+		<mat-icon>more_horiz</mat-icon> More settings
+	</button>
+	<button mat-menu-item (click)="onSignOut()">
+		<mat-icon>arrow_back</mat-icon> Sign out
+	</button>
+</mat-menu>
