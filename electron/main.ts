@@ -79,7 +79,7 @@ if (appLock || DEV) {
 
 			width: 1000,
 			height: 640,
-			resizable: false,
+			resizable: DEV, // only resizable when developing
 
 			webPreferences: {
 				nodeIntegration: true,
