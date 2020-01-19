@@ -29,11 +29,13 @@
 		margin: auto;
 		left: 0;
 		right: 0;
-		width: 250px;
+		width: 300px;
+		display: flex;
 
 		button.launch-button {
 			height: 48px;
 			width: 250px;
+			min-width: 250px;
 
 			background-color: #fff;
 			line-height: 1em;
@@ -85,6 +87,39 @@
 				.launch-button__icon {
 					opacity: 0.5;
 				}
+			}
+		}
+
+		.disable-vr {
+			overflow: visible;
+			padding-left: 16px;
+			display: flex;
+			align-items: center;
+
+			::ng-deep mat-checkbox {
+				.mat-checkbox-layout {
+					transform: scale(1.2);
+				}
+
+				.mat-checkbox-frame {
+					border-color: rgba(#fff, 0.8);
+				}
+
+				&.mat-checkbox-checked .mat-checkbox-background {
+					background-color: mix(#e91e63, #fff, 20%);
+				}
+
+				.mat-checkbox-checkmark-path {
+					stroke: #e91e63 !important;
+				}
+			}
+
+			> p {
+				margin: 0;
+				margin-left: 8px;
+				white-space: nowrap;
+				color: rgba(#fff, 0.8);
+				cursor: pointer;
 			}
 		}
 	}

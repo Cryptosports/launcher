@@ -65,6 +65,9 @@ export class SettingsService {
 
 	constructor() {
 		this.setDefaultSettings({
+			// launchbar
+			disableVr: false,
+
 			// general
 			discordRichPresence: true,
 			//settingsSyncing: true,

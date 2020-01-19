@@ -1,10 +1,5 @@
-import {
-	ChangeDetectorRef,
-	Component,
-	OnDestroy,
-	NgZone,
-	OnInit,
-} from "@angular/core";
+import { Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 import { Subscription } from "rxjs";
 import { AuthService, User } from "../../auth/auth.service";
 import { InterfaceService } from "../interface.service";
@@ -57,6 +52,10 @@ export class LaunchBarComponent implements OnInit, OnDestroy {
 
 	openMetaversePage() {
 		this.electron.shell.openExternal(this.metaverseUrl);
+	}
+
+	updateSettingChecked(key: string, event: MatCheckboxChange) {
+		this.settingsService.setSetting(key, event.checked);
 	}
 
 	ngOnDestroy() {

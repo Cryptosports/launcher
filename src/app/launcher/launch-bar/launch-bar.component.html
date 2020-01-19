@@ -55,6 +55,15 @@
 				</div>
 			</div>
 		</button>
+		<div class="disable-vr">
+			<mat-checkbox
+				#disableVr
+				[disableRipple]="true"
+				[checked]="settingsService.getSetting('disableVr') | async"
+				(change)="updateSettingChecked('disableVr', $event)"
+			></mat-checkbox>
+			<p (click)="disableVr.toggle()">Disable VR</p>
+		</div>
 	</div>
 	<!-- <button mat-flat-button>
 					no

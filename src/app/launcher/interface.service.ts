@@ -134,6 +134,7 @@ export class InterfaceService {
 				"AddressManager/address":
 					"hifi://alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
 			},
+			// settings which will be overwritten/forced
 			{
 				// necessary for disabling anti aliasing
 				"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
@@ -166,14 +167,18 @@ export class InterfaceService {
 				// usernames dont change
 				"Avatar/displayName": this.user.profile.username,
 			},
+			// forced default scripts
 			["file:///~//defaultScripts.js"],
 		);
 		this.interfaceSettingsService.setDefaultAvatarBookmarks();
 
 		// launch!
 		const userLaunchArgs = this.settingsService
-			.getSetting<String>("launchArgs")
+			.getSetting<string>("launchArgs")
 			.value.split(" ");
+
+		const disableVr = this.settingsService.getSetting<boolean>("disableVr")
+			.value;
 
 		this.child = childProcess.spawn(
 			executablePath,
@@ -188,10 +193,24 @@ export class InterfaceService {
 					// "--displayName",
 					// "--defaultScriptsOverride",
 
+					// "--display",
+					// "Desktop?",
+
 					"--tokens",
 					JSON.stringify(this.user.token),
 				],
+
+				...(disableVr
+					? [
+							"--disable-displays",
+							"OpenVR (Vive),Oculus Rift",
+							"--disable-inputs",
+							"OpenVR (Vive),Oculus Rift",
+					  ]
+					: []),
+
 				...(url != null ? ["--url", url] : []),
+
 				...userLaunchArgs,
 			],
 			{
