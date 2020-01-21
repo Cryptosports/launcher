@@ -95,10 +95,12 @@ export class InterfaceService {
 
 		this.running$.next(true);
 
-		// ensure settings are synced
+		// settings
+
+		// sync
 		//await this.interfaceSettingsService.downloadSettings();
 
-		// ensure default settings
+		// default settings
 		this.interfaceSettingsService.setInterfaceSettings(
 			{
 				"Maximum Texture Memory/4 MB": false,
@@ -170,6 +172,10 @@ export class InterfaceService {
 			// forced default scripts
 			["file:///~//defaultScripts.js"],
 		);
+
+		// no idea but fixes MyAvatar in /idle/update to be fast
+		this.interfaceSettingsService.cleanupAvatarEntityData();
+
 		this.interfaceSettingsService.setDefaultAvatarBookmarks();
 
 		// launch!

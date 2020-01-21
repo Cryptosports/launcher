@@ -99,6 +99,26 @@ export class InterfaceSettingsService {
 		}
 	}
 
+	cleanupAvatarEntityData() {
+		try {
+			let settings = this.readInterfaceSettings();
+			const keys = Object.keys(settings);
+
+			const keysToDelete = keys.filter(key =>
+				key.startsWith("Avatar/avatarEntityData"),
+			);
+			if (keysToDelete.length == 0) return;
+
+			for (const key of keysToDelete) {
+				delete settings[key];
+			}
+
+			this.writeInterfaceSettings(settings);
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
 	readAvatarBookmarks() {
 		const appDataPath = this.getAppDataPath();
 
