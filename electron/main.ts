@@ -139,6 +139,7 @@ if (appLock || DEV) {
 
 	ipcMain.on("updater", (e, msg: string) => {
 		if (msg == "check-for-update") {
+			if (DEV) return;
 			autoUpdater.checkForUpdates();
 			return;
 		}
