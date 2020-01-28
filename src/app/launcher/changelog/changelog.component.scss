@@ -1,0 +1,12 @@
+.changelog {
+	overflow: auto;
+	height: 100%;
+
+	iframe {
+		display: block;
+		margin: 0 auto;
+		border: none;
+		width: 800px;
+		height: 0px; // set programatically
+	}
+}

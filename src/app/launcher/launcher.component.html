@@ -4,6 +4,10 @@
 			<mat-icon>home</mat-icon> Home
 		</button>
 
+		<button mat-button routerLink="changelog" routerLinkActive="active">
+			<mat-icon>update</mat-icon> Changelog
+		</button>
+
 		<button
 			*ngIf="settingsService.getSetting('videoStreaming') | async"
 			mat-button

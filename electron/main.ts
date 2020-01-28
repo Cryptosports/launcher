@@ -76,6 +76,8 @@ if (appLock || DEV) {
 	// });
 
 	// window time
+	app.commandLine.appendSwitch("disable-site-isolation-trials");
+
 	const createWindow = () => {
 		if (!appLock) return;
 		if (win != null) return;
@@ -91,6 +93,7 @@ if (appLock || DEV) {
 				nodeIntegration: true,
 				backgroundThrottling: false,
 				nativeWindowOpen: true,
+				//webSecurity: false,
 			},
 
 			icon: APP_ICON,
