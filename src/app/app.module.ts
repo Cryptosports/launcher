@@ -1,15 +1,32 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, Injectable, NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
+import * as Sentry from "@sentry/browser";
+import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
 import { AuthInterceptorService } from "./auth/auth-interceptor";
 import { VerifyEmailComponent } from "./auth/verify-email/verify-email.component";
 import { MaterialModule } from "./material.module";
 import { MediaStreamPickerComponent } from "./media-stream-picker/media-stream-picker.component";
 import { UpdateAvailableComponent } from "./update-available/update-available.component";
+
+Sentry.init({
+	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
+	debug: !environment.production,
+	environment: environment.production ? "production" : "dev",
+});
+
+@Injectable()
+export class SentryErrorHandler implements ErrorHandler {
+	constructor() {}
+	handleError(error) {
+		const eventId = Sentry.captureException(error.originalError || error);
+		Sentry.showReportDialog({ eventId });
+	}
+}
 
 const routes: Routes = [
 	{
@@ -40,6 +57,10 @@ const routes: Routes = [
 		RouterModule.forRoot(routes),
 	],
 	providers: [
+		{
+			provide: ErrorHandler,
+			useClass: SentryErrorHandler,
+		},
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: AuthInterceptorService,

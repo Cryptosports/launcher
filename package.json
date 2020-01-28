@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@opentok/client": "^2.16.3",
+		"@sentry/electron": "^1.2.0",
 		"discord-rpc": "^3.1.0",
 		"electron-updater": "^4.2.0",
 		"node-fetch": "^2.6.0",
@@ -39,6 +40,7 @@
 		"@angular/platform-browser-dynamic": "~9.0.0-rc.8",
 		"@angular/router": "~9.0.0-rc.8",
 		"@auth0/angular-jwt": "^3.0.1",
+		"@sentry/browser": "^5.11.1",
 		"@types/dom-mediacapture-record": "^1.0.2",
 		"@types/electron": "^1.6.10",
 		"@types/node": "^12.11.1",

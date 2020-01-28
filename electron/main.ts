@@ -3,6 +3,7 @@ import { autoUpdater } from "electron-updater";
 import { watchFile } from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as Sentry from "@sentry/electron";
 
 let win: BrowserWindow;
 
@@ -13,6 +14,12 @@ app.setPath(
 	"userData",
 	path.resolve(app.getPath("userData"), "../Tivoli Cloud VR/launcher"),
 );
+
+Sentry.init({
+	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
+	debug: DEV,
+	environment: DEV ? "dev" : "production",
+});
 
 const appLock = !DEV ? app.requestSingleInstanceLock() : true;
 if (!appLock) app.quit();
