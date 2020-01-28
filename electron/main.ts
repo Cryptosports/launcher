@@ -5,24 +5,26 @@ import * as os from "os";
 import * as path from "path";
 import * as Sentry from "@sentry/electron";
 
-let win: BrowserWindow;
-
-const PLATFORM = os.platform();
-const DEV = process.env.DEV != null;
+autoUpdater.autoDownload = false;
 
 app.setPath(
 	"userData",
 	path.resolve(app.getPath("userData"), "../Tivoli Cloud VR/launcher"),
 );
 
+let win: BrowserWindow;
+
+const PLATFORM = os.platform();
+const DEV = process.env.DEV != null;
+
+const appLock = !DEV ? app.requestSingleInstanceLock() : true;
+if (!appLock) app.quit();
+
 Sentry.init({
 	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
 	debug: DEV,
 	environment: DEV ? "dev" : "production",
 });
-
-const appLock = !DEV ? app.requestSingleInstanceLock() : true;
-if (!appLock) app.quit();
 
 if (appLock || DEV) {
 	const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
@@ -44,9 +46,6 @@ if (appLock || DEV) {
 		// remove menu in prod
 		Menu.setApplicationMenu(null);
 	}
-
-	// dont auto download yet!
-	autoUpdater.autoDownload = false;
 
 	// tivoli:// functionality
 	app.setAsDefaultProtocolClient("tivoli");
