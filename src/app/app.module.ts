@@ -15,8 +15,8 @@ import { UpdateAvailableComponent } from "./update-available/update-available.co
 
 Sentry.init({
 	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
-	debug: !environment.production,
-	environment: environment.production ? "production" : "dev",
+	environment: "production",
+	enabled: environment.production,
 });
 
 @Injectable()

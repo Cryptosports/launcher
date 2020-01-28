@@ -22,8 +22,8 @@ if (!appLock) app.quit();
 
 Sentry.init({
 	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
-	debug: DEV,
-	environment: DEV ? "dev" : "production",
+	environment: "production",
+	enabled: !DEV,
 });
 
 if (appLock || DEV) {
