@@ -12,8 +12,7 @@
 		"package": "rimraf dist && electron-builder --config electron-builder.json",
 		"electron": "tsc --p electron && cross-env DEV=true electron .",
 		"format": "prettier --write **/*.ts **/*.json **/*.html **/*.scss",
-		"start": "ng build --watch",
-		"dist": "npm run build && npm run package"
+		"start": "ng build --watch"
 	},
 	"dependencies": {
 		"@opentok/client": "^2.16.3",

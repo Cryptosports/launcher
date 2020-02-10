@@ -1,0 +1,48 @@
+stages:
+    - dependencies
+    - build
+    - deploy
+
+dependencies:
+    stage: dependencies
+    tags:
+        - windows
+
+    cache:
+        paths:
+            - node_modules/
+
+    script:
+        - yarn install
+
+    only:
+        changes:
+            - yarn.lock
+
+build launcher:
+    stage: build
+    tags:
+        - windows
+
+    environment:
+        name: production
+
+    cache:
+        policy: pull
+        paths:
+            - node_modules/
+
+    variables:
+        CSC_LINK: C:\Users\maki\tivoli-cloud-vr.p12
+        #CSC_KEY_PASSWORD:
+
+    script:
+        - yarn run build
+        - yarn run package
+
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - dist/latest.yml
+            - dist/Tivoli Cloud VR Setup.exe
+            - dist/Tivoli Cloud VR Setup.exe.blockmap
