@@ -29,16 +29,21 @@ const files = [
 ];
 
 for (const file of files) {
-	spaces
-		.upload({
+	spaces.upload(
+		{
 			Bucket: "tivolicloud",
 			Key: "_releases/" + file,
 			Body: fs.readFileSync(path.resolve("../../dist/" + file)),
 			ACL: "public-read",
-		})
-		.catch(err => {
-			console.log('Failed to upload "' + file + '"');
-			console.log(err);
-			process.exit(1);
-		});
+		},
+		(err, data) => {
+			if (err) {
+				console.log('Failed to upload "' + file + '"');
+				console.log(err);
+				process.exit(1);
+			}
+
+			console.log('Uploaded  "' + file + '"');
+		},
+	);
 }
