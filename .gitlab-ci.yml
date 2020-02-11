@@ -26,6 +26,8 @@ build launcher:
 
     environment:
         name: production
+    only:
+        - triggers
 
     # cache:
     #     policy: pull
@@ -37,6 +39,19 @@ build launcher:
         #CSC_KEY_PASSWORD:
 
     script:
+        # unzip artifact to .\interface
+        - curl --output interface.zip %INTERFACE_ARTIFACT_URL%
+        - Expand-Archive .\interface.zip .\interface-artifact
+        - mv .\interface-artifact\interface\Release\ .\interface
+        - Remove-Item -recurse -path .\interface-artifact
+        - Remove-Item -recurse -path .\interface.zip
+
+        # set version in package.json
+        - echo %INTERFACE_VERSION%
+        - ((Get-Content -path .\package.json -Raw) -replace
+          "v0.0.0", $env:INTERFACE_VERSION) | Set-Content -Path .\package.json
+
+        # install, build and package
         - yarn install
         - yarn run build
         - yarn run package
@@ -55,6 +70,8 @@ deploy launcher:
 
     environment:
         name: production
+    only:
+        - triggers
 
     script:
         - cd gitlab/scripts

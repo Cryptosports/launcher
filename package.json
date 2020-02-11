@@ -1,7 +1,7 @@
 {
 	"name": "tivoli-cloud-vr",
 	"author": "Tivoli Cloud VR, Inc.",
-	"version": "0.3.0",
+	"version": "v0.0.0",
 	"description": "Tivoli Cloud VR Launcher",
 	"main": "electron/dist/main.js",
 	"scripts": {
