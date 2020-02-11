@@ -47,3 +47,16 @@ build launcher:
             - dist/latest.yml
             - dist/Tivoli Cloud VR Setup.exe
             - dist/Tivoli Cloud VR Setup.exe.blockmap
+
+deploy launcher:
+    stage: deploy
+    tags:
+        - windows
+
+    environment:
+        name: production
+
+    script:
+        - cd gitlab/scripts
+        - yarn install
+        - yarn run deploy
