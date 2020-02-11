@@ -1,5 +1,5 @@
 stages:
-    - bridge
+    #- bridge
     - build
     - deploy
 
@@ -20,10 +20,10 @@ stages:
 #         changes:
 #             - yarn.lock
 
-interface bridge:
-    stage: bridge
-    needs:
-        pipeline: tivolicloud/interface
+# interface bridge:
+#     stage: bridge
+#     needs:
+#         pipeline: tivolicloud/interface
 
 build launcher:
     stage: build
