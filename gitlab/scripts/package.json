@@ -1,8 +1,0 @@
-{
-	"scripts": {
-		"deploy": "node deploy.js"
-	},
-	"dependencies": {
-		"aws-sdk": "^2.615.0"
-	}
-}

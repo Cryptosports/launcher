@@ -40,23 +40,14 @@ build launcher:
         # CSC_KEY_PASSWORD:
         # from pipeline, should have:
         #   RELEASE_NUMBER
-        #   UPSTREAM_PROJECT_URL
-        #   UPSTREAM_REF
-        #   UPSTREAM_JOB
+        #   UPSTREAM_JOBS_URL
 
     script:
-        # unzip artifact to interface/
-        - Invoke-WebRequest
-          -OutFile .\interface-artifact.zip
-          -Uri "$env:UPSTREAM_PROJECT_URL/-/jobs/artifacts/$env:UPSTREAM_REF/download?job=$env:UPSTREAM_JOB"
-        - Expand-Archive .\interface-artifact.zip .\interface-artifact
-        - mv .\interface-artifact\interface\Release\ .\interface
-        - Remove-Item -recurse -path .\interface-artifact.zip
-        - Remove-Item -recurse -path .\interface-artifact
-
-        # set version in package.json
-        - ((Get-Content -path .\package.json -Raw) -replace
-          "v0.0.0", $env:RELEASE_NUMBER) | Set-Content -Path .\package.json
+        # prepare: download and unzip interface and change version in package.json
+        - cd gitlab
+        - yarn install
+        - yarn run prepare
+        - cd ..
 
         # install, build and package
         - yarn install
@@ -81,6 +72,6 @@ deploy launcher:
         - pipelines
 
     script:
-        - cd gitlab/scripts
+        - cd gitlab
         - yarn install
         - yarn run deploy

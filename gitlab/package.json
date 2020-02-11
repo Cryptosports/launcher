@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"prepare": "node prepare.js",
+		"deploy": "node deploy.js"
+	},
+	"dependencies": {
+		"aws-sdk": "^2.615.0",
+		"node-stream-zip": "^1.9.1"
+	}
+}
