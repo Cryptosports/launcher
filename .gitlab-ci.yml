@@ -1,23 +1,23 @@
 stages:
-    - dependencies
     - build
     - deploy
 
-dependencies:
-    stage: dependencies
-    tags:
-        - windows
+# windows ntfs is REALLY slow
+# dependencies:
+#     stage: dependencies
+#     tags:
+#         - windows
 
-    cache:
-        paths:
-            - node_modules/
+#     cache:
+#         paths:
+#             - node_modules/
 
-    script:
-        - yarn install
+#     script:
+#         - yarn install
 
-    only:
-        changes:
-            - yarn.lock
+#     only:
+#         changes:
+#             - yarn.lock
 
 build launcher:
     stage: build
@@ -27,16 +27,17 @@ build launcher:
     environment:
         name: production
 
-    cache:
-        policy: pull
-        paths:
-            - node_modules/
+    # cache:
+    #     policy: pull
+    #     paths:
+    #         - node_modules/
 
     variables:
         CSC_LINK: C:\Users\maki\tivoli-cloud-vr.p12
         #CSC_KEY_PASSWORD:
 
     script:
+        - yarn install
         - yarn run build
         - yarn run package
 
