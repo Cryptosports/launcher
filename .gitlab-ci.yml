@@ -25,9 +25,9 @@ build launcher:
         - windows
 
     environment:
-        name: production
-    only:
-        - triggers
+        name: production-windows
+    needs:
+        pipeline: tivolicloud/interface
 
     # cache:
     #     policy: pull
@@ -69,9 +69,9 @@ deploy launcher:
         - windows
 
     environment:
-        name: production
-    only:
-        - triggers
+        name: production-windows
+    needs:
+        pipeline: tivolicloud/interface
 
     script:
         - cd gitlab/scripts
