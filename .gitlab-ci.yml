@@ -20,11 +20,6 @@ stages:
 #         changes:
 #             - yarn.lock
 
-# interface bridge:
-#     stage: bridge
-#     needs:
-#         pipeline: tivolicloud/interface
-
 build launcher:
     stage: build
     tags:
@@ -42,20 +37,26 @@ build launcher:
 
     variables:
         CSC_LINK: C:\Users\maki\tivoli-cloud-vr.p12
-        #CSC_KEY_PASSWORD:
+        # CSC_KEY_PASSWORD:
+        # from pipeline, should have:
+        #   RELEASE_NUMBER
+        #   UPSTREAM_PROJECT_URL
+        #   UPSTREAM_BRANCH
+        #   UPSTREAM_JOB
 
     script:
-        # unzip artifact to .\interface
-        - curl --output interface.zip %INTERFACE_ARTIFACT_URL%
-        - Expand-Archive .\interface.zip .\interface-artifact
+        # unzip artifact to interface/
+        - Invoke-WebRequest
+          -OutFile .\interface-artifact.zip
+          -Uri $env:UPSTREAM_PROJECT_URL/-/jobs/artifacts/$env:UPSTREAM_BRANCH/download?job=$env:UPSTREAM_JOB
+        - Expand-Archive .\interface-artifact.zip .\interface-artifact
         - mv .\interface-artifact\interface\Release\ .\interface
+        - Remove-Item -recurse -path .\interface-artifact.zip
         - Remove-Item -recurse -path .\interface-artifact
-        - Remove-Item -recurse -path .\interface.zip
 
         # set version in package.json
-        - echo %INTERFACE_VERSION%
         - ((Get-Content -path .\package.json -Raw) -replace
-          "v0.0.0", $env:INTERFACE_VERSION) | Set-Content -Path .\package.json
+          "v0.0.0", $env:RELEASE_NUMBER) | Set-Content -Path .\package.json
 
         # install, build and package
         - yarn install
