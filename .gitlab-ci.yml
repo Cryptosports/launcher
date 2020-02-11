@@ -41,15 +41,14 @@ build launcher:
         # from pipeline, should have:
         #   RELEASE_NUMBER
         #   UPSTREAM_PROJECT_URL
-        #   UPSTREAM_BRANCH
+        #   UPSTREAM_REF
         #   UPSTREAM_JOB
 
     script:
         # unzip artifact to interface/
-        - gci env:* | sort-object name
         - Invoke-WebRequest
           -OutFile .\interface-artifact.zip
-          -Uri "$env:UPSTREAM_PROJECT_URL/-/jobs/artifacts/$env:UPSTREAM_BRANCH/download?job=$env:UPSTREAM_JOB"
+          -Uri "$env:UPSTREAM_PROJECT_URL/-/jobs/artifacts/$env:UPSTREAM_REF/download?job=$env:UPSTREAM_JOB"
         - Expand-Archive .\interface-artifact.zip .\interface-artifact
         - mv .\interface-artifact\interface\Release\ .\interface
         - Remove-Item -recurse -path .\interface-artifact.zip
