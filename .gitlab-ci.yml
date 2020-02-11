@@ -1,4 +1,5 @@
 stages:
+    - bridge
     - build
     - deploy
 
@@ -19,6 +20,11 @@ stages:
 #         changes:
 #             - yarn.lock
 
+interface bridge:
+    stage: bridge
+    needs:
+        pipeline: tivolicloud/interface
+
 build launcher:
     stage: build
     tags:
@@ -26,8 +32,8 @@ build launcher:
 
     environment:
         name: production-windows
-    needs:
-        pipeline: tivolicloud/interface
+    only:
+        - pipelines
 
     # cache:
     #     policy: pull
@@ -70,8 +76,8 @@ deploy launcher:
 
     environment:
         name: production-windows
-    needs:
-        pipeline: tivolicloud/interface
+    only:
+        - pipelines
 
     script:
         - cd gitlab/scripts
