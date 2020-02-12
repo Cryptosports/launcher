@@ -47,7 +47,7 @@ build launcher:
         # prepare: download and unzip interface and change version in package.json
         - cd .gitlab
         - yarn install
-        - yarn run prepare
+        - node prepare.js
         - cd ..
 
         # install, build and package
@@ -78,4 +78,4 @@ deploy launcher:
     script:
         - cd .gitlab
         - yarn install
-        - yarn run deploy
+        - node deploy.js
