@@ -101,6 +101,11 @@ function updateVersion() {
 	);
 }
 
-updateVersion();
-console.log("");
-downloadInterface();
+try {
+	updateVersion();
+	console.log("");
+	downloadInterface();
+} catch (err) {
+	console.log(err);
+	process.exit(1);
+}
