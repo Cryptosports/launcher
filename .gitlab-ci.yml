@@ -67,6 +67,9 @@ deploy launcher:
     tags:
         - windows
 
+    dependencies:
+        - build launcher
+
     environment:
         name: production-windows
     only:
