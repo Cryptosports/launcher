@@ -41,10 +41,11 @@ build launcher:
         # from pipeline, should have:
         #   RELEASE_NUMBER
         #   UPSTREAM_JOBS_URL
+        #   UPSTREAM_JOB
 
     script:
         # prepare: download and unzip interface and change version in package.json
-        - cd gitlab
+        - cd .gitlab
         - yarn install
         - yarn run prepare
         - cd ..
@@ -72,6 +73,6 @@ deploy launcher:
         - pipelines
 
     script:
-        - cd gitlab
+        - cd .gitlab
         - yarn install
         - yarn run deploy

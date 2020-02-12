@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 
 const ENV = {
-	CI_JOB_TOKEN: process.env.CI_JOB_TOKEN,
+	GITLAB_API_TOKEN: process.env.GITLAB_API_TOKEN,
 	RELEASE_NUMBER: process.env.RELEASE_NUMBER, // v0.0.0
 	UPSTREAM_JOBS_URL: process.env.UPSTREAM_JOBS_URL, // https://git.tivolicloud.com/api/v4/projects/9/pipelines/121/jobs
 	UPSTREAM_JOB: process.env.UPSTREAM_JOB, // build windows production
@@ -39,7 +39,7 @@ async function downloadInterface() {
 	const jobs = await (
 		await fetch(ENV.UPSTREAM_JOBS_URL, {
 			headers: {
-				Authorization: "Bearer " + ENV.CI_JOB_TOKEN,
+				Authorization: "Bearer " + ENV.GITLAB_API_TOKEN,
 			},
 		})
 	).json();

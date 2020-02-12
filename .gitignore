@@ -8,4 +8,4 @@ package-lock.json
 *.p12
 electron-builder.env
 yarn-error.log
-/gitlab/interface.zip
+/.gitlab/interface.zip
