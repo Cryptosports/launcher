@@ -5,6 +5,7 @@
 	},
 	"dependencies": {
 		"aws-sdk": "^2.615.0",
+		"node-fetch": "^2.6.0",
 		"node-stream-zip": "^1.9.1"
 	}
 }
