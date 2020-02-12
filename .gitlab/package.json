@@ -1,8 +1,4 @@
 {
-	"scripts": {
-		"prepare": "node prepare.js",
-		"deploy": "node deploy.js"
-	},
 	"dependencies": {
 		"aws-sdk": "^2.615.0",
 		"node-fetch": "^2.6.0",
