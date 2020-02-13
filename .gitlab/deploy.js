@@ -32,7 +32,7 @@ for (const file of files) {
 	spaces.upload(
 		{
 			Bucket: "tivolicloud",
-			Key: "_releases/" + file,
+			Key: "releases/" + file,
 			Body: fs.readFileSync(path.resolve(__dirname, "../dist", file)),
 			ACL: "public-read",
 		},
