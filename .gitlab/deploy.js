@@ -33,7 +33,7 @@ for (const file of files) {
 		{
 			Bucket: "tivolicloud",
 			Key: "_releases/" + file,
-			Body: fs.readFileSync(path.resolve("../../dist/" + file)),
+			Body: fs.readFileSync(path.resolve(__dirname, "../dist", file)),
 			ACL: "public-read",
 		},
 		(err, data) => {

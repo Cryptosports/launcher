@@ -26,7 +26,7 @@ build launcher:
         - windows
 
     environment:
-        name: production-windows
+        name: production
     only:
         - pipelines
 
@@ -71,7 +71,7 @@ deploy launcher:
         - build launcher
 
     environment:
-        name: production-windows
+        name: production
     only:
         - pipelines
 
