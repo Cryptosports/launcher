@@ -68,11 +68,9 @@ export class InterfaceService {
 	async launch(url?: string) {
 		if (this.running$.value == true) return;
 
-		const interfacePathEnabled = this.settingsService.getSetting<boolean>(
+		const interfacePath = this.settingsService.getSetting<boolean>(
 			"interfacePathEnabled",
-		).value;
-
-		const interfacePath = interfacePathEnabled
+		).value
 			? this.settingsService
 					.getSetting<string>("interfacePath")
 					.value.trim() || this.defaultInterfacePath
@@ -127,14 +125,12 @@ export class InterfaceService {
 				"Display/Disable Preview": false,
 				disableHmdPreview: false,
 
-				"com.tivolicloud.firstTime": true,
-
 				"Avatar/fullAvatarURL":
-					"https://cdn.tivolicloud.com/defaultAvatars/Robimo_white/Robimo_white.fst",
-				"Avatar/scale": 1.2,
+					"https://cdn.tivolicloud.com/defaultAvatars/matthew/matthew.fst",
+				"Avatar/scale": 1,
 
 				"AddressManager/address":
-					"hifi://alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
+					"alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
 			},
 			// settings which will be overwritten/forced
 			{
@@ -147,6 +143,9 @@ export class InterfaceService {
 
 				"Developer/Render/Throttle FPS If Not Focus": false,
 				"Render/Throttle FPS If Not Focus": false,
+
+				"Developer/Scripting/Enable Speech Control API": true,
+				"Scripting/Enable Speech Control API": true,
 
 				// necessary for default location
 				firstRun: false,
