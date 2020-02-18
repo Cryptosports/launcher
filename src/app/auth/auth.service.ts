@@ -10,6 +10,7 @@ import { BehaviorSubject, Observable, throwError, Subject } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 import { MatDialog } from "@angular/material/dialog";
 import { VerifyEmailComponent } from "./verify-email/verify-email.component";
+import { SettingsService } from "../launcher/settings/settings.service";
 
 export interface AuthToken {
 	access_token: string;
@@ -42,13 +43,21 @@ export class AuthService {
 	private tokenExpirationTimer: any;
 	private jwtHelper = new JwtHelperService();
 
-	//readonly metaverseUrl = "http://127.0.0.1:3000";
-	readonly metaverseUrl = "https://alpha.tivolicloud.com";
+	private defaultMetaverseUrl = "https://alpha.tivolicloud.com";
+
+	readonly metaverseUrl = this.settingsService.getSetting<boolean>(
+		"metaverseUrlEnabled",
+	).value
+		? this.settingsService
+				.getSetting<string>("metaverseUrl")
+				.value.trim() || this.defaultMetaverseUrl
+		: this.defaultMetaverseUrl;
 
 	constructor(
 		private http: HttpClient,
 		private router: Router,
 		private dialog: MatDialog,
+		private settingsService: SettingsService,
 	) {}
 
 	private handleError = (err: HttpErrorResponse): Observable<never> => {

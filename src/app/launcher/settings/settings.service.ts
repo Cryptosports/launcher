@@ -78,6 +78,9 @@ export class SettingsService {
 			interfacePathEnabled: false,
 			interfacePath: "",
 
+			metaverseUrlEnabled: false,
+			metaverseUrl: "",
+
 			// experimental
 			videoStreaming: false,
 			tokboxStreaming: false,

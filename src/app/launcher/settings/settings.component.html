@@ -84,6 +84,38 @@
 					/>
 				</mat-form-field>
 			</div>
+
+			<div style="display: flex; align-items: center;">
+				<mat-slide-toggle
+					[checked]="
+						settingsService.getSetting('metaverseUrlEnabled')
+							| async
+					"
+					(change)="
+						updateSettingChecked('metaverseUrlEnabled', $event)
+					"
+				></mat-slide-toggle>
+				<div style="margin: 0 8px"></div>
+				<mat-form-field>
+					<mat-label>
+						Custom metaverse URL (Tivoli only)
+					</mat-label>
+					<input
+						matInput
+						[disabled]="
+							!(
+								settingsService.getSetting(
+									'metaverseUrlEnabled'
+								) | async
+							)
+						"
+						[value]="
+							settingsService.getSetting('metaverseUrl') | async
+						"
+						(change)="updateSettingString('metaverseUrl', $event)"
+					/>
+				</mat-form-field>
+			</div>
 		</div>
 	</div>
 </div>
