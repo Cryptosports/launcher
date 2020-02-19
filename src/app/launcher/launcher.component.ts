@@ -46,10 +46,10 @@ export class LauncherComponent implements OnInit, OnDestroy {
 		this.electron.shell.openExternal("https://docs.tivolicloud.com");
 	}
 
-	onCheckForUpdates() {
-		const ipcRenderer = (window as any).require("electron").ipcRenderer;
-		ipcRenderer.send("updater", "check-for-update");
-	}
+	// onCheckForUpdates() {
+	// 	const ipcRenderer = (window as any).require("electron").ipcRenderer;
+	// 	ipcRenderer.send("updater", "check-for-update");
+	// }
 
 	onForceClose() {
 		this.interfaceService.forceClose();

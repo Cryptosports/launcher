@@ -32,9 +32,9 @@
 
 		<span style="flex-grow: 1;"></span>
 
-		<button mat-button (click)="onCheckForUpdates()">
+		<!-- <button mat-button (click)="onCheckForUpdates()">
 			<mat-icon>autorenew</mat-icon> Check for updates
-		</button>
+		</button> -->
 
 		<button
 			*ngIf="settingsService.getSetting('developerEnabled') | async"
