@@ -18,7 +18,7 @@ export class ChangelogComponent implements OnInit, OnDestroy {
 	constructor() {}
 
 	private interval: any;
-	private loading = true;
+	loading = true;
 
 	ngOnInit() {
 		const iframe = this.iframe.nativeElement;
