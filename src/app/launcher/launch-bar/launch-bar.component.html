@@ -1,5 +1,5 @@
 <div class="launch-bar">
-	<div class="logo"></div>
+	<div class="logo" (click)="openMetaversePage()"></div>
 
 	<div class="buttons">
 		<button
@@ -92,7 +92,7 @@
 </div>
 
 <mat-menu #appMenu="matMenu">
-	<button mat-menu-item (click)="openMetaversePage()">
+	<button mat-menu-item (click)="openUserSettingsPage()">
 		<mat-icon>more_horiz</mat-icon> More settings
 	</button>
 	<button mat-menu-item (click)="onSignOut()">

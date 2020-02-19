@@ -54,6 +54,10 @@ export class LaunchBarComponent implements OnInit, OnDestroy {
 		this.electron.shell.openExternal(this.metaverseUrl);
 	}
 
+	openUserSettingsPage() {
+		this.electron.shell.openExternal(this.metaverseUrl + "/user/settings");
+	}
+
 	updateSettingChecked(key: string, event: MatCheckboxChange) {
 		this.settingsService.setSetting(key, event.checked);
 	}
