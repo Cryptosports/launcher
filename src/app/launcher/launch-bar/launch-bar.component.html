@@ -62,7 +62,9 @@
 				[checked]="settingsService.getSetting('disableVr') | async"
 				(change)="updateSettingChecked('disableVr', $event)"
 			></mat-checkbox>
-			<p (click)="disableVr.toggle()">Disable VR</p>
+			<p (click)="disableVr._inputElement.nativeElement.click()">
+				Disable VR
+			</p>
 		</div>
 	</div>
 	<!-- <button mat-flat-button>
