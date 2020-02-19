@@ -1,15 +1,24 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import {
+	Component,
+	OnInit,
+	ViewChild,
+	ElementRef,
+	OnDestroy,
+} from "@angular/core";
 
 @Component({
 	selector: "app-changelog",
 	templateUrl: "./changelog.component.html",
 	styleUrls: ["./changelog.component.scss"],
 })
-export class ChangelogComponent implements OnInit {
+export class ChangelogComponent implements OnInit, OnDestroy {
 	@ViewChild("iframe", { static: true })
 	iframe: ElementRef<HTMLIFrameElement>;
 
 	constructor() {}
+
+	private interval: any;
+	private loading = true;
 
 	ngOnInit() {
 		const iframe = this.iframe.nativeElement;
@@ -66,7 +75,7 @@ export class ChangelogComponent implements OnInit {
 			],
 		];
 
-		const interval = setInterval(() => {
+		this.interval = setInterval(() => {
 			try {
 				let css = "html{background:#fff!important}";
 
@@ -85,10 +94,16 @@ export class ChangelogComponent implements OnInit {
 				this.iframe.nativeElement.style.height =
 					iframe.contentDocument.body.scrollHeight + "px";
 
-				clearInterval(interval);
+				this.loading = false;
+				clearInterval(this.interval);
+				this.interval = null;
 			} catch (err) {
-				console.log(err);
+				//console.log(err);
 			}
 		}, 100);
+	}
+
+	ngOnDestroy() {
+		if (this.interval) clearInterval(this.interval);
 	}
 }
