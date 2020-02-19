@@ -23,7 +23,7 @@
 						"polyfills": "src/polyfills.ts",
 						"tsConfig": "tsconfig.app.json",
 						"aot": true,
-						"assets": [],
+						"assets": ["src/assets/silence.webm"],
 						"styles": ["src/styles.scss"],
 						"scripts": [
 							"node_modules/@opentok/client/dist/js/opentok.min.js"
