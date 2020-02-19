@@ -19,7 +19,7 @@
 		"icon": "assets/icon.ico",
 		"publisherName": "Tivoli Cloud VR, Inc"
 	},
-	"nsis": {
+	"nsisWeb": {
 		"include": "build/installer.nsh",
 		"oneClick": false,
 		"perMachine": true,
