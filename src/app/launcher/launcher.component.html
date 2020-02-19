@@ -8,6 +8,10 @@
 			<mat-icon>update</mat-icon> Changelog
 		</button>
 
+		<button mat-button (click)="openDocs()">
+			<mat-icon>bookmarks</mat-icon> Docs
+		</button>
+
 		<button
 			*ngIf="settingsService.getSetting('videoStreaming') | async"
 			mat-button

@@ -20,6 +20,8 @@ export class LauncherComponent implements OnInit, OnDestroy {
 		private zone: NgZone,
 	) {}
 
+	readonly electron = (window as any).require("electron");
+
 	running: boolean;
 	runningSub: Subscription;
 
@@ -38,6 +40,10 @@ export class LauncherComponent implements OnInit, OnDestroy {
 		// 	this.dialog.open(DownloadComponent, {
 		// 		disableClose: true,
 		// 	});
+	}
+
+	openDocs() {
+		this.electron.shell.openExternal("https://docs.tivolicloud.com");
 	}
 
 	onCheckForUpdates() {
