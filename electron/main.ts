@@ -91,7 +91,7 @@ if (appLock || DEV) {
 
 			webPreferences: {
 				nodeIntegration: true,
-				backgroundThrottling: false,
+				//backgroundThrottling: false,
 				nativeWindowOpen: true,
 				//webSecurity: false,
 			},
