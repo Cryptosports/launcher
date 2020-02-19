@@ -2,48 +2,50 @@ const AWS = require("aws-sdk");
 const path = require("path");
 const fs = require("fs");
 
-const SPACES_KEY = process.env.SPACES_KEY;
-const SPACES_SECRET = process.env.SPACES_SECRET;
-const SPACES_ENDPOINT = "nyc3.digitaloceanspaces.com";
+const DO_KEY_ID = process.env.DO_KEY_ID;
+const DO_SECRET_KEY = process.env.DO_SECRET_KEY;
 
-if (SPACES_KEY == null || SPACES_SECRET == null) {
-	if (SPACES_KEY == null) console.log("Can't find SPACES_KEY");
-	if (SPACES_SECRET == null) console.log("Can't find SPACES_SECRET");
+const config = {
+	region: "nyc3",
+	name: "tivolicloud",
+	path: "releases",
+};
+
+if (DO_KEY_ID == null || DO_SECRET_KEY == null) {
+	if (DO_KEY_ID == null) console.log("Can't find DO_KEY_ID");
+	if (DO_SECRET_KEY == null) console.log("Can't find DO_SECRET_KEY");
 
 	process.exit(1);
 }
 
 AWS.config.update({
-	accessKeyId: SPACES_KEY,
-	secretAccessKey: SPACES_SECRET,
+	accessKeyId: DO_KEY_ID,
+	secretAccessKey: DO_SECRET_KEY,
 });
 
 const spaces = new AWS.S3({
-	endpoint: new AWS.Endpoint(SPACES_ENDPOINT),
+	endpoint: new AWS.Endpoint(config.region + ".digitaloceanspaces.com"),
 });
 
-const files = [
-	"latest.yml",
-	"Tivoli Cloud VR Setup.exe",
-	"Tivoli Cloud VR Setup.exe.blockmap",
-];
+const distPath = path.resolve(__dirname, "../dist/nsis-web");
+const files = fs.readdirSync(distPath);
 
-for (const file of files) {
+for (const fileName of files) {
 	spaces.upload(
 		{
-			Bucket: "tivolicloud",
-			Key: "releases/" + file,
-			Body: fs.readFileSync(path.resolve(__dirname, "../dist", file)),
+			Bucket: config.name,
+			Key: config.path + "/" + fileName,
+			Body: fs.readFileSync(path.resolve(distPath, fileName)),
 			ACL: "public-read",
 		},
 		(err, data) => {
 			if (err) {
-				console.log('Failed to upload "' + file + '"');
+				console.log('Failed to upload "' + fileName + '"');
 				console.log(err);
 				process.exit(1);
 			}
 
-			console.log('Uploaded  "' + file + '"');
+			console.log('Uploaded "' + fileName + '"');
 		},
 	);
 }

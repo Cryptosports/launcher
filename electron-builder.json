@@ -3,19 +3,21 @@
 	"productName": "Tivoli Cloud VR",
 	"asar": false,
 	"protocols": {
-		"name": "tivoli-cloud",
+		"name": "tivolicloud",
 		"schemes": ["tivoli"]
 	},
 	"publish": [
 		{
 			"provider": "generic",
-			"url": "https://cdn.tivolicloud.com/releases"
+			"url": "https://nyc3.digitaloceanspaces.com/tivolicloud/releases",
+			"useMultipleRangeRequest": false
 		}
 	],
 	"win": {
 		"artifactName": "Tivoli Cloud VR Setup.${ext}",
-		"target": "nsis",
-		"icon": "assets/icon.ico"
+		"target": "nsis-web",
+		"icon": "assets/icon.ico",
+		"publisherName": "Tivoli Cloud VR, Inc"
 	},
 	"nsis": {
 		"include": "build/installer.nsh",

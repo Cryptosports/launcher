@@ -37,7 +37,13 @@ build launcher:
 
     variables:
         CSC_LINK: C:\Users\maki\tivoli-cloud-vr.p12
-        # CSC_KEY_PASSWORD:
+        #
+        # from ci variabls:
+        #   GITLAB_API_TOKEN
+        #   CSC_KEY_PASSWORD
+        #   DO_KEY_ID
+        #   DO_SECRET_KEY
+        #
         # from pipeline, should have:
         #   RELEASE_NUMBER
         #   UPSTREAM_JOBS_URL
@@ -58,9 +64,7 @@ build launcher:
     artifacts:
         expire_in: 1 day
         paths:
-            - dist/latest.yml
-            - dist/Tivoli Cloud VR Setup.exe
-            - dist/Tivoli Cloud VR Setup.exe.blockmap
+            - dist/nsis-web/
 
 deploy launcher:
     stage: deploy
