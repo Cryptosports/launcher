@@ -36,86 +36,17 @@
 			>
 				TokBox streaming <span>(distributed w/ tokbox.com)</span>
 			</mat-slide-toggle>
-		</div>
-		<div>
-			<h2 style="margin-bottom: 8px;">
-				<mat-icon>code</mat-icon> Developer
-			</h2>
-			<mat-form-field>
-				<mat-label>Additional launch arguments</mat-label>
-				<input
-					matInput
-					[value]="settingsService.getSetting('launchArgs') | async"
-					(change)="updateSettingString('launchArgs', $event)"
-				/>
-				<mat-hint>e.g. --remote-debugging-port=9222</mat-hint>
-			</mat-form-field>
 
 			<div style="padding: 8px 0;"></div>
 
-			<div style="display: flex; align-items: center;">
-				<mat-slide-toggle
-					[checked]="
-						settingsService.getSetting('interfacePathEnabled')
-							| async
-					"
-					(change)="
-						updateSettingChecked('interfacePathEnabled', $event)
-					"
-				></mat-slide-toggle>
-				<div style="margin: 0 8px"></div>
-				<mat-form-field>
-					<mat-label>
-						Custom interface path (to build folder)
-					</mat-label>
-					<input
-						matInput
-						[disabled]="
-							!(
-								settingsService.getSetting(
-									'interfacePathEnabled'
-								) | async
-							)
-						"
-						[value]="
-							settingsService.getSetting('interfacePath') | async
-						"
-						(change)="updateSettingString('interfacePath', $event)"
-					/>
-				</mat-form-field>
-			</div>
-
-			<div style="display: flex; align-items: center;">
-				<mat-slide-toggle
-					[checked]="
-						settingsService.getSetting('metaverseUrlEnabled')
-							| async
-					"
-					(change)="
-						updateSettingChecked('metaverseUrlEnabled', $event)
-					"
-				></mat-slide-toggle>
-				<div style="margin: 0 8px"></div>
-				<mat-form-field>
-					<mat-label>
-						Custom metaverse URL (Tivoli only)
-					</mat-label>
-					<input
-						matInput
-						[disabled]="
-							!(
-								settingsService.getSetting(
-									'metaverseUrlEnabled'
-								) | async
-							)
-						"
-						[value]="
-							settingsService.getSetting('metaverseUrl') | async
-						"
-						(change)="updateSettingString('metaverseUrl', $event)"
-					/>
-				</mat-form-field>
-			</div>
+			<mat-slide-toggle
+				[checked]="
+					settingsService.getSetting('developerEnabled') | async
+				"
+				(change)="updateSettingChecked('developerEnabled', $event)"
+			>
+				Developer settings
+			</mat-slide-toggle>
 		</div>
 	</div>
 </div>

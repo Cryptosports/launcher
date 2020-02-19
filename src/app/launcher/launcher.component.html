@@ -29,7 +29,16 @@
 		<span style="flex-grow: 1;"></span>
 
 		<button mat-button (click)="onCheckForUpdates()">
-			<mat-icon>update</mat-icon> Check for updates
+			<mat-icon>autorenew</mat-icon> Check for updates
+		</button>
+
+		<button
+			*ngIf="settingsService.getSetting('developerEnabled') | async"
+			mat-button
+			routerLink="developer"
+			routerLinkActive="active"
+		>
+			<mat-icon>build</mat-icon> Developer
 		</button>
 
 		<button mat-button routerLink="settings" routerLinkActive="active">

@@ -10,6 +10,7 @@ import { SettingsComponent } from "./settings/settings.component";
 import { TokboxSettingsComponent } from "./tokbox-stream/tokbox-settings/tokbox-settings.component";
 import { TokboxStreamComponent } from "./tokbox-stream/tokbox-stream.component";
 import { VideoStreamComponent } from "./video-stream/video-stream.component";
+import { DeveloperComponent } from "./developer/developer.component";
 
 const routes: Routes = [
 	{
@@ -18,6 +19,7 @@ const routes: Routes = [
 		children: [
 			{ path: "home", component: HomeComponent },
 			{ path: "changelog", component: ChangelogComponent },
+			{ path: "developer", component: DeveloperComponent },
 			{ path: "settings", component: SettingsComponent },
 			{ path: "video-stream", component: VideoStreamComponent },
 			{ path: "tokbox-stream", component: TokboxStreamComponent },
@@ -35,6 +37,7 @@ const routes: Routes = [
 		TokboxStreamComponent,
 		TokboxSettingsComponent,
 		ChangelogComponent,
+		DeveloperComponent,
 	],
 	imports: [CommonModule, MaterialModule, RouterModule.forChild(routes)],
 	entryComponents: [TokboxSettingsComponent],

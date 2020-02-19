@@ -72,15 +72,6 @@ export class SettingsService {
 			discordRichPresence: true,
 			//settingsSyncing: true,
 
-			// developer
-			launchArgs: "",
-
-			interfacePathEnabled: false,
-			interfacePath: "",
-
-			metaverseUrlEnabled: false,
-			metaverseUrl: "",
-
 			// experimental
 			videoStreaming: false,
 			tokboxStreaming: false,
@@ -93,6 +84,17 @@ export class SettingsService {
 			"tokbox.width": 1920,
 			"tokbox.height": 1080,
 			"tokbox.frameRate": 30,
+
+			// developer
+			developerEnabled: false,
+
+			launchArgs: "",
+
+			interfacePathEnabled: false,
+			interfacePath: "",
+
+			metaverseUrlEnabled: false,
+			metaverseUrl: "",
 		});
 	}
 }
