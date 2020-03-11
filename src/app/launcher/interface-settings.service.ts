@@ -5,6 +5,7 @@ const process = (window as any).process;
 
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 
 @Injectable({
 	providedIn: "root",
@@ -16,7 +17,6 @@ export class InterfaceSettingsService {
 		switch (process.platform) {
 			case "win32":
 				return path.resolve(process.env.APPDATA, "Tivoli Cloud VR");
-
 			// case "darwin":
 			// 	return path.resolve(
 			// 		process.env.HOME,
@@ -26,6 +26,8 @@ export class InterfaceSettingsService {
 			// 		process.env.HOME,
 			// 		"Library/Application Support/Tivoli Cloud VR",
 			// 	);
+			case "linux":
+				return path.resolve(os.homedir(), ".config/Tivoli Cloud VR");
 
 			default:
 				throw new Error("Can't find your AppData folder");

@@ -85,6 +85,8 @@ export class InterfaceService {
 				// 		this.interfacePath,
 				// 		this.interfaceVersion + ".app/Contents/MacOS/interface",
 				// 	);
+				case "linux":
+					return path.resolve(interfacePath, "interface");
 				default:
 					return null;
 			}
