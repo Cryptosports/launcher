@@ -1,8 +1,17 @@
 {
 	"name": "tivoli-cloud-vr",
-	"author": "Tivoli Cloud VR, Inc.",
-	"version": "0.0.0",
 	"description": "Tivoli Cloud VR Launcher",
+	"homepage": "https://tivolicloud.com",
+	"license": "AGPL-3.0-or-later",
+	"author": {
+		"name": "Tivoli Cloud VR, Inc.",
+		"email": "support@tivolicloud.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://git.tivolicloud.com/tivolicloud/interface.git"
+	},
+	"version": "0.0.0",
 	"main": "electron/dist/main.js",
 	"scripts": {
 		"build:angular": "ng build --prod",

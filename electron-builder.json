@@ -50,6 +50,11 @@
 			}
 		]
 	},
+	"linux": {
+		"target": "pacman",
+		"icon": "assets/icon.icns",
+		"category": "Game"
+	},
 	"files": [
 		"out",
 		"electron/dist",
