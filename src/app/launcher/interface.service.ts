@@ -5,6 +5,7 @@ import { SettingsService } from "./settings/settings.service";
 import { HttpClient } from "@angular/common/http";
 import { DiscordService } from "./discord.service";
 import { InterfaceSettingsService } from "./interface-settings.service";
+import { environment } from "../../environments/environment";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -246,6 +247,8 @@ export class InterfaceService {
 		});
 
 		rl.on("line", (line: string) => {
+			if (!environment.production) console.log(line);
+
 			// discord rpc
 			const updatedDomainIdMatches = line.match(
 				/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
