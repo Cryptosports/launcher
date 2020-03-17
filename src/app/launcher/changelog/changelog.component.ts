@@ -25,54 +25,18 @@ export class ChangelogComponent implements OnInit, OnDestroy {
 
 		const styles: [string, string][] = [
 			// remove header
-			[
-				"[class*='-body-'] [class*='-header-']",
-				"display: none !important",
-			],
-			// remove page header
-			[
-				"[class*='-wholeContent-'] [class*='-pageHeader-']",
-				"display: none !important",
-			],
-			// add padding to content
-			[
-				"[class*='-wholeContent-'] [class*='-pageContainer-']",
-				"padding-top: 20px !important",
-			],
-			// remove padding from header
-			[
-				"[class*='-wholeContent-'] [class*='-wholeContentBody-']",
-				"padding-top: 0 !important",
-			],
-			// remove anchor tag from title headers
-			// [
-			// 	"[class*='-wholeContent-'] [class*='blockHeadingAnchor-']",
-			// 	"display: none !important",
-			// ],
-			// [
-			// 	"[class*='-wholeContent-'] [class*='-blockHeadingAnchorHidden-']",
-			// 	"display: none !important",
-			// ],
-			// remove left sidebar
-			[
-				"[class*='-wholeContent-'] [class*='-contentNavigation-']",
-				"display: none !important",
-			],
-			// remove right sidebar
-			[
-				"[class*='-wholeContent-'] [class*='-pageSide-']",
-				"display: none !important",
-			],
-			// remove right sidebar button
-			[
-				"[class*='-wholeContent-'] [class*='-pageHeaderToolbar-']",
-				"display: none !important",
-			],
+			[".md-header", "display: none !important"],
+			// remove title
+			[".md-content h1#changelog", "display: none !important"],
+			// remove title links
+			[".md-content .headerlink", "display: none !important"],
+			// move content up
+			[".md-content", "margin-top: -120px"],
 			// remove footer
-			[
-				"[class*='-wholeContent-'] [class*='-pageFooter-']",
-				"display: none !important",
-			],
+			[".md-footer", "display: none !important"],
+			// remove last update
+			[".md-content hr", "display: none !important"],
+			[".md-content .md-source-date", "display: none !important"],
 		];
 
 		this.interval = setInterval(() => {
@@ -80,11 +44,14 @@ export class ChangelogComponent implements OnInit, OnDestroy {
 				let css = "html{background:#fff!important}";
 
 				for (const style of styles) {
-					const className = iframe.contentDocument.querySelector<
-						HTMLDivElement
-					>(style[0]).className;
+					if (
+						iframe.contentDocument.querySelector<HTMLDivElement>(
+							style[0],
+						) == null
+					)
+						throw new Error(style[0] + " not found");
 
-					css += "." + className + "{" + style[1] + "}";
+					css += style[0] + "{" + style[1] + "}";
 				}
 
 				const styleEl = iframe.contentDocument.createElement("style");
