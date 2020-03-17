@@ -225,7 +225,6 @@ export class InterfaceService {
 				env: {
 					...process.env,
 					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
-					HIFI_ENABLE_MATERIAL_PROCEDURAL_SHADERS: "1",
 				},
 				detached: false,
 			},
