@@ -235,39 +235,50 @@ export class InterfaceService {
 			this.discordService.atLauncher();
 		};
 
-		this.child.on("exit", () => {
+		this.child.on("exit", (code: number, signal: string) => {
 			stopRunning();
+
+			if (!environment.production) {
+				console.log("Exit code: " + code);
+				console.log("Exit signal: " + signal);
+			}
 		});
 
-		const rl = readline.createInterface({
-			input: this.child.stdout,
-			terminal: false,
-			historySize: 10,
-		});
+		[this.child.stdout, this.child.stderr]
+			.map(input =>
+				readline.createInterface({
+					input,
+					terminal: false,
+					historySize: 10,
+				}),
+			)
+			.forEach(rl => {
+				rl.on("line", (line: string) => {
+					if (!environment.production) console.log(line);
 
-		rl.on("line", (line: string) => {
-			if (!environment.production) console.log(line);
-
-			// discord rpc
-			const updatedDomainIdMatches = line.match(
-				/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
-			);
-			if (updatedDomainIdMatches != null) {
-				if (updatedDomainIdMatches.length >= 2) {
-					this.discordService.updateDomainId(
-						updatedDomainIdMatches[1],
+					// discord rpc
+					const updatedDomainIdMatches = line.match(
+						/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
 					);
-				}
-			}
+					if (updatedDomainIdMatches != null) {
+						if (updatedDomainIdMatches.length >= 2) {
+							this.discordService.updateDomainId(
+								updatedDomainIdMatches[1],
+							);
+						}
+					}
 
-			// minimize launcher when interface opens
-			if (/\[hifi\.interface\] Created Display Window/i.test(line)) {
-				const win = electron.remote.getCurrentWindow();
-				if (win.isMinimized() == false) {
-					win.minimize();
-				}
-			}
-		});
+					// minimize launcher when interface opens
+					if (
+						/\[hifi\.interface\] Created Display Window/i.test(line)
+					) {
+						const win = electron.remote.getCurrentWindow();
+						if (win.isMinimized() == false) {
+							win.minimize();
+						}
+					}
+				});
+			});
 	}
 
 	forceClose() {
