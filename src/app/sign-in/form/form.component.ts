@@ -86,7 +86,7 @@ export class FormComponent implements OnInit {
 		const authWindow = window.open(
 			this.authService.metaverseUrl + "/api/auth/" + serviceName,
 			"",
-			"toolbar=no,menubar=no,width=500,height=600",
+			"toolbar=no,menubar=no,width=500,height=600,useragent=Cr",
 		);
 
 		this.signInForm.disable();

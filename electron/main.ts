@@ -78,6 +78,10 @@ if (appLock || DEV) {
 	// window time
 	app.commandLine.appendSwitch("disable-site-isolation-trials");
 
+	// fix google logging in (More tools > Network conditions > Chrome - Windows)
+	app.userAgentFallback =
+		"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:70.0) Gecko/20100101 Firefox/70.0";
+
 	const createWindow = () => {
 		if (!appLock) return;
 		if (win != null) return;
@@ -100,11 +104,11 @@ if (appLock || DEV) {
 			autoHideMenuBar: true,
 		});
 
-		win.loadFile(APP_ROOT);
-
 		win.on("closed", () => {
 			win = null;
 		});
+
+		win.loadFile(APP_ROOT);
 	};
 
 	app.on("ready", createWindow);
