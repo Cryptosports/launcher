@@ -20,7 +20,6 @@
 		"publisherName": ["Tivoli Cloud VR, Inc", "Sectigo RSA Code Signing CA"]
 	},
 	"nsisWeb": {
-		"include": "build/installer.nsh",
 		"oneClick": false,
 		"perMachine": true,
 		"allowToChangeInstallationDirectory": true,
