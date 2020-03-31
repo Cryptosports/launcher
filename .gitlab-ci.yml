@@ -64,7 +64,9 @@ build launcher:
     artifacts:
         expire_in: 1 day
         paths:
-            - dist/nsis-web/
+            - dist/*.exe
+            - dist/*.blockmap
+            - dist/*.yml
 
 deploy launcher:
     stage: deploy
