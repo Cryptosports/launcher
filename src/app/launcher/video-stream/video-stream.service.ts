@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { WebmConverter } from "./libs/webmConverter";
+// import { WebmConverter } from "./libs/webmConverter";
 import { WebRTCHost } from "./libs/webrtcHost";
 import { MatDialog } from "@angular/material/dialog";
 import { MediaStreamPickerComponent } from "../../media-stream-picker/media-stream-picker.component";
@@ -8,12 +8,13 @@ import { MediaStreamPickerComponent } from "../../media-stream-picker/media-stre
 	providedIn: "root",
 })
 export class VideoStreamService {
-	stream: MediaStream;
-	webm: WebmConverter;
 	webrtc: WebRTCHost;
+	stream: MediaStream;
+
+	// webm: WebmConverter;
+	// webmStream: MediaStream = null;
 
 	id = "";
-	webmStream: MediaStream = null;
 	active = false;
 
 	constructor(private dialog: MatDialog) {}
@@ -45,11 +46,11 @@ export class VideoStreamService {
 		this.active = true;
 
 		this.stream = await this.getStream();
-		this.webm = new WebmConverter(this.stream);
 
-		this.webmStream = await this.webm.getMediaStream();
+		//this.webm = new WebmConverter(this.stream);
+		//this.webmStream = await this.webm.getMediaStream();
 
-		this.webrtc = new WebRTCHost(this.webmStream);
+		this.webrtc = new WebRTCHost(this.stream);
 		this.webrtc.id.subscribe(id => {
 			this.id = id;
 		});
@@ -58,13 +59,14 @@ export class VideoStreamService {
 	stop() {
 		if (!this.active) return;
 
-		this.webm.destroy();
-		this.webm = null;
+		// this.webm.destroy();
+		// this.webm = null;
+		// this.webmStream = null;
+
 		this.webrtc.destroy();
 		this.webrtc = null;
 
 		this.id = "";
-		this.webmStream = null;
 		this.active = false;
 	}
 }
