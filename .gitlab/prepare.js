@@ -58,7 +58,8 @@ async function patchInterface() {
 	try {
 		updateVersion();
 		console.log("");
-		await patchInterface();
+		// TODO: needs to be done in tivolicloud/interface
+		if (process.platform == "win32") await patchInterface();
 	} catch (error) {
 		console.log(error);
 		process.exit(1);
