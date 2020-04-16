@@ -1,13 +1,9 @@
-const fetch = require("node-fetch");
 const StreamZip = require("node-stream-zip");
 const path = require("path");
 const fs = require("fs");
 
 const ENV = {
-	GITLAB_API_TOKEN: process.env.GITLAB_API_TOKEN,
-	RELEASE_NUMBER: process.env.RELEASE_NUMBER, // v0.0.0
-	UPSTREAM_JOBS_URL: process.env.UPSTREAM_JOBS_URL, // https://git.tivolicloud.com/api/v4/projects/9/pipelines/121/jobs
-	UPSTREAM_JOB: process.env.UPSTREAM_JOB, // build windows production
+	CI_COMMIT_TAG: process.env.CI_COMMIT_TAG,
 };
 
 if (Object.values(ENV).includes(undefined)) {
@@ -20,81 +16,13 @@ if (Object.values(ENV).includes(undefined)) {
 function updateVersion() {
 	const packagePath = path.resolve("../package.json");
 	const package = JSON.parse(fs.readFileSync(packagePath, "utf8"));
-	package.version = ENV.RELEASE_NUMBER;
+	package.version = ENV.CI_COMMIT_TAG;
 
 	fs.writeFileSync(packagePath, JSON.stringify(package, null, 4));
 
 	console.log(
 		"Updated version to " + package.version + " in: " + packagePath,
 	);
-}
-
-function downloadFile(url, dest) {
-	return new Promise(async (resolve, reject) => {
-		const stream = fs.createWriteStream(dest);
-		const res = await fetch(url);
-		res.body.pipe(stream);
-
-		res.body.on("error", error => {
-			reject(error);
-		});
-		stream.on("finish", function() {
-			resolve();
-		});
-	});
-}
-
-function downloadInterface() {
-	return new Promise(async resolve => {
-		console.log(
-			"Searching for interface artifact from: " + ENV.UPSTREAM_JOBS_URL,
-		);
-		const jobs = await (
-			await fetch(ENV.UPSTREAM_JOBS_URL, {
-				headers: {
-					Authorization: "Bearer " + ENV.GITLAB_API_TOKEN,
-				},
-			})
-		).json();
-
-		// find artifact
-		let job = jobs.filter(job => job.name == ENV.UPSTREAM_JOB);
-		if (job.length == 0)
-			throw new Error("Couldn't find job: \"" + ENV.UPSTREAM_JOB + '"');
-		job = job[0];
-
-		// download
-		const interfaceZipUrl = job.web_url + "/artifacts/download";
-		const interfaceZipPath = path.resolve(__dirname, "interface.zip");
-
-		console.log("Downloading zip from: " + interfaceZipUrl);
-		await downloadFile(interfaceZipUrl, interfaceZipPath).catch(error => {
-			throw new Error("Failed to download");
-		});
-
-		// extract
-		const interfacePath = path.resolve(__dirname, "../interface");
-		console.log("Extracting to: " + interfacePath);
-
-		const zip = new StreamZip({
-			file: interfaceZipPath,
-		});
-
-		zip.on("ready", () => {
-			if (fs.existsSync(interfacePath))
-				fs.rmdirSync(interfacePath, { recursive: true });
-			fs.mkdirSync(interfacePath);
-
-			zip.extract("build/interface/Release", interfacePath, error => {
-				if (error) throw new Error(error);
-
-				zip.close();
-				console.log("Finished extracting!");
-
-				resolve();
-			});
-		});
-	});
 }
 
 async function patchInterface() {
@@ -129,8 +57,6 @@ async function patchInterface() {
 (async () => {
 	try {
 		updateVersion();
-		console.log("");
-		await downloadInterface();
 		console.log("");
 		await patchInterface();
 	} catch (error) {
