@@ -17,11 +17,11 @@ export class InterfaceSettingsService {
 		switch (process.platform) {
 			case "win32":
 				return path.resolve(process.env.APPDATA, "Tivoli Cloud VR");
-			// case "darwin":
-			// 	return path.resolve(
-			// 		process.env.HOME,
-			// 		".config/highfidelity.io",
-			// 	);
+			case "darwin":
+				return path.resolve(
+					process.env.HOME,
+					".config/highfidelity.io",
+				);
 			// 	return path.resolve(
 			// 		process.env.HOME,
 			// 		"Library/Application Support/Tivoli Cloud VR",

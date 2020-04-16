@@ -81,11 +81,11 @@ export class InterfaceService {
 			switch (process.platform) {
 				case "win32":
 					return path.resolve(interfacePath, "interface.exe");
-				// case "darwin":
-				// 	return path.resolve(
-				// 		this.interfacePath,
-				// 		this.interfaceVersion + ".app/Contents/MacOS/interface",
-				// 	);
+				case "darwin":
+					return path.resolve(
+						interfacePath,
+						"interface.app/Contents/MacOS/interface",
+					);
 				case "linux":
 					return path.resolve(interfacePath, "interface");
 				default:
