@@ -31,7 +31,7 @@ const distPath = path.resolve(__dirname, "../dist");
 const files = fs
 	.readdirSync(distPath)
 	.filter(filename =>
-		["exe", "blockmap", "yml"].includes(
+		["exe", "dmg", "zip", "blockmap", "yml"].includes(
 			filename.split(".").pop().toLowerCase(),
 		),
 	);
