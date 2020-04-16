@@ -20,7 +20,7 @@ export class InterfaceSettingsService {
 			case "darwin":
 				return path.resolve(
 					process.env.HOME,
-					".config/highfidelity.io",
+					".config/Tivoli Cloud VR",
 				);
 			// 	return path.resolve(
 			// 		process.env.HOME,
