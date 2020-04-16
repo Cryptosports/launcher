@@ -147,8 +147,8 @@ export class InterfaceService {
 				"Developer/Render/Throttle FPS If Not Focus": false,
 				"Render/Throttle FPS If Not Focus": false,
 
-				"Developer/Scripting/Enable Speech Control API": true,
-				"Scripting/Enable Speech Control API": true,
+				"Developer/Scripting/Enable Speech Control API": false,
+				"Scripting/Enable Speech Control API": false,
 
 				// necessary for default location
 				firstRun: false,
