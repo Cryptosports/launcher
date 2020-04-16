@@ -27,8 +27,14 @@ const spaces = new AWS.S3({
 	endpoint: new AWS.Endpoint(config.region + ".digitaloceanspaces.com"),
 });
 
-const distPath = path.resolve(__dirname, "../dist/nsis-web");
-const files = fs.readdirSync(distPath);
+const distPath = path.resolve(__dirname, "../dist");
+const files = fs
+	.readdirSync(distPath)
+	.filter(filename =>
+		["exe", "blockmap", "yml"].includes(
+			filename.split(".").pop().toLowerCase(),
+		),
+	);
 
 for (const fileName of files) {
 	spaces.upload(

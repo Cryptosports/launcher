@@ -1,0 +1,87 @@
+stages:
+    #- bridge
+    - build
+    - deploy
+
+# windows ntfs is REALLY slow
+# dependencies:
+#     stage: dependencies
+#     tags:
+#         - windows
+
+#     cache:
+#         paths:
+#             - node_modules/
+
+#     script:
+#         - yarn install
+
+#     only:
+#         changes:
+#             - yarn.lock
+
+build launcher:
+    stage: build
+    tags:
+        - windows
+
+    environment:
+        name: production
+    only:
+        - pipelines
+
+    # cache:
+    #     policy: pull
+    #     paths:
+    #         - node_modules/
+
+    variables:
+        CSC_LINK: C:\Users\maki\tivoli-cloud-vr.p12
+        #
+        # from ci variabls:
+        #   GITLAB_API_TOKEN
+        #   CSC_KEY_PASSWORD
+        #   DO_KEY_ID
+        #   DO_SECRET_KEY
+        #
+        # from pipeline, should have:
+        #   RELEASE_NUMBER
+        #   UPSTREAM_JOBS_URL
+        #   UPSTREAM_JOB
+
+    script:
+        # prepare: download and unzip interface and change version in package.json
+        - cd .gitlab
+        - yarn install
+        - node prepare.js
+        - cd ..
+
+        # install, build and package
+        - yarn install
+        - yarn run build
+        - yarn run package
+
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - dist/*.exe
+            - dist/*.blockmap
+            - dist/*.yml
+
+deploy launcher:
+    stage: deploy
+    tags:
+        - windows
+
+    dependencies:
+        - build launcher
+
+    environment:
+        name: production
+    only:
+        - pipelines
+
+    script:
+        - cd .gitlab
+        - yarn install
+        - node deploy.js
