@@ -104,6 +104,19 @@ export class InterfaceService {
 		// default settings
 		this.interfaceSettingsService.setInterfaceSettings(
 			{
+				"Display/Disable Preview": false,
+				disableHmdPreview: false,
+
+				// "Avatar/fullAvatarURL":
+				// 	"https://cdn.tivolicloud.com/defaultAvatars/matthew/matthew.fst",
+				"Avatar/scale": 1,
+
+				"AddressManager/address":
+					"alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
+			},
+			// settings which will be overwritten/forced
+			{
+				// force maximum to 8192 MB
 				"Maximum Texture Memory/4 MB": false,
 				"Maximum Texture Memory/64 MB": false,
 				"Maximum Texture Memory/256 MB": false,
@@ -125,20 +138,9 @@ export class InterfaceService {
 				"Developer/Render/Maximum Texture Memory/8192 MB": true,
 				"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
 
-				"Display/Disable Preview": false,
-				disableHmdPreview: false,
-
-				"Avatar/fullAvatarURL":
-					"https://cdn.tivolicloud.com/defaultAvatars/matthew/matthew.fst",
-				"Avatar/scale": 1,
-
-				"AddressManager/address":
-					"alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
-			},
-			// settings which will be overwritten/forced
-			{
 				// necessary for disabling anti aliasing
 				"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
+				"Render/Temporal Antialiasing (FXAA if disabled)": true,
 				antialiasingEnabled: true,
 
 				"Developer/Render/Enable Procedural Materials": true,
@@ -146,9 +148,6 @@ export class InterfaceService {
 
 				"Developer/Render/Throttle FPS If Not Focus": false,
 				"Render/Throttle FPS If Not Focus": false,
-
-				"Developer/Scripting/Enable Speech Control API": false,
-				"Scripting/Enable Speech Control API": false,
 
 				// necessary for default location
 				firstRun: false,
