@@ -14,7 +14,7 @@
 		}
 	],
 	"win": {
-		"artifactName": "Tivoli Cloud VR Setup.${ext}",
+		"artifactName": "Tivoli Cloud VR.${ext}",
 		"target": "nsis",
 		"icon": "assets/icon.ico",
 		"publisherName": ["Tivoli Cloud VR, Inc", "Sectigo RSA Code Signing CA"]
