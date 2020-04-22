@@ -23,6 +23,8 @@ export class LaunchBarComponent implements OnInit, OnDestroy {
 
 	currentVersion = this.electron.remote.app.getVersion();
 
+	hasVr = process.platform == "win32";
+
 	constructor(
 		private authService: AuthService,
 		public interfaceService: InterfaceService,

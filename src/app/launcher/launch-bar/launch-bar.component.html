@@ -1,7 +1,7 @@
 <div class="launch-bar">
 	<div class="logo" (click)="openMetaversePage()"></div>
 
-	<div class="buttons">
+	<div class="buttons" [style.width]="hasVr ? '300px' : '250px'">
 		<button
 			class="launch-button"
 			mat-flat-button
@@ -55,7 +55,7 @@
 				</div>
 			</div>
 		</button>
-		<div class="disable-vr">
+		<div class="disable-vr" *ngIf="hasVr">
 			<mat-checkbox
 				#disableVr
 				[disableRipple]="true"
