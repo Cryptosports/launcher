@@ -112,7 +112,8 @@ export class InterfaceService {
 				"Avatar/scale": 1,
 
 				"AddressManager/address":
-					"alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
+					// "alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
+					"199fa1e7-a132-4f4c-88b2-28ca9f9f2955", // silence (maki)
 			},
 			// settings which will be overwritten/forced
 			{
