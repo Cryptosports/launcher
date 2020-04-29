@@ -51,7 +51,7 @@
 	},
 	"linux": {
 		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
-		"target": ["AppImage", "pacman", "deb"],
+		"target": ["AppImage", "pacman"],
 		"icon": "assets/icon.icns",
 		"category": "Game"
 	},
