@@ -14,6 +14,7 @@ const childProcess = require("child_process");
 const readline = require("readline");
 const electron = require("electron");
 const path = require("path");
+const fs = require("fs");
 
 @Injectable({
 	providedIn: "root",
@@ -84,10 +85,17 @@ export class InterfaceService {
 				case "darwin":
 					return path.resolve(
 						interfacePath,
-						"interface.app/Contents/MacOS/interface",
+						fs.existsSync(path.resolve(interfacePath, "interface"))
+							? "interface"
+							: "interface.app/Contents/MacOS/interface",
 					);
 				case "linux":
-					return path.resolve(interfacePath, "interface");
+					return path.resolve(
+						interfacePath,
+						fs.existsSync(path.resolve(interfacePath, "interface"))
+							? "interface"
+							: "interface.AppDir/interface",
+					);
 				default:
 					return null;
 			}
