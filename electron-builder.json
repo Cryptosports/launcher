@@ -14,7 +14,7 @@
 		}
 	],
 	"win": {
-		"artifactName": "Tivoli Cloud VR.${ext}",
+		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
 		"target": "nsis",
 		"icon": "assets/icon.ico",
 		"publisherName": ["Tivoli Cloud VR, Inc", "Sectigo RSA Code Signing CA"]
@@ -28,7 +28,7 @@
 		"installerSidebar": "assets/installer-sidebar.bmp"
 	},
 	"mac": {
-		"artifactName": "Tivoli Cloud VR.${ext}",
+		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
 		"target": ["dmg", "zip"],
 		"icon": "assets/icon.icns",
 		"category": "public.app-category.games"
@@ -50,7 +50,8 @@
 		]
 	},
 	"linux": {
-		"target": "pacman",
+		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
+		"target": ["AppImage", "pacman", "deb"],
 		"icon": "assets/icon.icns",
 		"category": "Game"
 	},
