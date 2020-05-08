@@ -109,19 +109,11 @@ export class InterfaceService {
 		// sync
 		//await this.interfaceSettingsService.downloadSettings();
 
-		// default settings
 		this.interfaceSettingsService.setInterfaceSettings(
+			// default settings
 			{
 				"Display/Disable Preview": false,
 				disableHmdPreview: false,
-
-				// "Avatar/fullAvatarURL":
-				// 	"https://cdn.tivolicloud.com/defaultAvatars/matthew/matthew.fst",
-				"Avatar/scale": 1,
-
-				"AddressManager/address":
-					// "alpha.tivolicloud.com:50002/0,0,0/0,0,0,0",
-					"199fa1e7-a132-4f4c-88b2-28ca9f9f2955", // silence (maki)
 			},
 			// settings which will be overwritten/forced
 			{
@@ -146,20 +138,6 @@ export class InterfaceService {
 				"Developer/Render/Maximum Texture Memory/6144 MB": false,
 				"Developer/Render/Maximum Texture Memory/8192 MB": true,
 				"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
-
-				// necessary for disabling anti aliasing
-				"Developer/Render/Temporal Antialiasing (FXAA if disabled)": true,
-				"Render/Temporal Antialiasing (FXAA if disabled)": true,
-				antialiasingEnabled: true,
-
-				"Developer/Render/Enable Procedural Materials": true,
-				"Render/Enable Procedural Materials": true,
-
-				"Developer/Render/Throttle FPS If Not Focus": false,
-				"Render/Throttle FPS If Not Focus": false,
-
-				// necessary for default location
-				firstRun: false,
 
 				// 100% unethical
 				"Developer/Network/Disable Activity Logger": true,
@@ -208,9 +186,6 @@ export class InterfaceService {
 
 					// "--displayName",
 					// "--defaultScriptsOverride",
-
-					// "--display",
-					// "Desktop?",
 
 					"--tokens",
 					JSON.stringify(this.user.token),
