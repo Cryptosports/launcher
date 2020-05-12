@@ -9,8 +9,7 @@
 	"publish": [
 		{
 			"provider": "generic",
-			"url": "https://nyc3.digitaloceanspaces.com/tivolicloud/releases",
-			"useMultipleRangeRequest": false
+			"url": "https://cdn.tivolicloud.com/releases"
 		}
 	],
 	"win": {
