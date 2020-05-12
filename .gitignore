@@ -6,6 +6,7 @@
 package-lock.json
 .DS_Store
 *.p12
+*.pfx
 electron-builder.env
 yarn-error.log
 /.gitlab/interface.zip
