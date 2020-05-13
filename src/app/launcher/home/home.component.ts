@@ -9,6 +9,8 @@ import { HttpClient } from "@angular/common/http";
 	styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnDestroy {
+	readonly electron = (window as any).require("electron");
+
 	user: User = null;
 	userSub: Subscription;
 
@@ -75,6 +77,10 @@ export class HomeComponent implements OnDestroy {
 			);
 
 		this.getDomainStats();
+	}
+
+	openRoadmap() {
+		this.electron.shell.openExternal("https://roadmap.tivolicloud.com");
 	}
 
 	ngOnDestroy() {
