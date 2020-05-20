@@ -1,0 +1,38 @@
+<div class="content">
+	<div class="logs">
+		<cdk-virtual-scroll-viewport #viewport class="viewport" itemSize="24">
+			<p
+				*cdkVirtualFor="let log of logs"
+				[style.backgroundColor]="log[0]"
+			>
+				<span
+					style="
+						font-family: 'Roboto Mono', monospace;
+						font-weight: 700;
+						font-size: 12px;
+					"
+				>
+					<span style="color: #e91e63;">{{ log[1] }}</span>
+					{{ log[2] }}
+				</span>
+				{{ log[3] }}
+			</p>
+		</cdk-virtual-scroll-viewport>
+	</div>
+
+	<div class="top-right">
+		<button
+			mat-flat-button
+			color="primary"
+			[cdkCopyToClipboard]="getClipboard()"
+		>
+			<mat-icon>content_copy</mat-icon>
+			Copy to clipboard
+		</button>
+		<div style="margin: 8px 0;"></div>
+		<button mat-flat-button (click)="scrollToBottom(true)">
+			<mat-icon>vertical_align_bottom</mat-icon>
+			Scroll to bottom
+		</button>
+	</div>
+</div>

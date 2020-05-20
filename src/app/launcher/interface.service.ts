@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { BehaviorSubject, Subscription, Subject } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 import { SettingsService } from "./settings/settings.service";
 import { HttpClient } from "@angular/common/http";
@@ -24,6 +24,9 @@ export class InterfaceService {
 	userSub: Subscription = null;
 
 	running$ = new BehaviorSubject<boolean>(false);
+
+	logs: string[] = [];
+	log$ = new Subject<string>();
 
 	readonly defaultInterfacePath = path.resolve(
 		electron.remote.app.getAppPath(),
@@ -227,17 +230,24 @@ export class InterfaceService {
 			}
 		});
 
+		this.logs = [];
+		this.log$.next("CLEAR_LOGS");
+
 		[this.child.stdout, this.child.stderr]
 			.map(input =>
 				readline.createInterface({
 					input,
 					terminal: false,
-					historySize: 10,
+					historySize: 0,
 				}),
 			)
 			.forEach(rl => {
 				rl.on("line", (line: string) => {
 					if (!environment.production) console.log(line);
+
+					this.log$.next(line);
+					this.logs.push(line);
+					if (this.logs.length > 10000) this.logs.shift();
 
 					// discord rpc
 					const updatedDomainIdMatches = line.match(

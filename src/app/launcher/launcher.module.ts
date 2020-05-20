@@ -11,6 +11,9 @@ import { TokboxSettingsComponent } from "./tokbox-stream/tokbox-settings/tokbox-
 import { TokboxStreamComponent } from "./tokbox-stream/tokbox-stream.component";
 import { VideoStreamComponent } from "./video-stream/video-stream.component";
 import { DeveloperComponent } from "./developer/developer.component";
+import { LogsComponent } from "./logs/logs.component";
+import { ScrollingModule } from "@angular/cdk/scrolling";
+import { ClipboardModule } from "@angular/cdk/clipboard";
 
 const routes: Routes = [
 	{
@@ -20,6 +23,7 @@ const routes: Routes = [
 			{ path: "home", component: HomeComponent },
 			{ path: "changelog", component: ChangelogComponent },
 			{ path: "developer", component: DeveloperComponent },
+			{ path: "logs", component: LogsComponent },
 			{ path: "settings", component: SettingsComponent },
 			{ path: "video-stream", component: VideoStreamComponent },
 			{ path: "tokbox-stream", component: TokboxStreamComponent },
@@ -38,8 +42,15 @@ const routes: Routes = [
 		TokboxSettingsComponent,
 		ChangelogComponent,
 		DeveloperComponent,
+		LogsComponent,
 	],
-	imports: [CommonModule, MaterialModule, RouterModule.forChild(routes)],
+	imports: [
+		CommonModule,
+		MaterialModule,
+		RouterModule.forChild(routes),
+		ScrollingModule,
+		ClipboardModule,
+	],
 	entryComponents: [TokboxSettingsComponent],
 })
 export class LauncherModule {}

@@ -45,6 +45,15 @@
 			<mat-icon>build</mat-icon> Developer
 		</button>
 
+		<button
+			*ngIf="settingsService.getSetting('interfaceLogs') | async"
+			mat-button
+			routerLink="logs"
+			routerLinkActive="active"
+		>
+			<mat-icon>notes</mat-icon> Logs
+		</button>
+
 		<button mat-button routerLink="settings" routerLinkActive="active">
 			<mat-icon>settings</mat-icon> Settings
 		</button>

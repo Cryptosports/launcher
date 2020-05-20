@@ -10,6 +10,12 @@
 			>
 				Discord Rich Presence
 			</mat-slide-toggle>
+			<mat-slide-toggle
+				[checked]="settingsService.getSetting('interfaceLogs') | async"
+				(change)="updateSettingChecked('interfaceLogs', $event)"
+			>
+				See interface logs
+			</mat-slide-toggle>
 			<!-- <mat-slide-toggle
 				[checked]="
 					settingsService.getSetting('settingsSyncing') | async

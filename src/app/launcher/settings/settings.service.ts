@@ -70,6 +70,7 @@ export class SettingsService {
 
 			// general
 			discordRichPresence: true,
+			interfaceLogs: false,
 			//settingsSyncing: true,
 
 			// experimental
