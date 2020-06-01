@@ -60,7 +60,7 @@ if (appLock || DEV) {
 		const url = [...argv].pop().toLowerCase();
 		if (url.startsWith("tivoli://")) {
 			openedUrl = url;
-			win.webContents.send("url", openedUrl);
+			if (win != null) win.webContents.send("url", openedUrl);
 		}
 	};
 

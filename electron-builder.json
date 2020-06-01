@@ -3,8 +3,9 @@
 	"productName": "Tivoli Cloud VR",
 	"asar": false,
 	"protocols": {
-		"name": "tivolicloud",
-		"schemes": ["tivoli"]
+		"name": "Tivoli Cloud VR",
+		"schemes": ["tivoli"],
+		"role": "Viewer"
 	},
 	"publish": [
 		{

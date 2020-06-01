@@ -71,7 +71,8 @@ export class InterfaceService {
 	}
 
 	async launch(url?: string) {
-		if (this.running$.value == true) return;
+		// disabled so tivoli:// works
+		// if (this.running$.value == true) return;
 
 		const interfacePath = this.settingsService.getSetting<boolean>(
 			"interfacePathEnabled",
@@ -105,7 +106,8 @@ export class InterfaceService {
 		})();
 		if (executablePath == null) return;
 
-		this.running$.next(true);
+		const alreadyRunning = this.running$.value;
+		if (alreadyRunning == false) this.running$.next(true);
 
 		// settings
 
@@ -177,7 +179,7 @@ export class InterfaceService {
 		const disableVr = this.settingsService.getSetting<boolean>("disableVr")
 			.value;
 
-		this.child = childProcess.spawn(
+		const child = childProcess.spawn(
 			executablePath,
 			[
 				...[
@@ -185,7 +187,7 @@ export class InterfaceService {
 					"--no-launcher",
 					"--no-login-suggestion",
 					"--suppress-settings-reset",
-					process.env.DEV != null ? "--allowMultipleInstances" : "",
+					// process.env.DEV != null ? "--allowMultipleInstances" : "",
 
 					// "--displayName",
 					// "--defaultScriptsOverride",
@@ -215,6 +217,16 @@ export class InterfaceService {
 				detached: false,
 			},
 		);
+
+		if (alreadyRunning) {
+			const win = electron.remote.getCurrentWindow();
+			if (win.isMinimized() == false) {
+				win.minimize();
+			}
+			return;
+		} else {
+			this.child = child;
+		}
 
 		const stopRunning = () => {
 			this.running$.next(false);
