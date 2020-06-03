@@ -3,7 +3,6 @@ import { BehaviorSubject, Subscription, Subject } from "rxjs";
 import { AuthService, User } from "../auth/auth.service";
 import { SettingsService } from "./settings/settings.service";
 import { HttpClient } from "@angular/common/http";
-import { DiscordService } from "./discord.service";
 import { InterfaceSettingsService } from "./interface-settings.service";
 import { environment } from "../../environments/environment";
 
@@ -38,7 +37,7 @@ export class InterfaceService {
 	constructor(
 		private authService: AuthService,
 		private settingsService: SettingsService,
-		private discordService: DiscordService,
+		// private discordService: DiscordService,
 		private interfaceSettingsService: InterfaceSettingsService,
 		private http: HttpClient,
 	) {
@@ -50,7 +49,7 @@ export class InterfaceService {
 			electron.ipcRenderer.send("running", running);
 		});
 
-		this.discordService.initialize();
+		// this.discordService.initialize();
 
 		// setInterval(() => {
 		// 	if (!this.running$.value) return;
@@ -230,7 +229,7 @@ export class InterfaceService {
 
 		const stopRunning = () => {
 			this.running$.next(false);
-			this.discordService.atLauncher();
+			// this.discordService.atLauncher();
 		};
 
 		this.child.on("exit", (code: number, signal: string) => {
@@ -262,16 +261,16 @@ export class InterfaceService {
 					if (this.logs.length > 10000) this.logs.shift();
 
 					// discord rpc
-					const updatedDomainIdMatches = line.match(
-						/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
-					);
-					if (updatedDomainIdMatches != null) {
-						if (updatedDomainIdMatches.length >= 2) {
-							this.discordService.updateDomainId(
-								updatedDomainIdMatches[1],
-							);
-						}
-					}
+					// const updatedDomainIdMatches = line.match(
+					// 	/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
+					// );
+					// if (updatedDomainIdMatches != null) {
+					// 	if (updatedDomainIdMatches.length >= 2) {
+					// 		this.discordService.updateDomainId(
+					// 			updatedDomainIdMatches[1],
+					// 		);
+					// 	}
+					// }
 
 					// minimize launcher when interface opens
 					if (
