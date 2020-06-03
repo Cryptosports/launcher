@@ -70,10 +70,11 @@ if (appLock || DEV) {
 		processArgvForUrl(argv);
 	});
 
-	// // mac
-	// app.on("open-url", (event, url) => {
-	// 	event.preventDefault();
-	// });
+	// mac
+	app.on("open-url", (e, url) => {
+		e.preventDefault();
+		processArgvForUrl([url]);
+	});
 
 	// window time
 	app.commandLine.appendSwitch("disable-site-isolation-trials");
