@@ -2,14 +2,14 @@
 	<div class="center">
 		<div>
 			<h2><mat-icon>settings</mat-icon> General</h2>
-			<!-- <mat-slide-toggle
+			<mat-slide-toggle
 				[checked]="
 					settingsService.getSetting('discordRichPresence') | async
 				"
 				(change)="updateSettingChecked('discordRichPresence', $event)"
 			>
 				Discord Rich Presence
-			</mat-slide-toggle> -->
+			</mat-slide-toggle>
 			<mat-slide-toggle
 				[checked]="settingsService.getSetting('interfaceLogs') | async"
 				(change)="updateSettingChecked('interfaceLogs', $event)"
