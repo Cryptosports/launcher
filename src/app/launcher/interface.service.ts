@@ -34,6 +34,7 @@ export class InterfaceService {
 	);
 
 	private child = null;
+	private children = [];
 
 	constructor(
 		private authService: AuthService,
@@ -104,7 +105,8 @@ export class InterfaceService {
 					return null;
 			}
 		})();
-		if (executablePath == null) return;
+		if (executablePath == null || fs.existsSync(executablePath) == false)
+			return alert('Tivoli path not found\n\n"' + executablePath + '"');
 
 		const alreadyRunning = this.running$.value;
 		if (alreadyRunning == false) this.running$.next(true);
@@ -179,117 +181,138 @@ export class InterfaceService {
 		const disableVr = this.settingsService.getSetting<boolean>("disableVr")
 			.value;
 
-		const child = childProcess.spawn(
-			executablePath,
-			[
-				...[
-					"--no-updater",
-					"--no-launcher",
-					"--no-login-suggestion",
-					"--suppress-settings-reset",
-					// process.env.DEV != null ? "--allowMultipleInstances" : "",
+		try {
+			const child = childProcess.spawn(
+				executablePath,
+				[
+					...[
+						"--no-updater",
+						"--no-launcher",
+						"--no-login-suggestion",
+						"--suppress-settings-reset",
+						// process.env.DEV != null ? "--allowMultipleInstances" : "",
 
-					// "--displayName",
-					// "--defaultScriptsOverride",
+						// "--displayName",
+						// "--defaultScriptsOverride",
 
-					"--tokens",
-					JSON.stringify(this.user.token),
+						"--tokens",
+						JSON.stringify(this.user.token),
+					],
+
+					...(disableVr
+						? [
+								"--disable-displays",
+								"OpenVR (Vive),Oculus Rift",
+								"--disable-inputs",
+								"OpenVR (Vive),Oculus Rift",
+						  ]
+						: []),
+
+					...(url != null ? ["--url", url] : []),
+
+					...userLaunchArgs,
 				],
-
-				...(disableVr
-					? [
-							"--disable-displays",
-							"OpenVR (Vive),Oculus Rift",
-							"--disable-inputs",
-							"OpenVR (Vive),Oculus Rift",
-					  ]
-					: []),
-
-				...(url != null ? ["--url", url] : []),
-
-				...userLaunchArgs,
-			],
-			{
-				env: {
-					...process.env,
-					HIFI_METAVERSE_URL: this.authService.metaverseUrl,
+				{
+					env: {
+						...process.env,
+						HIFI_METAVERSE_URL: this.authService.metaverseUrl,
+					},
+					detached: false,
 				},
-				detached: false,
-			},
-		);
+			);
 
-		if (alreadyRunning) {
-			const win = electron.remote.getCurrentWindow();
-			if (win.isMinimized() == false) {
-				win.minimize();
+			this.children.push(child);
+
+			if (alreadyRunning) {
+				const win = electron.remote.getCurrentWindow();
+				if (win.isMinimized() == false) {
+					win.minimize();
+				}
+				return;
+			} else {
+				this.child = child;
 			}
-			return;
-		} else {
-			this.child = child;
-		}
 
-		const stopRunning = () => {
-			this.running$.next(false);
-			this.discordService.atLauncher();
-		};
+			child.on("exit", (code: number, signal: string) => {
+				this.forceClose(child);
 
-		this.child.on("exit", (code: number, signal: string) => {
-			stopRunning();
+				if (!environment.production) {
+					console.log("Exit code: " + code);
+					console.log("Exit signal: " + signal);
+				}
 
-			if (!environment.production) {
-				console.log("Exit code: " + code);
-				console.log("Exit signal: " + signal);
-			}
-		});
-
-		this.logs = [];
-		this.log$.next("CLEAR_LOGS");
-
-		[this.child.stdout, this.child.stderr]
-			.map(input =>
-				readline.createInterface({
-					input,
-					terminal: false,
-					historySize: 0,
-				}),
-			)
-			.forEach(rl => {
-				rl.on("line", (line: string) => {
-					if (!environment.production) console.log(line);
-
-					this.log$.next(line);
-					this.logs.push(line);
-					if (this.logs.length > 10000) this.logs.shift();
-
-					// discord rpc
-					const updatedDomainIdMatches = line.match(
-						/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
-					);
-					if (updatedDomainIdMatches != null) {
-						if (updatedDomainIdMatches.length >= 2) {
-							this.discordService.updateDomainId(
-								updatedDomainIdMatches[1],
-							);
-						}
-					}
-
-					// minimize launcher when interface opens
-					if (
-						/\[hifi\.interface\] Created Display Window/i.test(line)
-					) {
-						const win = electron.remote.getCurrentWindow();
-						if (win.isMinimized() == false) {
-							win.minimize();
-						}
-					}
-				});
+				if (code == 0 || code == null) return;
+				alert(
+					"Tivoli exited with code: " +
+						code +
+						(this.logs && this.logs.length > 0
+							? "\n\n" + this.logs[this.logs.length - 1]
+							: ""),
+				);
 			});
+
+			this.logs = [];
+			this.log$.next("CLEAR_LOGS");
+
+			[child.stdout, child.stderr]
+				.map(input =>
+					readline.createInterface({
+						input,
+						terminal: false,
+						historySize: 0,
+					}),
+				)
+				.forEach(rl => {
+					rl.on("line", (line: string) => {
+						if (!environment.production) console.log(line);
+
+						this.log$.next(line);
+						this.logs.push(line);
+						if (this.logs.length > 10000) this.logs.shift();
+
+						// discord rpc
+						const updatedDomainIdMatches = line.match(
+							/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
+						);
+						if (updatedDomainIdMatches != null) {
+							if (updatedDomainIdMatches.length >= 2) {
+								this.discordService.updateDomainId(
+									updatedDomainIdMatches[1],
+								);
+							}
+						}
+
+						// minimize launcher when interface opens
+						if (
+							/\[hifi\.interface\] Created Display Window/i.test(
+								line,
+							)
+						) {
+							const win = electron.remote.getCurrentWindow();
+							if (win.isMinimized() == false) {
+								win.minimize();
+							}
+						}
+					});
+				});
+		} catch (err) {
+			this.forceClose();
+			alert("Tivoli failed to launch\n\n" + err);
+			return;
+		}
 	}
 
-	forceClose() {
-		if (this.running$.value == false) return;
-		if (this.child == null) return;
-		this.child.kill("SIGKILL");
+	forceClose(child?) {
+		this.running$.next(false);
+		this.discordService.atLauncher();
+
+		if (child) child.kill("SIGKILL");
+		if (this.child) this.child.kill("SIGKILL");
+		for (const child of this.children) {
+			child.kill("SIGKILL");
+		}
+		this.children = [];
+
 		//this.interfaceSettingsService.uploadSettings();
 	}
 }
