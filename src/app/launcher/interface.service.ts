@@ -242,11 +242,18 @@ export class InterfaceService {
 				}
 
 				if (code == 0 || code == null) return;
+
+				const lastLogs = this.logs.slice(
+					this.logs.length - 6,
+					this.logs.length,
+				);
+
 				alert(
 					"Tivoli exited with code: " +
 						code +
 						(this.logs && this.logs.length > 0
-							? "\n\n" + this.logs[this.logs.length - 1]
+							? `\n\nLast ${lastLogs.length} logs:\n` +
+							  lastLogs.join("\n")
 							: ""),
 				);
 			});
