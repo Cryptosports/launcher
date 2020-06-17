@@ -71,6 +71,16 @@ export class InterfaceService {
 		});
 	}
 
+	showErrorMessage(message: string, detail?: string) {
+		electron.remote.dialog.showMessageBox(null, {
+			type: "error",
+			buttons: ["OK"],
+			title: "Tivoli Cloud VR",
+			message,
+			detail,
+		});
+	}
+
 	async launch(url?: string) {
 		// disabled so tivoli:// works
 		// if (this.running$.value == true) return;
@@ -106,7 +116,10 @@ export class InterfaceService {
 			}
 		})();
 		if (executablePath == null || fs.existsSync(executablePath) == false)
-			return alert('Tivoli path not found\n\n"' + executablePath + '"');
+			return this.showErrorMessage(
+				"Tivoli path not found",
+				executablePath,
+			);
 
 		const alreadyRunning = this.running$.value;
 		if (alreadyRunning == false) this.running$.next(true);
@@ -248,13 +261,12 @@ export class InterfaceService {
 					this.logs.length,
 				);
 
-				alert(
-					"Tivoli exited with code: " +
-						code +
-						(this.logs && this.logs.length > 0
-							? `\n\nLast ${lastLogs.length} logs:\n` +
-							  lastLogs.join("\n")
-							: ""),
+				this.showErrorMessage(
+					"Tivoli exited with code: " + code,
+					this.logs && this.logs.length > 0
+						? `Last ${lastLogs.length} logs:\n` +
+								lastLogs.join("\n")
+						: null,
 				);
 			});
 
@@ -304,7 +316,7 @@ export class InterfaceService {
 				});
 		} catch (err) {
 			this.forceClose();
-			alert("Tivoli failed to launch\n\n" + err);
+			this.showErrorMessage("Tivoli failed to launch", err);
 			return;
 		}
 	}
