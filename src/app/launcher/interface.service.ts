@@ -124,75 +124,75 @@ export class InterfaceService {
 		const alreadyRunning = this.running$.value;
 		if (alreadyRunning == false) this.running$.next(true);
 
-		// settings
-
-		// sync
-		//await this.interfaceSettingsService.downloadSettings();
-
-		this.interfaceSettingsService.setInterfaceSettings(
-			// default settings
-			{
-				"Display/Disable Preview": false,
-				disableHmdPreview: false,
-			},
-			// settings which will be overwritten/forced
-			{
-				// force maximum to 8192 MB
-				"Maximum Texture Memory/4 MB": false,
-				"Maximum Texture Memory/64 MB": false,
-				"Maximum Texture Memory/256 MB": false,
-				"Maximum Texture Memory/512 MB": false,
-				"Maximum Texture Memory/1024 MB": false,
-				"Maximum Texture Memory/2048 MB": false,
-				"Maximum Texture Memory/4096 MB": false,
-				"Maximum Texture Memory/6144 MB": false,
-				"Maximum Texture Memory/8192 MB": true,
-				"Maximum Texture Memory/Automatic Texture Memory": false,
-				"Developer/Render/Maximum Texture Memory/4 MB": false,
-				"Developer/Render/Maximum Texture Memory/64 MB": false,
-				"Developer/Render/Maximum Texture Memory/256 MB": false,
-				"Developer/Render/Maximum Texture Memory/512 MB": false,
-				"Developer/Render/Maximum Texture Memory/1024 MB": false,
-				"Developer/Render/Maximum Texture Memory/2048 MB": false,
-				"Developer/Render/Maximum Texture Memory/4096 MB": false,
-				"Developer/Render/Maximum Texture Memory/6144 MB": false,
-				"Developer/Render/Maximum Texture Memory/8192 MB": true,
-				"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
-
-				// 100% unethical
-				"Developer/Network/Disable Activity Logger": true,
-				"Network/Disable Activity Logger": true,
-				UserActivityLoggerDisabled: true,
-
-				// for convinence
-				"Display/Fullscreen": false,
-
-				// terrible
-				"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
-				"Avatar/flyingHMD": true,
-				allowTeleporting: false,
-				miniTabletEnabled: false,
-				use3DKeyboard: false,
-
-				// usernames dont change
-				"Avatar/displayName": this.user.profile.username,
-			},
-			// forced default scripts
-			["file:///~//defaultScripts.js"],
-		);
-
-		// no idea but fixes MyAvatar in /idle/update to be fast
-		this.interfaceSettingsService.cleanupAvatarEntityData();
-
-		// launch!
-		const userLaunchArgs = this.settingsService
-			.getSetting<string>("launchArgs")
-			.value.split(" ");
-
-		const disableVr = this.settingsService.getSetting<boolean>("disableVr")
-			.value;
-
 		try {
+			// sync settings
+			//await this.interfaceSettingsService.downloadSettings();
+
+			// settings
+			this.interfaceSettingsService.setInterfaceSettings(
+				// default settings
+				{
+					"Display/Disable Preview": false,
+					disableHmdPreview: false,
+				},
+				// settings which will be overwritten/forced
+				{
+					// force maximum to 8192 MB
+					"Maximum Texture Memory/4 MB": false,
+					"Maximum Texture Memory/64 MB": false,
+					"Maximum Texture Memory/256 MB": false,
+					"Maximum Texture Memory/512 MB": false,
+					"Maximum Texture Memory/1024 MB": false,
+					"Maximum Texture Memory/2048 MB": false,
+					"Maximum Texture Memory/4096 MB": false,
+					"Maximum Texture Memory/6144 MB": false,
+					"Maximum Texture Memory/8192 MB": true,
+					"Maximum Texture Memory/Automatic Texture Memory": false,
+					"Developer/Render/Maximum Texture Memory/4 MB": false,
+					"Developer/Render/Maximum Texture Memory/64 MB": false,
+					"Developer/Render/Maximum Texture Memory/256 MB": false,
+					"Developer/Render/Maximum Texture Memory/512 MB": false,
+					"Developer/Render/Maximum Texture Memory/1024 MB": false,
+					"Developer/Render/Maximum Texture Memory/2048 MB": false,
+					"Developer/Render/Maximum Texture Memory/4096 MB": false,
+					"Developer/Render/Maximum Texture Memory/6144 MB": false,
+					"Developer/Render/Maximum Texture Memory/8192 MB": true,
+					"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
+
+					// 100% unethical
+					"Developer/Network/Disable Activity Logger": true,
+					"Network/Disable Activity Logger": true,
+					UserActivityLoggerDisabled: true,
+
+					// for convinence
+					"Display/Fullscreen": false,
+
+					// terrible
+					"Edit/Create Entities As Grabbable (except Zones, Particles, and Lights)": false,
+					"Avatar/flyingHMD": true,
+					allowTeleporting: false,
+					miniTabletEnabled: false,
+					use3DKeyboard: false,
+
+					// usernames dont change
+					"Avatar/displayName": this.user.profile.username,
+				},
+				// forced default scripts
+				["file:///~//defaultScripts.js"],
+			);
+
+			// no idea but fixes MyAvatar in /idle/update to be fast
+			this.interfaceSettingsService.cleanupAvatarEntityData();
+
+			// launch!
+			const userLaunchArgs = this.settingsService
+				.getSetting<string>("launchArgs")
+				.value.split(" ");
+
+			const disableVr = this.settingsService.getSetting<boolean>(
+				"disableVr",
+			).value;
+
 			const child = childProcess.spawn(
 				executablePath,
 				[
