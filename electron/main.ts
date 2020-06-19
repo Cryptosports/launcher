@@ -88,7 +88,7 @@ if (appLock || DEV) {
 		if (win != null) return;
 
 		win = new BrowserWindow({
-			title: "Tivoli Cloud VR Launcher",
+			title: "Tivoli Cloud VR " + app.getVersion(),
 
 			width: 1000,
 			height: 640,
