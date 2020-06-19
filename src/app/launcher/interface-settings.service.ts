@@ -121,47 +121,53 @@ export class InterfaceSettingsService {
 		}
 	}
 
-	readAvatarBookmarks() {
-		const appDataPath = this.getAppDataPath();
+	// readAvatarBookmarks() {
+	// 	try {
+	// 		const appDataPath = this.getAppDataPath();
 
-		const jsonPath = path.resolve(
-			appDataPath,
-			"Interface",
-			"avatarbookmarks.json",
-		);
-		try {
-			const jsonStr = fs.readFileSync(jsonPath, "utf8");
-			const json = JSON.parse(jsonStr);
-			return json;
-		} catch (err) {
-			return null;
-		}
-	}
+	// 		const jsonPath = path.resolve(
+	// 			appDataPath,
+	// 			"Interface",
+	// 			"avatarbookmarks.json",
+	// 		);
 
-	writeAvatarBookmarks(avatarBookmarks: Object) {
-		const appDataPath = this.getAppDataPath();
+	// 		const jsonStr = fs.readFileSync(jsonPath, "utf8");
+	// 		const json = JSON.parse(jsonStr);
+	// 		return json;
+	// 	} catch (err) {
+	// 		return null;
+	// 	}
+	// }
 
-		if (!fs.existsSync(appDataPath)) fs.mkdirSync(appDataPath);
+	// writeAvatarBookmarks(avatarBookmarks: Object) {
+	// 	try {
+	// 		const appDataPath = this.getAppDataPath();
 
-		const interfaceInterfacePath = path.resolve(appDataPath, "Interface");
-		if (!fs.existsSync(interfaceInterfacePath))
-			fs.mkdirSync(interfaceInterfacePath);
+	// 		if (!fs.existsSync(appDataPath)) fs.mkdirSync(appDataPath);
 
-		const avatarBookmarksPath = path.resolve(
-			interfaceInterfacePath,
-			"avatarbookmarks.json",
-		);
-		fs.writeFileSync(
-			avatarBookmarksPath,
-			JSON.stringify(avatarBookmarks, null, 4),
-		);
-	}
+	// 		const interfaceInterfacePath = path.resolve(
+	// 			appDataPath,
+	// 			"Interface",
+	// 		);
+	// 		if (!fs.existsSync(interfaceInterfacePath))
+	// 			fs.mkdirSync(interfaceInterfacePath);
 
-	setDefaultAvatarBookmarks() {
-		if (this.readAvatarBookmarks() == null) {
-			this.writeAvatarBookmarks({});
-		}
-	}
+	// 		const avatarBookmarksPath = path.resolve(
+	// 			interfaceInterfacePath,
+	// 			"avatarbookmarks.json",
+	// 		);
+	// 		fs.writeFileSync(
+	// 			avatarBookmarksPath,
+	// 			JSON.stringify(avatarBookmarks, null, 4),
+	// 		);
+	// 	} catch (err) {}
+	// }
+
+	// setDefaultAvatarBookmarks() {
+	// 	if (this.readAvatarBookmarks() == null) {
+	// 		this.writeAvatarBookmarks({});
+	// 	}
+	// }
 
 	// downloadSettings() {
 	// 	return new Promise(resolve => {

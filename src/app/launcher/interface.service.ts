@@ -184,8 +184,6 @@ export class InterfaceService {
 		// no idea but fixes MyAvatar in /idle/update to be fast
 		this.interfaceSettingsService.cleanupAvatarEntityData();
 
-		this.interfaceSettingsService.setDefaultAvatarBookmarks();
-
 		// launch!
 		const userLaunchArgs = this.settingsService
 			.getSetting<string>("launchArgs")
