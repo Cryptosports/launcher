@@ -97,7 +97,7 @@ export class InterfaceSettingsService {
 				this.writeInterfaceSettings(interfaceSettings);
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 
@@ -117,7 +117,7 @@ export class InterfaceSettingsService {
 
 			this.writeInterfaceSettings(settings);
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 

@@ -35,7 +35,7 @@ export class DiscordService {
 								clientId: "626510915843653638",
 							})
 							.catch(err => {
-								console.log("failed to init");
+								console.error(err);
 								this.rpc == null;
 								failed = true;
 							})

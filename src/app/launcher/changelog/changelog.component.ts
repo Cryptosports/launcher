@@ -65,7 +65,7 @@ export class ChangelogComponent implements OnInit, OnDestroy {
 				clearInterval(this.interval);
 				this.interval = null;
 			} catch (err) {
-				//console.log(err);
+				// console.error(err);
 			}
 		}, 100);
 	}
