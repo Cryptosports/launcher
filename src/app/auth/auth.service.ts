@@ -43,7 +43,7 @@ export class AuthService {
 	private tokenExpirationTimer: any;
 	private jwtHelper = new JwtHelperService();
 
-	private defaultMetaverseUrl = "https://alpha.tivolicloud.com";
+	private defaultMetaverseUrl = "https://tivolicloud.com";
 
 	readonly metaverseUrl = this.settingsService.getSetting<boolean>(
 		"metaverseUrlEnabled",

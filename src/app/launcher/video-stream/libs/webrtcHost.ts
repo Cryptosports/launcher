@@ -94,7 +94,7 @@ export class WebRTCHost {
 		this.stream = stream;
 		this.bitrate = bitrate;
 
-		this.socket = io("https://alpha.tivolicloud.com/webrtc");
+		this.socket = io("https://tivolicloud.com/webrtc");
 
 		this.socket.on("client", id => {
 			this.onClient(id);
