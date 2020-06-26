@@ -47,8 +47,8 @@ export class SettingsComponent {
 		});
 
 		if (response > 0) {
-			rimraf(configPath, () => {});
-			rimraf(localPath, () => {});
+			await rimraf.sync(localPath);
+			await rimraf.sync(configPath);
 
 			this.router.navigate(["launcher", "home"]);
 
