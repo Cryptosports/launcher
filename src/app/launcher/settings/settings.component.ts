@@ -7,7 +7,8 @@ import { SettingsService } from "./settings.service";
 const require = (window as any).require;
 
 const electron = require("electron");
-const rimraf = require("rimraf");
+const fsExtra = require("fs-extra");
+const path = require("path");
 
 @Component({
 	selector: "app-settings",
@@ -34,21 +35,28 @@ export class SettingsComponent {
 		const configPath = this.interfaceSettingsService.getConfigPath();
 		const localPath = this.interfaceSettingsService.getLocalPath();
 
+		const toBeDeleted = [
+			path.resolve(configPath, "Interface"),
+			path.resolve(configPath, "Interface.json"),
+			localPath,
+		];
+
 		const { response } = await electron.remote.dialog.showMessageBox(null, {
 			type: "question",
 			buttons: ["Cancel", "OK"],
 			title: "Tivoli Cloud VR",
 			message: "Are you sure you want to remove all your settings?",
-			detail:
-				"Removing these folders is irreversible:\n\n" +
-				configPath +
-				"\n" +
-				localPath,
+			detail: toBeDeleted.join("\n"),
 		});
 
 		if (response > 0) {
-			await rimraf.sync(localPath);
-			await rimraf.sync(configPath);
+			for (const path of toBeDeleted) {
+				try {
+					await fsExtra.remove(path);
+				} catch (err) {
+					console.error(err);
+				}
+			}
 
 			this.router.navigate(["launcher", "home"]);
 
