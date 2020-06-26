@@ -31,8 +31,25 @@
 				mat-flat-button
 				color="primary"
 				(click)="onRemoveAllSettings()"
+				[disabled]="removingSettings"
 			>
-				<mat-icon>delete_forever</mat-icon> Remove all settings
+				<div style="display: flex; align-items: center;">
+					<mat-icon *ngIf="!removingSettings">
+						delete_forever
+					</mat-icon>
+					<mat-progress-spinner
+						*ngIf="removingSettings"
+						mode="indeterminate"
+						diameter="24"
+					>
+					</mat-progress-spinner>
+					<div style="margin: 0 4px;"></div>
+					{{
+						removingSettings
+							? "Removing all settings..."
+							: "Remove all settings"
+					}}
+				</div>
 			</button>
 
 			<div style="padding: 8px 0;"></div>

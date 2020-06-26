@@ -31,6 +31,8 @@ export class SettingsComponent {
 		this.settingsService.setSetting(key, input.value);
 	}
 
+	removingSettings = false;
+
 	async onRemoveAllSettings() {
 		const configPath = this.interfaceSettingsService.getConfigPath();
 		const localPath = this.interfaceSettingsService.getLocalPath();
@@ -48,6 +50,7 @@ export class SettingsComponent {
 		});
 
 		if (response == 0) {
+			this.removingSettings = true;
 			for (const path of toBeDeleted) {
 				try {
 					await fsExtra.remove(path);
@@ -55,6 +58,7 @@ export class SettingsComponent {
 					console.error(err);
 				}
 			}
+			this.removingSettings = false;
 
 			this.router.navigate(["launcher", "home"]);
 
@@ -62,7 +66,7 @@ export class SettingsComponent {
 				type: "info",
 				buttons: ["OK"],
 				title: "Tivoli Cloud VR",
-				message: "Interface settings removed",
+				message: "All settings removed",
 			});
 		}
 	}
