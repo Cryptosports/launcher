@@ -25,7 +25,8 @@
 		"allowToChangeInstallationDirectory": true,
 		"runAfterFinish": true,
 		"installerHeader": "assets/installer-header.bmp",
-		"installerSidebar": "assets/installer-sidebar.bmp"
+		"installerSidebar": "assets/installer-sidebar.bmp",
+		"include": "build/installer.nsh"
 	},
 	"mac": {
 		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
