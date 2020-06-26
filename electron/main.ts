@@ -42,9 +42,6 @@ if (appLock || DEV) {
 		watchFile(APP_ROOT, { interval: 500 }, () => {
 			if (win != null) win.loadFile(APP_ROOT);
 		});
-	} else {
-		// remove menu in prod
-		Menu.setApplicationMenu(null);
 	}
 
 	// tivoli:// functionality
@@ -99,6 +96,7 @@ if (appLock || DEV) {
 				//backgroundThrottling: false,
 				nativeWindowOpen: true,
 				//webSecurity: false,
+				devTools: DEV,
 			},
 
 			icon: APP_ICON,
