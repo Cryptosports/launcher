@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { config } from "process";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -13,29 +14,34 @@ const os = require("os");
 export class InterfaceSettingsService {
 	constructor() {}
 
-	getAppDataPath() {
-		switch (process.platform) {
-			case "win32":
-				return path.resolve(process.env.APPDATA, "Tivoli Cloud VR");
-			case "darwin":
-				return path.resolve(
-					process.env.HOME,
-					".config/Tivoli Cloud VR",
-				);
-			// 	return path.resolve(
-			// 		process.env.HOME,
-			// 		"Library/Application Support/Tivoli Cloud VR",
-			// 	);
-			case "linux":
-				return path.resolve(os.homedir(), ".config/Tivoli Cloud VR");
+	getConfigPath() {
+		return path.resolve(
+			process.platform == "win32"
+				? path.resolve(os.homedir(), "AppData/Roaming")
+				: process.platform == "darwin"
+				? path.resolve(os.homedir(), ".config")
+				: process.platform == "linux"
+				? path.resolve(os.homedir(), ".config")
+				: null,
+			"Tivoli Cloud VR",
+		);
+	}
 
-			default:
-				throw new Error("Can't find your AppData folder");
-		}
+	getLocalPath() {
+		return path.resolve(
+			process.platform == "win32"
+				? path.resolve(os.homedir(), "AppData/Local")
+				: process.platform == "darwin"
+				? path.resolve(os.homedir(), "Library/Application Support")
+				: process.platform == "linux"
+				? path.resolve(os.homedir(), ".local/share")
+				: null,
+			"Tivoli Cloud VR",
+		);
 	}
 
 	readInterfaceSettings() {
-		const appDataPath = this.getAppDataPath();
+		const appDataPath = this.getConfigPath();
 		const jsonPath = path.resolve(appDataPath, "Interface.json");
 
 		try {
@@ -48,7 +54,7 @@ export class InterfaceSettingsService {
 	}
 
 	writeInterfaceSettings(interfaceSettings: Object) {
-		const appDataPath = this.getAppDataPath();
+		const appDataPath = this.getConfigPath();
 
 		if (!fs.existsSync(appDataPath)) fs.mkdirSync(appDataPath);
 

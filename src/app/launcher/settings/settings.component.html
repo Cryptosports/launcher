@@ -27,6 +27,16 @@
 
 			<div style="padding: 8px 0;"></div>
 
+			<button
+				mat-flat-button
+				color="primary"
+				(click)="onRemoveAllSettings()"
+			>
+				<mat-icon>delete_forever</mat-icon> Remove all settings
+			</button>
+
+			<div style="padding: 8px 0;"></div>
+
 			<h2><mat-icon>developer_board</mat-icon> Experimental</h2>
 			<mat-slide-toggle
 				[checked]="settingsService.getSetting('videoStreaming') | async"
