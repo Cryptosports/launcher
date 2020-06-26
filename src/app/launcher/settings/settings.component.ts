@@ -35,20 +35,19 @@ export class SettingsComponent {
 		const configPath = this.interfaceSettingsService.getConfigPath();
 		const localPath = this.interfaceSettingsService.getLocalPath();
 
-		const toBeDeleted = [
-			configPath,
-			localPath,
-		];
+		const toBeDeleted = [configPath, localPath];
 
 		const { response } = await electron.remote.dialog.showMessageBox(null, {
 			type: "question",
-			buttons: ["Cancel", "OK"],
+			buttons: ["OK", "Cancel"],
+			defaultId: 1,
 			title: "Tivoli Cloud VR",
 			message: "Are you sure you want to remove all your settings?",
 			detail: toBeDeleted.join("\n"),
+			cancelId: 1,
 		});
 
-		if (response > 0) {
+		if (response == 0) {
 			for (const path of toBeDeleted) {
 				try {
 					await fsExtra.remove(path);
