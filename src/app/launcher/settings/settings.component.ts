@@ -36,8 +36,7 @@ export class SettingsComponent {
 		const localPath = this.interfaceSettingsService.getLocalPath();
 
 		const toBeDeleted = [
-			path.resolve(configPath, "Interface"),
-			path.resolve(configPath, "Interface.json"),
+			configPath,
 			localPath,
 		];
 
