@@ -79,9 +79,10 @@ export class DiscordService {
 		this.timeSinceStarted = null;
 
 		if (this.rpc == null) return;
-		this.rpc.setActivity({
-			details: "Waiting at the launcher...",
-		});
+		// this.rpc.setActivity({
+		// 	details: "Waiting at the launcher...",
+		// });
+		this.rpc.clearActivity();
 	}
 
 	async updateDomainId(domainId: string, forceUpdate = false) {
@@ -113,7 +114,7 @@ export class DiscordService {
 
 						if (json.domain.restriction == "acl") {
 							this.rpc.setActivity({
-								details: "Private domain",
+								details: "🔒 In a private world",
 								largeImageKey: "header",
 								smallImageKey: "logo",
 								startTimestamp: this.timeSinceStarted,
