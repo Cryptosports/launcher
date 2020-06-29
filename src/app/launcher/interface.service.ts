@@ -306,9 +306,10 @@ export class InterfaceService {
 							)
 						) {
 							const win = electron.remote.getCurrentWindow();
-							if (win.isMinimized() == false) {
-								win.minimize();
-							}
+							// if (win.isMinimized() == false) {
+							// 	win.minimize();
+							// }
+							win.hide();
 						}
 					});
 				});

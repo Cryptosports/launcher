@@ -1,9 +1,17 @@
-import { app, BrowserWindow, ipcMain, Menu, nativeImage } from "electron";
+import * as Sentry from "@sentry/electron";
+import {
+	app,
+	BrowserWindow,
+	ipcMain,
+	Menu,
+	nativeImage,
+	shell,
+	Tray,
+} from "electron";
 import { autoUpdater } from "electron-updater";
 import { watchFile } from "fs";
 import * as os from "os";
 import * as path from "path";
-import * as Sentry from "@sentry/electron";
 
 autoUpdater.autoDownload = false;
 
@@ -13,6 +21,12 @@ app.setPath(
 );
 
 let win: BrowserWindow;
+let tray: Tray;
+let isQuiting = false;
+
+app.on("before-quit", function () {
+	isQuiting = true;
+});
 
 const PLATFORM = os.platform();
 const DEV = process.env.DEV != null;
@@ -83,6 +97,7 @@ if (appLock || DEV) {
 	const createWindow = () => {
 		if (!appLock) return;
 		if (win != null) return;
+		if (tray != null) return;
 
 		win = new BrowserWindow({
 			title: "Tivoli Cloud VR " + app.getVersion(),
@@ -101,6 +116,69 @@ if (appLock || DEV) {
 
 			icon: APP_ICON,
 			autoHideMenuBar: true,
+		});
+
+		tray = new Tray(path.resolve(APP_ASSETS, "icon.png"));
+		tray.setToolTip("Tivoli Cloud VR" + app.getVersion());
+		tray.setTitle("Tivoli Cloud VR" + app.getVersion());
+		tray.on("click", () => {
+			win.show();
+		});
+		tray.setContextMenu(
+			Menu.buildFromTemplate([
+				{
+					icon: path.resolve(APP_ASSETS, "icon.png"),
+					label: "Tivoli Cloud VR " + app.getVersion(),
+					enabled: false,
+				},
+				{
+					type: "separator",
+				},
+				{
+					label: "Open Tivoli Launcher",
+					click: () => {
+						win.show();
+					},
+				},
+				{
+					label: "My Files",
+					click: () => {
+						shell.openExternal(
+							"https://tivolicloud.com/user/files",
+						);
+					},
+				},
+				{
+					label: "My Worlds",
+					click: () => {
+						shell.openExternal(
+							"https://tivolicloud.com/user/worlds",
+						);
+					},
+				},
+				{
+					type: "separator",
+				},
+				{
+					label: "Quit Tivoli",
+					click: () => {
+						isQuiting = true;
+						win.close();
+					},
+				},
+			]),
+		);
+
+		// win.on("minimize", event => {
+		// 	event.preventDefault();
+		// 	win.hide();
+		// });
+
+		win.on("close", event => {
+			if (!isQuiting) {
+				event.preventDefault();
+				win.hide();
+			}
 		});
 
 		win.on("closed", () => {
