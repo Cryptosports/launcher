@@ -90,6 +90,7 @@ export class SettingsService {
 			developerEnabled: false,
 
 			launchArgs: "",
+			launchEnv: "",
 
 			interfacePathEnabled: false,
 			interfacePath: "",

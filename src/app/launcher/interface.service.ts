@@ -187,7 +187,20 @@ export class InterfaceService {
 			// launch!
 			const userLaunchArgs = this.settingsService
 				.getSetting<string>("launchArgs")
-				.value.split(" ");
+				.value.trim()
+				.split(" ");
+
+			const userLaunchEnvStr = this.settingsService
+				.getSetting<string>("launchEnv")
+				.value.trim();
+			const userLaunchEnv =
+				userLaunchEnvStr.length == 0
+					? {}
+					: userLaunchEnvStr.split(" ").reduce((all, current) => {
+							const split = current.split("=");
+							all[split[0]] = split.length > 1 ? split[1] : "";
+							return all;
+					  }, {});
 
 			const disableVr = this.settingsService.getSetting<boolean>(
 				"disableVr",
@@ -227,6 +240,7 @@ export class InterfaceService {
 					env: {
 						...process.env,
 						HIFI_METAVERSE_URL: this.authService.metaverseUrl,
+						...userLaunchEnv,
 					},
 					detached: false,
 				},
