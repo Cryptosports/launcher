@@ -119,15 +119,15 @@ if (appLock || DEV) {
 		});
 
 		tray = new Tray(path.resolve(APP_ASSETS, "icon.png"));
-		tray.setToolTip("Tivoli Cloud VR" + app.getVersion());
-		tray.setTitle("Tivoli Cloud VR" + app.getVersion());
+		tray.setToolTip("Tivoli Cloud VR " + app.getVersion());
+		tray.setTitle("Tivoli Cloud VR " + app.getVersion());
 		tray.on("click", () => {
 			win.show();
 		});
 		tray.setContextMenu(
 			Menu.buildFromTemplate([
 				{
-					icon: path.resolve(APP_ASSETS, "icon.png"),
+					// icon: path.resolve(APP_ASSETS, "icon.png"),
 					label: "Tivoli Cloud VR " + app.getVersion(),
 					enabled: false,
 				},
