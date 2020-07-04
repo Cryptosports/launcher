@@ -150,9 +150,11 @@ export class FormComponent implements OnInit {
 			.shell.openExternal(this.authService.metaverseUrl + "?signUp");
 	}
 
-	onForgotPassword() {
+	onResetPassword() {
 		(window as any)
 			.require("electron")
-			.shell.openExternal(this.authService.metaverseUrl + "?signIn");
+			.shell.openExternal(
+				this.authService.metaverseUrl + "?resetPassword",
+			);
 	}
 }
