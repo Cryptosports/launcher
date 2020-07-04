@@ -7,8 +7,10 @@
 	*ngIf="errorMessage"
 	class="bg-warn"
 	style="
-		margin-bottom: 16px; color: #fff;
-		display: flex; vertical-align: middle;
+		margin-bottom: 16px;
+		color: #fff;
+		display: flex;
+		vertical-align: middle;
 	"
 >
 	<mat-icon style="margin-top: -3px; margin-right: 8px;">
@@ -74,6 +76,15 @@
 	>
 		Create a new account
 	</button>
+	<span style="margin: 0 4px;"></span>
+	<button
+		type="button"
+		mat-button
+		(click)="onForgotPassword()"
+		[disabled]="isLoading"
+	>
+		Forgot password
+	</button>
 
 	<div style="margin: 8px 0;"></div>
 
@@ -96,7 +107,7 @@
 		<tr>
 			<td>
 				<img
-					style="margin-right: 8px"
+					style="margin-right: 8px;"
 					class="user-image"
 					[src]="extImageUrl"
 				/>
