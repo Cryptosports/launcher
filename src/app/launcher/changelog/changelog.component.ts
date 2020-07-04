@@ -31,7 +31,7 @@ export class ChangelogComponent implements OnInit, OnDestroy {
 			// remove title links
 			[".md-content .headerlink", "display: none !important"],
 			// move content up
-			[".md-content", "margin-top: -120px"],
+			[".md-content", "margin-top: -60px"],
 			// remove footer
 			[".md-footer", "display: none !important"],
 			// remove last update
