@@ -127,7 +127,7 @@ if (appLock || DEV) {
 		tray.setContextMenu(
 			Menu.buildFromTemplate([
 				{
-					// icon: path.resolve(APP_ASSETS, "icon.png"),
+					icon: path.resolve(APP_ASSETS, "tray-icon.png"),
 					label: "Tivoli Cloud VR " + app.getVersion(),
 					enabled: false,
 				},
