@@ -199,8 +199,7 @@ if (appLock || DEV) {
 	// restore if opened twice
 	app.on("second-instance", () => {
 		if (win && !DEV) {
-			if (win.isMinimized()) win.restore();
-			win.focus();
+			win.show();
 		}
 	});
 
