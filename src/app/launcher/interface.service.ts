@@ -210,10 +210,6 @@ export class InterfaceService {
 				executablePath,
 				[
 					...[
-						"--no-updater",
-						"--no-launcher",
-						"--no-login-suggestion",
-						"--suppress-settings-reset",
 						// process.env.DEV != null ? "--allowMultipleInstances" : "",
 
 						// "--displayName",
