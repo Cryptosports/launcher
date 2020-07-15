@@ -334,11 +334,19 @@ export class InterfaceService {
 		this.running$.next(false);
 		this.discordService.atLauncher();
 
-		if (child) child.kill("SIGKILL");
-		if (this.child) this.child.kill("SIGKILL");
-		for (const child of this.children) {
-			child.kill("SIGKILL");
-		}
+		const kill = (signal: string) => {
+			if (child) child.kill(signal);
+			if (this.child) this.child.kill(signal);
+			for (const child of this.children) {
+				child.kill(signal);
+			}
+		};
+
+		kill("SIGQUIT");
+		setTimeout(() => {
+			kill("SIGKILL");
+		}, 500);
+
 		this.children = [];
 
 		//this.interfaceSettingsService.uploadSettings();
