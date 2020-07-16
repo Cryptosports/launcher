@@ -17,7 +17,7 @@
 		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
 		"target": "nsis",
 		"icon": "assets/icon.ico",
-		"publisherName": ["Tivoli Cloud VR, Inc", "Sectigo RSA Code Signing CA"]
+		"publisherName": ["Tivoli Cloud VR, Inc.", "Sectigo RSA Code Signing CA"]
 	},
 	"nsis": {
 		"oneClick": false,
