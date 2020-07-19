@@ -342,10 +342,10 @@ export class InterfaceService {
 			}
 		};
 
-		kill("SIGQUIT");
-		setTimeout(() => {
-			kill("SIGKILL");
-		}, 500);
+		// kill("SIGQUIT");
+		// setTimeout(() => {
+		kill("SIGKILL");
+		// }, 500);
 
 		this.children = [];
 
