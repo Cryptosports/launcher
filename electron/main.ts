@@ -175,7 +175,7 @@ if (appLock || DEV) {
 		// });
 
 		win.on("close", event => {
-			if (!isQuiting) {
+			if (isRunning && !isQuiting) {
 				event.preventDefault();
 				win.hide();
 			}
@@ -204,14 +204,14 @@ if (appLock || DEV) {
 	});
 
 	// running for changing window icon
-	let running = false;
-	ipcMain.on("running", (e, newRunning: boolean) => {
+	let isRunning = false;
+	ipcMain.on("running", (e, newIsRunning: boolean) => {
 		if (win == null) return;
 
-		if (running == newRunning) return;
-		running = newRunning;
+		if (isRunning == newIsRunning) return;
+		isRunning = newIsRunning;
 
-		win.setOverlayIcon(running ? RUNNING_ICON : null, "Running");
+		win.setOverlayIcon(isRunning ? RUNNING_ICON : null, "Running");
 	});
 
 	// updater
