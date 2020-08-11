@@ -135,10 +135,19 @@ if (appLock || DEV) {
 					type: "separator",
 				},
 				{
-					label: "Open Tivoli Launcher",
+					label: "Open Tivoli interface",
+					click: () => {
+						win.webContents.send("url", "tivoli://");
+					},
+				},
+				{
+					label: "Open Tivoli launcher",
 					click: () => {
 						win.show();
 					},
+				},
+				{
+					type: "separator",
 				},
 				{
 					label: "My Files",
