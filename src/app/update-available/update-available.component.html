@@ -60,8 +60,15 @@
 </ng-container> -->
 <ng-container *ngIf="updateState == 2">
 	<h2 style="margin-top: 0;">An error occurred while updating.</h2>
-	<p>Please try again later. We're not sure what's going on...</p>
+	<p>
+		We're not sure what's going on... Downloading the last version from the
+		website is much more likely to work.
+	</p>
 	<div class="buttons">
 		<button mat-flat-button (click)="onDismiss()">Dismiss</button>
+		<button mat-flat-button (click)="onDownloadTivoli()" color="primary">
+			<mat-icon>get_app</mat-icon>
+			Download Tivoli
+		</button>
 	</div>
 </ng-container>

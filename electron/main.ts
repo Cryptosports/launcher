@@ -230,19 +230,24 @@ if (appLock || DEV) {
 	};
 
 	ipcMain.on("updater", (e, msg: string) => {
-		if (msg == "check-for-update") {
-			if (DEV) return;
+		switch (msg) {
+			case "check-for-update":
+				if (DEV) break;
 			autoUpdater.checkForUpdates();
-			return;
-		}
-		if (msg == "dismiss-update") {
+				break;
+
+			case "dismiss-update":
 			if (win != null) win.setProgressBar(-1); // off
-			return;
-		}
-		if (msg == "start-download") {
+				break;
+
+			case "start-download":
 			if (win != null) win.setProgressBar(0); // 0%
 			autoUpdater.downloadUpdate();
-			return;
+				break;
+
+			case "close":
+				if (win != null) win.close();
+				break;
 		}
 	});
 

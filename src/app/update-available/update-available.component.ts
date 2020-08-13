@@ -1,5 +1,6 @@
 import { Component, NgZone } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
+import { AuthService } from "../auth/auth.service";
 
 @Component({
 	selector: "app-update-available",
@@ -7,8 +8,9 @@ import { MatDialogRef } from "@angular/material/dialog";
 	styleUrls: ["./update-available.component.scss"],
 })
 export class UpdateAvailableComponent {
-	private readonly ipcRenderer = (window as any).require("electron")
-		.ipcRenderer;
+	readonly electron = (window as any).require("electron");
+
+	private readonly ipcRenderer = this.electron.ipcRenderer;
 
 	updateState: 0 | 1 | 2 = 0; // ask, updating, error
 
@@ -49,6 +51,7 @@ export class UpdateAvailableComponent {
 	constructor(
 		private dialogRef: MatDialogRef<UpdateAvailableComponent>,
 		private zone: NgZone,
+		private readonly authService: AuthService,
 	) {
 		this.ipcRenderer.on("updater", (e, msg, info) => {
 			this.zone.run(() => {
@@ -71,6 +74,13 @@ export class UpdateAvailableComponent {
 				}
 			});
 		});
+	}
+
+	onDownloadTivoli() {
+		this.electron.shell.openExternal(
+			this.authService.metaverseUrl + "/download",
+		);
+		this.sendMessageToUpdater("close");
 	}
 
 	onDismiss() {
