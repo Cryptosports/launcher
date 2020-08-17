@@ -79,8 +79,10 @@ export class HomeComponent implements OnDestroy {
 		this.getDomainStats();
 	}
 
-	openRoadmap() {
-		this.electron.shell.openExternal("https://roadmap.tivolicloud.com");
+	openIssues() {
+		this.electron.shell.openExternal(
+			"https://git.tivolicloud.com/tivolicloud/interface/-/issues",
+		);
 	}
 
 	ngOnDestroy() {
