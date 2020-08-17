@@ -58,7 +58,6 @@ export class InterfaceService {
 		// 	this.interfaceSettingsService.uploadSettings();
 		// }, 1000 * 60 * 5);
 
-		// needs to be fixed
 		electron.ipcRenderer.send("url", "get-url");
 		electron.ipcRenderer.on("url", (e, url: string) => {
 			if (url == null) return;
