@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { InterfaceService } from "./interface.service";
 import { SettingsService } from "./settings/settings.service";
+import { WorldServerService } from "./world-server.service";
 
 @Component({
 	selector: "app-launcher",
@@ -12,8 +13,9 @@ import { SettingsService } from "./settings/settings.service";
 })
 export class LauncherComponent implements OnInit, OnDestroy {
 	constructor(
-		private interfaceService: InterfaceService,
-		public settingsService: SettingsService, // to init defaults
+		private readonly interfaceService: InterfaceService,
+		public readonly settingsService: SettingsService, // to init defaults
+		public readonly worldServerService: WorldServerService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
 		private dialog: MatDialog,

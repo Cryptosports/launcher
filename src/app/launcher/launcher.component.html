@@ -59,6 +59,19 @@
 		</button>
 
 		<button
+			*ngIf="settingsService.getSetting('worldServer') | async"
+			mat-button
+			routerLink="world-server"
+			routerLinkActive="active"
+			[style.backgroundColor]="
+				worldServerService.running ? '#8bc34a' : ''
+			"
+			[style.color]="worldServerService.running ? '#fff' : '#f44336'"
+		>
+			<mat-icon>dns</mat-icon> World server
+		</button>
+
+		<button
 			mat-flat-button
 			color="warn"
 			style="margin-right: 0;"

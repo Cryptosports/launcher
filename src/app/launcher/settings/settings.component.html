@@ -24,6 +24,13 @@
 			>
 				Settings Syncing
 			</mat-slide-toggle> -->
+			<mat-slide-toggle
+				[checked]="settingsService.getSetting('worldServer') | async"
+				(change)="updateSettingChecked('worldServer', $event)"
+				[disabled]="!isWindows"
+			>
+				Enable local world server <span>(windows only)</span>
+			</mat-slide-toggle>
 
 			<div style="padding: 8px 0;"></div>
 

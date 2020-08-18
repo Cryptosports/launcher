@@ -33,6 +33,8 @@ export class SettingsComponent {
 
 	removingSettings = false;
 
+	isWindows = process.platform == "win32";
+
 	async onRemoveAllSettings() {
 		const configPath = this.interfaceSettingsService.getConfigPath();
 		const localPath = this.interfaceSettingsService.getLocalPath();

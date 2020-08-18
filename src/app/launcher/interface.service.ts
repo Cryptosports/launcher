@@ -28,11 +28,6 @@ export class InterfaceService {
 	logs: string[] = [];
 	log$ = new Subject<string>();
 
-	readonly defaultInterfacePath = path.resolve(
-		electron.remote.app.getAppPath(),
-		"interface",
-	);
-
 	private child = null;
 	private children = [];
 
@@ -80,17 +75,28 @@ export class InterfaceService {
 		});
 	}
 
-	async launch(url?: string) {
-		// disabled so tivoli:// works
-		// if (this.running$.value == true) return;
+	getInterfacePath() {
+		const defaultInterfacePath = path.resolve(
+			electron.remote.app.getAppPath(),
+			"interface",
+		);
 
 		const interfacePath = this.settingsService.getSetting<boolean>(
 			"interfacePathEnabled",
 		).value
 			? this.settingsService
 					.getSetting<string>("interfacePath")
-					.value.trim() || this.defaultInterfacePath
-			: this.defaultInterfacePath;
+					.value.trim() || defaultInterfacePath
+			: defaultInterfacePath;
+
+		return interfacePath;
+	}
+
+	async launch(url?: string) {
+		// disabled so tivoli:// works
+		// if (this.running$.value == true) return;
+
+		const interfacePath = this.getInterfacePath();
 
 		const executablePath = (() => {
 			switch (process.platform) {

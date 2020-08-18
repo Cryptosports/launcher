@@ -1,0 +1,89 @@
+<div class="world-server">
+	<div class="center">
+		<h2>
+			<mat-icon>dns</mat-icon>
+			Your local world server
+		</h2>
+		<p>
+			It's recommended to host your server on a Linux machine.
+			<br />
+			Your world server will close when you the launcher is fully closed.
+		</p>
+		<br />
+		<div style="display: flex; justify-content: center;">
+			<button
+				mat-flat-button
+				color="primary"
+				(click)="worldServerService.start()"
+				[disabled]="worldServerService.running"
+			>
+				Start world
+			</button>
+			<span style="margin: 0 8px;"></span>
+			<button
+				mat-flat-button
+				color="primary"
+				(click)="worldServerService.stop()"
+				[disabled]="!worldServerService.running"
+			>
+				Stop world
+			</button>
+			<span style="margin: 0 8px;"></span>
+			<button
+				mat-stroked-button
+				color="primary"
+				(click)="openAdminPage()"
+				[disabled]="!worldServerService.running"
+			>
+				Open admin page
+			</button>
+		</div>
+		<br />
+		<br />
+		<div style="display: flex; flex-direction: row;">
+			<div>
+				<div class="server" [class.online]="isOnline('Domain Server')">
+					<div class="icon"></div>
+					Domain Server
+				</div>
+				<div class="server" [class.online]="isOnline('Audio Mixer')">
+					<div class="icon"></div>
+					Audio Mixer
+				</div>
+				<div class="server" [class.online]="isOnline('Avatar Mixer')">
+					<div class="icon"></div>
+					Avatar Mixer
+				</div>
+				<div class="server" [class.online]="isOnline('Scripted Agent')">
+					<div class="icon"></div>
+					Scripted Agent
+				</div>
+			</div>
+			<span style="margin: 0 4px;"></span>
+			<div>
+				<div class="server" [class.online]="isOnline('Asset Server')">
+					<div class="icon"></div>
+					Asset Server
+				</div>
+				<div class="server" [class.online]="isOnline('Messages Mixer')">
+					<div class="icon"></div>
+					Messages Mixer
+				</div>
+				<div
+					class="server"
+					[class.online]="isOnline('Entity Script Server')"
+				>
+					<div class="icon"></div>
+					Entity Script Server
+				</div>
+				<div
+					class="server"
+					[class.online]="isOnline('Entities Server')"
+				>
+					<div class="icon"></div>
+					Entities Server
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

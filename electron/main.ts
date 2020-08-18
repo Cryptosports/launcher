@@ -184,7 +184,7 @@ if (appLock || DEV) {
 		// });
 
 		win.on("close", event => {
-			if (isRunning && !isQuiting) {
+			if ((isRunning || isServerRunning) && !isQuiting) {
 				event.preventDefault();
 				win.hide();
 			}
@@ -223,6 +223,13 @@ if (appLock || DEV) {
 		win.setOverlayIcon(isRunning ? RUNNING_ICON : null, "Running");
 	});
 
+	let isServerRunning = false;
+	ipcMain.on("server-running", (e, newIsServerRunning: boolean) => {
+		if (win == null) return;
+
+		isServerRunning = newIsServerRunning;
+	});
+
 	// updater
 	const sendUpdateMessage = (msg: string, info: any = null) => {
 		if (win == null) return;
@@ -233,16 +240,16 @@ if (appLock || DEV) {
 		switch (msg) {
 			case "check-for-update":
 				if (DEV) break;
-			autoUpdater.checkForUpdates();
+				autoUpdater.checkForUpdates();
 				break;
 
 			case "dismiss-update":
-			if (win != null) win.setProgressBar(-1); // off
+				if (win != null) win.setProgressBar(-1); // off
 				break;
 
 			case "start-download":
-			if (win != null) win.setProgressBar(0); // 0%
-			autoUpdater.downloadUpdate();
+				if (win != null) win.setProgressBar(0); // 0%
+				autoUpdater.downloadUpdate();
 				break;
 
 			case "close":

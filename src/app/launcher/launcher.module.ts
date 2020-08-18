@@ -14,6 +14,7 @@ import { DeveloperComponent } from "./developer/developer.component";
 import { LogsComponent } from "./logs/logs.component";
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { ClipboardModule } from "@angular/cdk/clipboard";
+import { WorldServerComponent } from "./world-server/world-server.component";
 
 const routes: Routes = [
 	{
@@ -24,6 +25,7 @@ const routes: Routes = [
 			{ path: "changelog", component: ChangelogComponent },
 			{ path: "developer", component: DeveloperComponent },
 			{ path: "logs", component: LogsComponent },
+			{ path: "world-server", component: WorldServerComponent },
 			{ path: "settings", component: SettingsComponent },
 			{ path: "video-stream", component: VideoStreamComponent },
 			{ path: "tokbox-stream", component: TokboxStreamComponent },
@@ -43,6 +45,7 @@ const routes: Routes = [
 		ChangelogComponent,
 		DeveloperComponent,
 		LogsComponent,
+		WorldServerComponent,
 	],
 	imports: [
 		CommonModule,

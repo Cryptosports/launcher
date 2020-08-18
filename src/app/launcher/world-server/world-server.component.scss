@@ -1,0 +1,44 @@
+.world-server {
+	display: flex;
+	width: 100%;
+	height: calc(100% - 32px);
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+
+	h2 > mat-icon {
+		vertical-align: middle;
+		margin-bottom: 4px;
+	}
+
+	.server {
+		width: 196px;
+		color: #1d1f21;
+		font-weight: 700;
+		border-radius: 4px;
+		padding: 8px 12px;
+		display: flex;
+		align-items: center;
+		margin-bottom: 8px;
+
+		.icon {
+			width: 24px;
+			height: 24px;
+			border-radius: 999px;
+			margin-right: 12px;
+		}
+
+		background: rgba(#f44336, 0.3);
+		.icon {
+			background: #f44336;
+		}
+
+		&.online {
+			background: rgba(#8bc34a, 0.3);
+			.icon {
+				background: #8bc34a;
+			}
+		}
+	}
+}

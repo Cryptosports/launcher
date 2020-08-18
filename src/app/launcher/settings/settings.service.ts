@@ -71,6 +71,7 @@ export class SettingsService {
 			// general
 			discordRichPresence: true,
 			interfaceLogs: false,
+			worldServer: false,
 			//settingsSyncing: true,
 
 			// experimental
