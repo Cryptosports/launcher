@@ -27,8 +27,8 @@ const routes: Routes = [
 			{ path: "logs", component: LogsComponent },
 			{ path: "world-server", component: WorldServerComponent },
 			{ path: "settings", component: SettingsComponent },
-			{ path: "video-stream", component: VideoStreamComponent },
-			{ path: "tokbox-stream", component: TokboxStreamComponent },
+			// { path: "video-stream", component: VideoStreamComponent },
+			// { path: "tokbox-stream", component: TokboxStreamComponent },
 		],
 	},
 ];

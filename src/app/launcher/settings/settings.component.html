@@ -10,12 +10,7 @@
 			>
 				Discord Rich Presence
 			</mat-slide-toggle>
-			<mat-slide-toggle
-				[checked]="settingsService.getSetting('interfaceLogs') | async"
-				(change)="updateSettingChecked('interfaceLogs', $event)"
-			>
-				See interface logs
-			</mat-slide-toggle>
+
 			<!-- <mat-slide-toggle
 				[checked]="
 					settingsService.getSetting('settingsSyncing') | async
@@ -24,6 +19,7 @@
 			>
 				Settings Syncing
 			</mat-slide-toggle> -->
+
 			<mat-slide-toggle
 				[checked]="settingsService.getSetting('worldServer') | async"
 				(change)="updateSettingChecked('worldServer', $event)"
@@ -31,6 +27,44 @@
 			>
 				Enable local world server <span>(windows only)</span>
 			</mat-slide-toggle>
+
+			<div style="padding: 8px 0;"></div>
+
+			<h2><mat-icon>developer_board</mat-icon> Advanced</h2>
+
+			<mat-slide-toggle
+				[checked]="settingsService.getSetting('interfaceLogs') | async"
+				(change)="updateSettingChecked('interfaceLogs', $event)"
+			>
+				Show interface logs
+			</mat-slide-toggle>
+
+			<!-- <mat-slide-toggle
+				[checked]="settingsService.getSetting('videoStreaming') | async"
+				(change)="updateSettingChecked('videoStreaming', $event)"
+			>
+				Video streaming <span>(p2p with WebRTC)</span>
+			</mat-slide-toggle>
+			
+			<mat-slide-toggle
+				[checked]="
+					settingsService.getSetting('tokboxStreaming') | async
+				"
+				(change)="updateSettingChecked('tokboxStreaming', $event)"
+			>
+				TokBox streaming <span>(distributed w/ tokbox.com)</span>
+			</mat-slide-toggle> -->
+
+			<mat-slide-toggle
+				[checked]="
+					settingsService.getSetting('developerEnabled') | async
+				"
+				(change)="updateSettingChecked('developerEnabled', $event)"
+			>
+				Developer settings
+			</mat-slide-toggle>
+
+			<div style="padding: 8px 0;"></div>
 
 			<div style="padding: 8px 0;"></div>
 
@@ -58,35 +92,6 @@
 					}}
 				</div>
 			</button>
-
-			<div style="padding: 8px 0;"></div>
-
-			<h2><mat-icon>developer_board</mat-icon> Experimental</h2>
-			<mat-slide-toggle
-				[checked]="settingsService.getSetting('videoStreaming') | async"
-				(change)="updateSettingChecked('videoStreaming', $event)"
-			>
-				Video streaming <span>(p2p with WebRTC)</span>
-			</mat-slide-toggle>
-			<mat-slide-toggle
-				[checked]="
-					settingsService.getSetting('tokboxStreaming') | async
-				"
-				(change)="updateSettingChecked('tokboxStreaming', $event)"
-			>
-				TokBox streaming <span>(distributed w/ tokbox.com)</span>
-			</mat-slide-toggle>
-
-			<div style="padding: 8px 0;"></div>
-
-			<mat-slide-toggle
-				[checked]="
-					settingsService.getSetting('developerEnabled') | async
-				"
-				(change)="updateSettingChecked('developerEnabled', $event)"
-			>
-				Developer settings
-			</mat-slide-toggle>
 		</div>
 	</div>
 </div>
