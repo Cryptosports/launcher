@@ -120,7 +120,9 @@ if (appLock || DEV) {
 
 		tray = new Tray(path.resolve(APP_ASSETS, "tray-icon.png"));
 		tray.setToolTip("Tivoli Cloud VR " + app.getVersion());
-		tray.setTitle("Tivoli Cloud VR " + app.getVersion());
+		if (process.platform != "darwin") {
+			tray.setTitle("Tivoli Cloud VR " + app.getVersion());
+		}
 		tray.on("click", () => {
 			win.show();
 		});
