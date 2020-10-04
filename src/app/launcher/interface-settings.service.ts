@@ -107,25 +107,25 @@ export class InterfaceSettingsService {
 		}
 	}
 
-	cleanupAvatarEntityData() {
-		try {
-			let settings = this.readInterfaceSettings();
-			const keys = Object.keys(settings);
+	// cleanupAvatarEntityData() {
+	// 	try {
+	// 		let settings = this.readInterfaceSettings();
+	// 		const keys = Object.keys(settings);
 
-			const keysToDelete = keys.filter(key =>
-				key.startsWith("Avatar/avatarEntityData"),
-			);
-			if (keysToDelete.length == 0) return;
+	// 		const keysToDelete = keys.filter(key =>
+	// 			key.startsWith("Avatar/avatarEntityData"),
+	// 		);
+	// 		if (keysToDelete.length == 0) return;
 
-			for (const key of keysToDelete) {
-				delete settings[key];
-			}
+	// 		for (const key of keysToDelete) {
+	// 			delete settings[key];
+	// 		}
 
-			this.writeInterfaceSettings(settings);
-		} catch (err) {
-			console.error(err);
-		}
-	}
+	// 		this.writeInterfaceSettings(settings);
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// }
 
 	// readAvatarBookmarks() {
 	// 	try {
