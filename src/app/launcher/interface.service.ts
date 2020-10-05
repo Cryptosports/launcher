@@ -142,28 +142,6 @@ export class InterfaceService {
 				},
 				// settings which will be overwritten/forced
 				{
-					// force maximum to 8192 MB
-					"Maximum Texture Memory/4 MB": false,
-					"Maximum Texture Memory/64 MB": false,
-					"Maximum Texture Memory/256 MB": false,
-					"Maximum Texture Memory/512 MB": false,
-					"Maximum Texture Memory/1024 MB": false,
-					"Maximum Texture Memory/2048 MB": false,
-					"Maximum Texture Memory/4096 MB": false,
-					"Maximum Texture Memory/6144 MB": false,
-					"Maximum Texture Memory/8192 MB": true,
-					"Maximum Texture Memory/Automatic Texture Memory": false,
-					"Developer/Render/Maximum Texture Memory/4 MB": false,
-					"Developer/Render/Maximum Texture Memory/64 MB": false,
-					"Developer/Render/Maximum Texture Memory/256 MB": false,
-					"Developer/Render/Maximum Texture Memory/512 MB": false,
-					"Developer/Render/Maximum Texture Memory/1024 MB": false,
-					"Developer/Render/Maximum Texture Memory/2048 MB": false,
-					"Developer/Render/Maximum Texture Memory/4096 MB": false,
-					"Developer/Render/Maximum Texture Memory/6144 MB": false,
-					"Developer/Render/Maximum Texture Memory/8192 MB": true,
-					"Developer/Render/Maximum Texture Memory/Automatic Texture Memory": false,
-
 					// 100% unethical
 					"Developer/Network/Disable Activity Logger": true,
 					"Network/Disable Activity Logger": true,
