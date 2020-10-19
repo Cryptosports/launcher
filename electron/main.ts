@@ -200,9 +200,15 @@ if (appLock || DEV) {
 	};
 
 	app.on("ready", createWindow);
+
 	app.on("activate", () => {
-		if (win == null) createWindow();
+		if (win == null) {
+			createWindow();
+		} else {
+			win.show();
+		}
 	});
+
 	app.on("window-all-closed", () => {
 		app.quit();
 	});
