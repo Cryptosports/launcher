@@ -80,7 +80,9 @@ export class UpdateAvailableComponent {
 		this.electron.shell.openExternal(
 			this.authService.metaverseUrl + "/download",
 		);
-		this.sendMessageToUpdater("close");
+		setTimeout(() => {
+			this.sendMessageToUpdater("close");
+		}, 1000);
 	}
 
 	onDismiss() {
