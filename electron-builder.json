@@ -10,7 +10,8 @@
 	"publish": [
 		{
 			"provider": "generic",
-			"url": "https://cdn.tivolicloud.com/releases"
+			"url": "https://cdn.tivolicloud.com/releases",
+			"useMultipleRangeRequest": false
 		}
 	],
 	"win": {
