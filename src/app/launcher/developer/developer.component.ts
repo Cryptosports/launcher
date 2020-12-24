@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { SettingsService } from "../settings/settings.service";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
-import { AuthService } from "../../auth/auth.service";
 import { take } from "rxjs/operators";
+import { AuthService } from "../../auth/auth.service";
+import { SettingsService } from "../settings/settings.service";
 
 @Component({
 	selector: "app-developer",
@@ -10,6 +10,8 @@ import { take } from "rxjs/operators";
 	styleUrls: ["./developer.component.scss"],
 })
 export class DeveloperComponent implements OnInit {
+	readonly electron = (window as any).require("electron");
+
 	constructor(
 		public readonly settingsService: SettingsService,
 		private readonly authService: AuthService,
@@ -30,5 +32,13 @@ export class DeveloperComponent implements OnInit {
 	updateSettingString(key: string, event: Event) {
 		const input = event.currentTarget as HTMLInputElement;
 		this.settingsService.setSetting(key, input.value);
+	}
+
+	onCopyToken(tokenInput: HTMLInputElement) {
+		this.electron.clipboard.writeText(this.token);
+		tokenInput.disabled = false;
+		tokenInput.focus();
+		tokenInput.select();
+		tokenInput.disabled = true;
 	}
 }

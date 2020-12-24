@@ -90,10 +90,20 @@
 				</mat-form-field>
 			</div>
 
-			<mat-form-field>
-				<mat-label>Current access token</mat-label>
-				<input matInput disabled [value]="token" />
-			</mat-form-field>
+			<div style="display: flex; align-items: baseline;">
+				<mat-form-field>
+					<mat-label>Current access token</mat-label>
+					<input matInput #tokenInput disabled [value]="token" />
+				</mat-form-field>
+				<div style="margin: 0 4px;"></div>
+				<button
+					mat-icon-button
+					style="color: rgba(0, 0, 0, 0.55);"
+					(click)="onCopyToken(tokenInput)"
+				>
+					<mat-icon>content_copy</mat-icon>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
