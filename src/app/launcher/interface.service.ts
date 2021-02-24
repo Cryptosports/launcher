@@ -1,11 +1,13 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subscription, Subject } from "rxjs";
-import { AuthService, User } from "../auth/auth.service";
-import { SettingsService } from "./settings/settings.service";
 import { HttpClient } from "@angular/common/http";
+import { Injectable, NgZone } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { BehaviorSubject, Subject, Subscription } from "rxjs";
+import { environment } from "../../environments/environment";
+import { AuthService, User } from "../auth/auth.service";
+import { CrashDialogComponent } from "./crash-dialog/crash-dialog.component";
 import { DiscordService } from "./discord.service";
 import { InterfaceSettingsService } from "./interface-settings.service";
-import { environment } from "../../environments/environment";
+import { SettingsService } from "./settings/settings.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -37,6 +39,8 @@ export class InterfaceService {
 		private discordService: DiscordService,
 		private interfaceSettingsService: InterfaceSettingsService,
 		private http: HttpClient,
+		private dialog: MatDialog,
+		private zone: NgZone,
 	) {
 		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
@@ -247,18 +251,28 @@ export class InterfaceService {
 
 				if (code == 0 || code == null) return;
 
-				const lastLogs = this.logs.slice(
-					this.logs.length - 6,
-					this.logs.length,
-				);
+				// const lastLogs = this.logs.slice(
+				// 	this.logs.length - 6,
+				// 	this.logs.length,
+				// );
 
-				this.showErrorMessage(
-					"Tivoli exited with code: " + code,
-					this.logs && this.logs.length > 0
-						? `Last ${lastLogs.length} logs:\n` +
-								lastLogs.join("\n")
-						: null,
-				);
+				// this.showErrorMessage(
+				// 	"Tivoli exited with code: " + code,
+				// 	this.logs && this.logs.length > 0
+				// 		? `Last ${lastLogs.length} logs:\n` +
+				// 				lastLogs.join("\n")
+				// 		: null,
+				// );
+
+				this.zone.run(() => {
+					// lets hope this works
+					electron.remote.getCurrentWindow().show();
+
+					this.dialog.open(CrashDialogComponent, {
+						disableClose: true,
+						width: "500px",
+					});
+				});
 			});
 
 			this.logs = [];

@@ -1,19 +1,20 @@
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { ScrollingModule } from "@angular/cdk/scrolling";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { MaterialModule } from "../material.module";
 import { ChangelogComponent } from "./changelog/changelog.component";
+import { CrashDialogComponent } from "./crash-dialog/crash-dialog.component";
+import { DeveloperComponent } from "./developer/developer.component";
 import { HomeComponent } from "./home/home.component";
 import { LaunchBarComponent } from "./launch-bar/launch-bar.component";
 import { LauncherComponent } from "./launcher.component";
+import { LogsComponent } from "./logs/logs.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { TokboxSettingsComponent } from "./tokbox-stream/tokbox-settings/tokbox-settings.component";
 import { TokboxStreamComponent } from "./tokbox-stream/tokbox-stream.component";
 import { VideoStreamComponent } from "./video-stream/video-stream.component";
-import { DeveloperComponent } from "./developer/developer.component";
-import { LogsComponent } from "./logs/logs.component";
-import { ScrollingModule } from "@angular/cdk/scrolling";
-import { ClipboardModule } from "@angular/cdk/clipboard";
 import { WorldServerComponent } from "./world-server/world-server.component";
 
 const routes: Routes = [
@@ -46,6 +47,7 @@ const routes: Routes = [
 		DeveloperComponent,
 		LogsComponent,
 		WorldServerComponent,
+		CrashDialogComponent,
 	],
 	imports: [
 		CommonModule,
@@ -54,6 +56,6 @@ const routes: Routes = [
 		ScrollingModule,
 		ClipboardModule,
 	],
-	entryComponents: [TokboxSettingsComponent],
+	entryComponents: [TokboxSettingsComponent, CrashDialogComponent],
 })
 export class LauncherModule {}

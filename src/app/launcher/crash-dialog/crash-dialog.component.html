@@ -1,0 +1,35 @@
+<h2 style="margin-top: 0;">Whoops, looks like <b>Tivoli crashed</b></h2>
+<!-- <p>
+	You could try <b>relaunching Tivoli</b>, it may be a one-off thing.
+	<br />
+	<br />
+	However, if you're crashing over and over, you could try
+	<b>resetting your settings.</b>
+</p> -->
+<p>
+	Please try <b>relaunching Tivoli</b>.
+	<br />
+	<br />
+	If you continue to crash, <b>reset your settings</b> and relaunch.
+</p>
+<div style="margin: 24px 0;"></div>
+<div class="buttons">
+	<button mat-flat-button (click)="onDismiss()">Dismiss</button>
+	<button
+		mat-stroked-button
+		(click)="onResetSettings()"
+		[disabled]="resetSettingsState == 2"
+	>
+		<mat-icon>delete_forever</mat-icon>
+		{{
+			resetSettingsState == 0
+				? "Reset settings"
+				: resetSettingsState == 1
+				? "Are you sure?"
+				: "Settings reset!"
+		}}
+	</button>
+	<button mat-flat-button color="primary" (click)="onRelaunch()">
+		<mat-icon>refresh</mat-icon> Relaunch
+	</button>
+</div>
