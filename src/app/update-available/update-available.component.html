@@ -2,12 +2,16 @@
 	<h2 style="margin-top: 0;">There is a new update available!</h2>
 	<p>
 		Would you like to download the latest version?
-		<b>It is highly recommended.</b>
+		<b>It is highly recommended.</b> It's possible the update might fail and
+		you'll have to redownload Tivoli again.
 	</p>
 	<div class="buttons">
 		<button mat-flat-button (click)="onDismiss()">Dismiss</button>
+		<button mat-flat-button (click)="onDownloadTivoli()" color="primary">
+			<mat-icon>get_app</mat-icon> Download Tivoli
+		</button>
 		<button mat-flat-button (click)="onUpdate()" color="primary">
-			<mat-icon>get_app</mat-icon> Update now!
+			<mat-icon>redo</mat-icon> Update here
 		</button>
 	</div>
 </ng-container>
@@ -29,7 +33,6 @@
 			</td>
 		</tr>
 	</table>
-
 	<br />
 	<mat-progress-bar
 		mode="determinate"
@@ -42,6 +45,25 @@
 			</td>
 			<td style="text-align: right;">
 				{{ downloadSpeed }}
+			</td>
+		</tr>
+	</table>
+	<hr style="margin: 16px 0; opacity: 0.2; border-width: 2px;" />
+	<table style="width: 100%;">
+		<tr>
+			<td style="text-align: left;">
+				If the download isn't working, please redownload Tivoli from the
+				website
+			</td>
+			<td style="text-align: right;">
+				<button
+					mat-flat-button
+					(click)="onDownloadTivoli()"
+					color="primary"
+				>
+					<mat-icon>get_app</mat-icon>
+					Download Tivoli
+				</button>
 			</td>
 		</tr>
 	</table>
@@ -62,7 +84,7 @@
 	<h2 style="margin-top: 0;">An error occurred while updating.</h2>
 	<p>
 		We're not sure what's going on... Downloading the last version from the
-		website is much more likely to work.
+		website is more likely to work.
 	</p>
 	<div class="buttons">
 		<button mat-flat-button (click)="onDismiss()">Dismiss</button>

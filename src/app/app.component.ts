@@ -10,11 +10,7 @@ import { AuthService } from "./auth/auth.service";
 export class AppComponent {
 	private updating = false;
 
-	constructor(
-		private dialog: MatDialog,
-		private authService: AuthService,
-		private zone: NgZone,
-	) {
+	constructor(private dialog: MatDialog, private zone: NgZone) {
 		this.checkForUpdate();
 	}
 
