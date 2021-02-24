@@ -7,6 +7,8 @@ const process = (window as any).process;
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
+const fsExtra = require("fs-extra");
+const electron = require("electron");
 
 @Injectable({
 	providedIn: "root",
@@ -40,6 +42,14 @@ export class InterfaceSettingsService {
 		);
 	}
 
+	getInterfaceSettingsPath() {
+		return path.resolve(this.getConfigPath(), "Interface.json");
+	}
+
+	getInterfaceDataPaths() {
+		return [this.getConfigPath(), this.getLocalPath()];
+	}
+
 	readInterfaceSettings() {
 		const appDataPath = this.getConfigPath();
 		const jsonPath = path.resolve(appDataPath, "Interface.json");
@@ -60,6 +70,30 @@ export class InterfaceSettingsService {
 
 		const jsonPath = path.resolve(appDataPath, "Interface.json");
 		fs.writeFileSync(jsonPath, JSON.stringify(interfaceSettings, null, 4));
+	}
+
+	resettingInterfaceData = false;
+	async resetInterfaceData(showDialog = false) {
+		// TODO: dont delete `this.getConfigPath() + "/launcher"`
+
+		this.resettingInterfaceData = true;
+		for (const path of this.getInterfaceDataPaths()) {
+			try {
+				await fsExtra.remove(path);
+			} catch (err) {
+				console.error(err);
+			}
+		}
+		this.resettingInterfaceData = false;
+
+		if (showDialog) {
+			electron.remote.dialog.showMessageBox(null, {
+				type: "info",
+				buttons: ["OK"],
+				title: "Tivoli Cloud VR",
+				message: "Interface data successfully reset",
+			});
+		}
 	}
 
 	setInterfaceSettings(

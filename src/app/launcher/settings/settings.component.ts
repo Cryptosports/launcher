@@ -7,8 +7,6 @@ import { SettingsService } from "./settings.service";
 const require = (window as any).require;
 
 const electron = require("electron");
-const fsExtra = require("fs-extra");
-const path = require("path");
 
 @Component({
 	selector: "app-settings",
@@ -31,45 +29,50 @@ export class SettingsComponent {
 		this.settingsService.setSetting(key, input.value);
 	}
 
-	removingSettings = false;
-
 	isWindows = process.platform == "win32";
 
-	async onRemoveAllSettings() {
-		const configPath = this.interfaceSettingsService.getConfigPath();
-		const localPath = this.interfaceSettingsService.getLocalPath();
+	async onResetInterfaceSettings() {
+		const { response } = await electron.remote.dialog.showMessageBox(null, {
+			type: "question",
+			buttons: ["OK", "Cancel"],
+			defaultId: 1,
+			title: "Tivoli Cloud VR",
+			message: "Are you sure you want to reset your interface settings?",
+			detail: this.interfaceSettingsService.getInterfaceSettingsPath(),
+			cancelId: 1,
+		});
 
-		const toBeDeleted = [configPath, localPath];
+		if (response == 0) {
+			this.interfaceSettingsService.writeInterfaceSettings({});
+
+			electron.remote.dialog.showMessageBox(null, {
+				type: "info",
+				buttons: ["OK"],
+				title: "Tivoli Cloud VR",
+				message: "Interface settings successfully reset",
+			});
+		}
+	}
+
+	get resettingInterfaceData() {
+		return this.interfaceSettingsService.resettingInterfaceData;
+	}
+
+	async onResetInterfaceData() {
+		const toBeDeleted = this.interfaceSettingsService.getInterfaceDataPaths();
 
 		const { response } = await electron.remote.dialog.showMessageBox(null, {
 			type: "question",
 			buttons: ["OK", "Cancel"],
 			defaultId: 1,
 			title: "Tivoli Cloud VR",
-			message: "Are you sure you want to remove all your settings?",
+			message: "Are you sure you want to reset your interface data?",
 			detail: toBeDeleted.join("\n"),
 			cancelId: 1,
 		});
 
 		if (response == 0) {
-			this.removingSettings = true;
-			for (const path of toBeDeleted) {
-				try {
-					await fsExtra.remove(path);
-				} catch (err) {
-					console.error(err);
-				}
-			}
-			this.removingSettings = false;
-
-			this.router.navigate(["launcher", "home"]);
-
-			electron.remote.dialog.showMessageBox(null, {
-				type: "info",
-				buttons: ["OK"],
-				title: "Tivoli Cloud VR",
-				message: "All settings removed",
-			});
+			this.interfaceSettingsService.resetInterfaceData(true);
 		}
 	}
 }

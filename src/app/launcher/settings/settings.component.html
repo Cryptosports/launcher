@@ -10,6 +10,7 @@
 			>
 				Discord Rich Presence
 			</mat-slide-toggle>
+			<br />
 
 			<!-- <mat-slide-toggle
 				[checked]="
@@ -38,6 +39,7 @@
 			>
 				Show interface logs
 			</mat-slide-toggle>
+			<br />
 
 			<!-- <mat-slide-toggle
 				[checked]="settingsService.getSetting('videoStreaming') | async"
@@ -66,32 +68,43 @@
 
 			<div style="padding: 8px 0;"></div>
 
-			<div style="padding: 8px 0;"></div>
+			<h2><mat-icon>delete_forever</mat-icon> Resetting</h2>
 
-			<button
-				mat-flat-button
-				color="primary"
-				(click)="onRemoveAllSettings()"
-				[disabled]="removingSettings"
+			<div
+				style="display: flex; align-items: center; flex-direction: row;"
 			>
-				<div style="display: flex; align-items: center;">
-					<mat-icon *ngIf="!removingSettings">
-						delete_forever
-					</mat-icon>
-					<mat-progress-spinner
-						*ngIf="removingSettings"
-						mode="indeterminate"
-						diameter="24"
+				<button mat-stroked-button (click)="onResetInterfaceSettings()">
+					Interface settings
+				</button>
+				<span style="padding: 0px 4px;"></span>
+				<button
+					mat-stroked-button
+					(click)="onResetInterfaceData()"
+					[disabled]="resettingInterfaceData"
+				>
+					<div
+						style="
+							display: flex;
+							align-items: center;
+							flex-direction: row;
+						"
 					>
-					</mat-progress-spinner>
-					<div style="margin: 0 4px;"></div>
-					{{
-						removingSettings
-							? "Removing all settings..."
-							: "Remove all settings"
-					}}
-				</div>
-			</button>
+						<ng-container *ngIf="resettingInterfaceData">
+							<mat-progress-spinner
+								mode="indeterminate"
+								diameter="24"
+							>
+							</mat-progress-spinner>
+							<div style="margin: 0 4px;"></div>
+						</ng-container>
+						{{
+							resettingInterfaceData
+								? "Resetting interface data..."
+								: "Interface data (slow)"
+						}}
+					</div>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
