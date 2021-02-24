@@ -67,7 +67,7 @@ export class ChangelogComponent implements OnInit, OnDestroy {
 			} catch (err) {
 				// console.error(err);
 			}
-		}, 100);
+		}, 200);
 	}
 
 	ngOnDestroy() {
