@@ -1,0 +1,46 @@
+<button mat-flat-button (click)="onLaunch()" [disabled]="running">
+	<div class="content">
+		<div class="icon">
+			<mat-icon *ngIf="!running">
+				launch
+			</mat-icon>
+			<mat-progress-spinner
+				*ngIf="running"
+				diameter="28"
+				strokeWidth="4"
+				color="primary"
+				mode="indeterminate"
+			>
+			</mat-progress-spinner>
+		</div>
+		<div class="text">
+			<ng-container *ngIf="!running">
+				Launch Tivoli client
+			</ng-container>
+			<ng-container *ngIf="running">
+				Tivoli is now running!
+			</ng-container>
+			<br />
+			<span>
+				using
+				<ng-container
+					*ngIf="
+						(settingsService.getSetting('interfacePathEnabled')
+						| async)
+							? (settingsService.getSetting('interfacePath')
+							  | async)
+							: false;
+						else currentVersionRef
+					"
+				>
+					<b style="color: #f44336; font-weight: 700;">
+						custom path!
+					</b>
+				</ng-container>
+				<ng-template #currentVersionRef>
+					version {{ currentVersion }}
+				</ng-template>
+			</span>
+		</div>
+	</div>
+</button>

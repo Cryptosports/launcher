@@ -9,6 +9,7 @@ import { CrashDialogComponent } from "./crash-dialog/crash-dialog.component";
 import { DeveloperComponent } from "./developer/developer.component";
 import { HomeComponent } from "./home/home.component";
 import { LaunchBarComponent } from "./launch-bar/launch-bar.component";
+import { LaunchButtonComponent } from "./launch-bar/launch-button/launch-button.component";
 import { LauncherComponent } from "./launcher.component";
 import { LogsComponent } from "./logs/logs.component";
 import { SettingsComponent } from "./settings/settings.component";
@@ -48,6 +49,7 @@ const routes: Routes = [
 		LogsComponent,
 		WorldServerComponent,
 		CrashDialogComponent,
+		LaunchButtonComponent,
 	],
 	imports: [
 		CommonModule,
