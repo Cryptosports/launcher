@@ -1,0 +1,53 @@
+<button
+	mat-flat-button
+	[disabled]="disabled"
+	[style.opacity]="disabled ? 0.5 : 1"
+>
+	<div class="content">
+		<div
+			class="thumbnail"
+			[class.tutorial]="state == 'tutorial'"
+			[style.backgroundImage]="
+				state == 'known'
+					? 'url(' +
+					  metaverseUrl +
+					  '/api/domain/' +
+					  world.id +
+					  '/image)'
+					: ''
+			"
+		>
+			<div class="shadow"></div>
+			<div class="users">
+				<ng-container *ngIf="state == 'known' && world">
+					{{ displayPlural(world.numUsers, "person", "people") }}
+				</ng-container>
+				<ng-container *ngIf="state == 'tutorial'">
+					Serverless
+				</ng-container>
+				<ng-container *ngIf="state == 'unknown'">
+					Unknown
+				</ng-container>
+			</div>
+		</div>
+		<div class="text" [class.dark]="dark">
+			<ng-container *ngIf="state == 'known' && world">
+				{{ world.label }}
+				<br />
+				<span>
+					{{ world.author }}
+				</span>
+			</ng-container>
+			<ng-container *ngIf="state == 'tutorial'">
+				Tutorial world
+				<br />
+				<span>Tivoli Cloud VR</span>
+			</ng-container>
+			<ng-container *ngIf="state == 'unknown'">
+				???
+				<br />
+				<span>???</span>
+			</ng-container>
+		</div>
+	</div>
+</button>

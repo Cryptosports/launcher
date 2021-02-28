@@ -1,0 +1,43 @@
+<div class="world-selector">
+	<app-world-button
+		style="margin-top: 2px;"
+		(click)="toggleDropdown()"
+		[world]="currentWorld"
+		[state]="currentWorldState"
+		[disabled]="running"
+	></app-world-button>
+	<mat-icon
+		style="font-size: 36px; width: 36px; height: 36px; margin-left: 2px;"
+		[style.opacity]="running ? 0.2 : 0.4"
+	>
+		expand_less
+	</mat-icon>
+	<div *ngIf="dropdownOpen" class="dropdown">
+		<app-world-button
+			*ngFor="let world of latestWorlds"
+			dark="true"
+			[world]="world"
+			(click)="updateSpawnWorld(world.id)"
+			[disabled]="
+				settingsService.getSetting('alwaysSpawnInTutorialWorld') | async
+			"
+		></app-world-button>
+		<hr style="border: none; border-top: solid 1px rgba(0, 0, 0, 0.2);" />
+		<app-world-button
+			dark="true"
+			state="tutorial"
+			(click)="updateSpawnWorld(null)"
+		></app-world-button>
+		<mat-slide-toggle
+			style="margin-top: 4px;"
+			[checked]="
+				settingsService.getSetting('alwaysSpawnInTutorialWorld') | async
+			"
+			(change)="
+				updateSettingChecked('alwaysSpawnInTutorialWorld', $event)
+			"
+		>
+			Always spawn at tutorial
+		</mat-slide-toggle>
+	</div>
+</div>

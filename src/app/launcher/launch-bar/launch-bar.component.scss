@@ -9,17 +9,6 @@
 	align-items: center;
 	position: relative;
 
-	.logo {
-		height: 32px;
-		width: 200px;
-		background-image: url(../../../assets/logo-light-nopink.svg);
-		background-position: left center;
-		background-repeat: no-repeat;
-		background-size: auto 100%;
-		margin-left: 16px;
-		cursor: pointer;
-	}
-
 	table {
 		width: 100%;
 		table-layout: fixed;

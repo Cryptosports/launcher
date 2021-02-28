@@ -10,6 +10,8 @@ import { DeveloperComponent } from "./developer/developer.component";
 import { HomeComponent } from "./home/home.component";
 import { LaunchBarComponent } from "./launch-bar/launch-bar.component";
 import { LaunchButtonComponent } from "./launch-bar/launch-button/launch-button.component";
+import { WorldButtonComponent } from "./launch-bar/world-selector/world-button/world-button.component";
+import { WorldSelectorComponent } from "./launch-bar/world-selector/world-selector.component";
 import { LauncherComponent } from "./launcher.component";
 import { LogsComponent } from "./logs/logs.component";
 import { SettingsComponent } from "./settings/settings.component";
@@ -50,6 +52,8 @@ const routes: Routes = [
 		WorldServerComponent,
 		CrashDialogComponent,
 		LaunchButtonComponent,
+		WorldButtonComponent,
+		WorldSelectorComponent,
 	],
 	imports: [
 		CommonModule,

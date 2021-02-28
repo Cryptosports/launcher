@@ -36,10 +36,6 @@ export class LaunchBarComponent implements OnInit, OnDestroy {
 		this.authService.logout();
 	}
 
-	openMetaversePage() {
-		electron.shell.openExternal(this.metaverseUrl);
-	}
-
 	openUserSettingsPage() {
 		electron.shell.openExternal(this.metaverseUrl + "/user/settings");
 	}

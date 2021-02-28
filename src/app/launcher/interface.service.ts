@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable, NgZone } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { BehaviorSubject, Subject, Subscription } from "rxjs";
@@ -8,6 +7,7 @@ import { CrashDialogComponent } from "./crash-dialog/crash-dialog.component";
 import { DiscordService } from "./discord.service";
 import { InterfaceSettingsService } from "./interface-settings.service";
 import { SettingsService } from "./settings/settings.service";
+import { tutorialWorldAddress } from "./utils";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -30,17 +30,19 @@ export class InterfaceService {
 	logs: string[] = [];
 	log$ = new Subject<string>();
 
+	worldIdChanges$ = new Subject<string>();
+	serverlessChanges$ = new Subject<string>();
+
 	private child = null;
 	private children = [];
 
 	constructor(
-		private authService: AuthService,
-		private settingsService: SettingsService,
-		private discordService: DiscordService,
-		private interfaceSettingsService: InterfaceSettingsService,
-		private http: HttpClient,
-		private dialog: MatDialog,
-		private zone: NgZone,
+		private readonly authService: AuthService,
+		private readonly settingsService: SettingsService,
+		private readonly interfaceSettingsService: InterfaceSettingsService,
+		private readonly dialog: MatDialog,
+		private readonly zone: NgZone,
+		private readonly discordService: DiscordService,
 	) {
 		this.userSub = this.authService.user$.subscribe(user => {
 			this.user = user;
@@ -132,6 +134,16 @@ export class InterfaceService {
 
 		const alreadyRunning = this.running$.value;
 		if (alreadyRunning == false) this.running$.next(true);
+
+		if (url == null) {
+			if (
+				this.settingsService.getSetting<boolean>(
+					"alwaysSpawnInTutorialWorld",
+				).value == true
+			) {
+				url = tutorialWorldAddress;
+			}
+		}
 
 		try {
 			// sync settings
@@ -288,22 +300,28 @@ export class InterfaceService {
 				)
 				.forEach(rl => {
 					rl.on("line", (line: string) => {
-						if (!environment.production) console.log(line);
+						// if (!environment.production) console.log(line);
 
 						this.log$.next(line);
 						this.logs.push(line);
 						if (this.logs.length > 10000) this.logs.shift();
 
-						// discord rpc
+						// for discord rpc and world selector
 						const updatedDomainIdMatches = line.match(
 							/\[hifi\.networking\] Domain ID changed to "([^]+)"/i,
 						);
 						if (updatedDomainIdMatches != null) {
-							if (updatedDomainIdMatches.length >= 2) {
-								this.discordService.updateDomainId(
-									updatedDomainIdMatches[1],
-								);
-							}
+							const worldId = updatedDomainIdMatches[1];
+							this.discordService.updateDomainId(worldId);
+							this.worldIdChanges$.next(worldId);
+						}
+						const updatedServerlessMatches = line.match(
+							/\[hifi.networking\] Possible domain change required to serverless domain:  "([^]+)"/i,
+						);
+						if (updatedServerlessMatches != null) {
+							const address = updatedServerlessMatches[1];
+							this.discordService.updateDomainId(null);
+							this.serverlessChanges$.next(address);
 						}
 
 						// minimize launcher when interface opens

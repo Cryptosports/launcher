@@ -1,0 +1,23 @@
+.world-selector {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	position: relative;
+
+	.dropdown {
+		$height: 362px; // whatever works best!
+		$padding: 4px;
+
+		position: absolute;
+		margin: auto;
+		top: -$height - 12px - $padding - $padding;
+		height: $height;
+		left: 0;
+		right: 36px + 2px;
+		border-radius: 4px;
+		padding: $padding;
+
+		background-color: #fff;
+		color: #000;
+	}
+}

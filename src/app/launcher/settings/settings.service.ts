@@ -67,6 +67,7 @@ export class SettingsService {
 		this.setDefaultSettings({
 			// launchbar
 			disableVr: false,
+			alwaysSpawnInTutorialWorld: false,
 
 			// general
 			discordRichPresence: true,

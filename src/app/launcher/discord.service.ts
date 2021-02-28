@@ -1,7 +1,7 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "../auth/auth.service";
 import { SettingsService } from "./settings/settings.service";
-import { HttpClient } from "@angular/common/http";
 
 const require = (window as any).require;
 const DiscordRPC = require("discord-rpc");
@@ -16,52 +16,49 @@ export class DiscordService {
 	private timeSinceStarted: Date = null;
 
 	constructor(
-		private authService: AuthService,
-		private settingsService: SettingsService,
-		private http: HttpClient,
+		private readonly authService: AuthService,
+		private readonly settingsService: SettingsService,
+		private readonly http: HttpClient,
 	) {}
 
 	initialize() {
+		const initializeRpc = () => {
+			let failed = false;
+
+			this.rpc = new DiscordRPC.Client({ transport: "ipc" });
+			this.rpc
+				.login({
+					clientId: "626510915843653638",
+				})
+				.catch(err => {
+					console.error(err);
+					this.rpc == null;
+					failed = true;
+				})
+				.then(() => {
+					if (failed) return;
+
+					if (this.currentDomainId == null) {
+						this.atLauncher();
+					} else {
+						this.updateDomainId(this.currentDomainId, true);
+					}
+					console.log(this.rpc);
+				});
+		};
+
 		this.settingsService
 			.getSetting("discordRichPresence")
 			.subscribe(enabled => {
 				if (enabled) {
-					const initialize = () => {
-						let failed = false;
-
-						this.rpc = new DiscordRPC.Client({ transport: "ipc" });
-						this.rpc
-							.login({
-								clientId: "626510915843653638",
-							})
-							.catch(err => {
-								console.error(err);
-								this.rpc == null;
-								failed = true;
-							})
-							.then(() => {
-								if (failed) return;
-
-								if (this.currentDomainId == null) {
-									this.atLauncher();
-								} else {
-									this.updateDomainId(
-										this.currentDomainId,
-										true,
-									);
-								}
-								console.log(this.rpc);
-							});
-					};
-
-					initialize();
+					initializeRpc();
 
 					setInterval(() => {
 						if (this.rpc.user == null) {
-							initialize();
+							initializeRpc();
 						} else {
 							if (this.rpc.transport.socket.writable == false) {
-								initialize();
+								initializeRpc();
 							}
 						}
 					}, 1000 * 60);

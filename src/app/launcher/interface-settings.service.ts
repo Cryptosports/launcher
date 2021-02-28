@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { config } from "process";
+import { SettingsService } from "./settings/settings.service";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -14,7 +15,21 @@ const electron = require("electron");
 	providedIn: "root",
 })
 export class InterfaceSettingsService {
-	constructor() {}
+	constructor(private readonly settingsService: SettingsService) {}
+
+	private getFolderName() {
+		// TODO: what if the interface path is not a dev build
+		const interfacePathEnabled = this.settingsService.getSetting<string>(
+			"interfacePathEnabled",
+		).value;
+		const interfacePath = this.settingsService.getSetting<string>(
+			"interfacePath",
+		).value;
+
+		const isDev = interfacePathEnabled && interfacePath;
+
+		return "Tivoli Cloud VR" + (isDev ? " - dev" : "");
+	}
 
 	getConfigPath() {
 		return path.resolve(
@@ -25,7 +40,7 @@ export class InterfaceSettingsService {
 				: process.platform == "linux"
 				? path.resolve(os.homedir(), ".config")
 				: null,
-			"Tivoli Cloud VR",
+			this.getFolderName(),
 		);
 	}
 
@@ -38,7 +53,7 @@ export class InterfaceSettingsService {
 				: process.platform == "linux"
 				? path.resolve(os.homedir(), ".local/share")
 				: null,
-			"Tivoli Cloud VR",
+			this.getFolderName(),
 		);
 	}
 
