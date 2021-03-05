@@ -7,21 +7,60 @@
 		[disabled]="running"
 	></app-world-button>
 	<mat-icon
-		style="font-size: 36px; width: 36px; height: 36px; margin-left: 2px;"
+		style="
+			font-size: 36px;
+			width: 36px;
+			height: 36px;
+			margin-left: 2px;
+			cursor: pointer;
+		"
 		[style.opacity]="running ? 0.2 : 0.4"
+		(click)="toggleDropdown()"
 	>
-		expand_less
+		{{ dropdownOpen ? "expand_more" : "expand_less" }}
 	</mat-icon>
 	<div *ngIf="dropdownOpen" class="dropdown">
 		<app-world-button
 			*ngFor="let world of latestWorlds"
 			dark="true"
 			[world]="world"
+			[state]="world.id == null ? 'unknown' : 'known'"
+			[style.opacity]="world.id == null ? '0' : '1'"
 			(click)="updateSpawnWorld(world.id)"
 			[disabled]="
 				settingsService.getSetting('alwaysSpawnInTutorialWorld') | async
 			"
 		></app-world-button>
+		<div
+			style="
+				display: flex;
+				flex-direction: row;
+				width: 100%;
+				margin-top: 4px;
+				align-items: center;
+			"
+		>
+			<mat-form-field
+				appearance="outline"
+				class="thin-input"
+				style="width: 1px; flex-grow: 1;"
+			>
+				<mat-icon matPrefix>search</mat-icon>
+				<input
+					matInput
+					(input)="onWorldSearch($event.target.value)"
+					[value]="search"
+				/>
+			</mat-form-field>
+			<button
+				mat-icon-button
+				class="small-icon-button"
+				[disabled]="search == ''"
+				(click)="onWorldSearch('')"
+			>
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
 		<hr style="border: none; border-top: solid 1px rgba(0, 0, 0, 0.2);" />
 		<app-world-button
 			dark="true"

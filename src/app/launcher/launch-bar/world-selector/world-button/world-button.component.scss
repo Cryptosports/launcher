@@ -72,6 +72,10 @@ button {
 			width: 100%;
 			padding-left: 8px;
 
+			// stop emojis from cutting off
+			padding-top: 8px;
+			margin-top: -8px;
+
 			span {
 				font-weight: 400;
 				font-size: 0.8em;

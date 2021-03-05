@@ -22,6 +22,7 @@ export class WorldSelectorComponent implements OnInit, OnDestroy {
 	currentWorldState: "known" | "tutorial" | "unknown" = "known";
 
 	latestWorlds: World[] = [];
+	search = "";
 
 	subs: Subscription[] = [];
 
@@ -84,12 +85,24 @@ export class WorldSelectorComponent implements OnInit, OnDestroy {
 
 	getLatestWorlds() {
 		this.http
-			.get<World[]>(
-				this.authService.metaverseUrl + "/api/domains?page=1&amount=5",
-			)
+			.get<World[]>(this.authService.metaverseUrl + "/api/domains", {
+				params: {
+					page: "1",
+					amount: "5",
+					search: this.search,
+				},
+			})
 			.subscribe(
 				worlds => {
-					this.latestWorlds = worlds.slice(0, 5); // to be sure
+					const maxWorlds = 5;
+					this.latestWorlds = worlds.slice(0, maxWorlds);
+
+					const worldsToAdd = maxWorlds - this.latestWorlds.length;
+					if (this.latestWorlds.length < maxWorlds) {
+						for (let i = 0; i < worldsToAdd; i++) {
+							this.latestWorlds.push({} as any);
+						}
+					}
 				},
 				() => {
 					this.latestWorlds = [];
@@ -170,5 +183,10 @@ export class WorldSelectorComponent implements OnInit, OnDestroy {
 		this.getCurrentWorld();
 
 		this.dropdownOpen = false;
+	}
+
+	onWorldSearch(search: string) {
+		this.search = search.trim();
+		this.getLatestWorlds();
 	}
 }
