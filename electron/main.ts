@@ -10,15 +10,24 @@ import {
 } from "electron";
 import { autoUpdater } from "electron-updater";
 import { watchFile } from "fs";
-import * as os from "os";
+import { rmdirSync } from "fs-extra";
 import * as path from "path";
 
 autoUpdater.autoDownload = false;
 
+const oldUserData = app.getPath("userData");
 app.setPath(
 	"userData",
-	path.resolve(app.getPath("userData"), "../Tivoli Cloud VR/launcher"),
+	path.resolve(oldUserData, "../Tivoli Cloud VR/launcher"),
 );
+// delete %appdata%/tivoli-cloud-vr immediately after changing above
+// there is a chance it might have made it already
+// timeout not necessary but just incase
+setTimeout(() => {
+	try {
+		rmdirSync(oldUserData, { recursive: true });
+	} catch (err) {}
+}, 1000);
 
 let win: BrowserWindow;
 let tray: Tray;
@@ -28,7 +37,6 @@ app.on("before-quit", function () {
 	isQuiting = true;
 });
 
-const PLATFORM = os.platform();
 const DEV = process.env.DEV != null;
 
 const appLock = !DEV ? app.requestSingleInstanceLock() : true;
