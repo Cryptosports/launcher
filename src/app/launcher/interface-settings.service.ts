@@ -74,7 +74,7 @@ export class InterfaceSettingsService {
 			const json = JSON.parse(jsonStr);
 			return json;
 		} catch (err) {
-			return null;
+			return {};
 		}
 	}
 
