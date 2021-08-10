@@ -1,20 +1,26 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { MaterialModule } from "../material.module";
-import { FormComponent } from "./form/form.component";
 import { SignInComponent } from "./sign-in.component";
+import { LottieModule } from "ngx-lottie";
+import player from "lottie-web";
+
+export function playerFactory() {
+	return player;
+}
 
 const routes: Routes = [{ path: "", component: SignInComponent }];
 
 @NgModule({
-	declarations: [SignInComponent, FormComponent],
+	declarations: [SignInComponent],
 	imports: [
 		CommonModule,
 		MaterialModule,
-		ReactiveFormsModule,
 		RouterModule.forChild(routes),
+		LottieModule.forRoot({
+			player: playerFactory,
+		}),
 	],
 })
 export class SignInModule {}

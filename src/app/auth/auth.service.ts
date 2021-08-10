@@ -60,13 +60,6 @@ export class AuthService {
 		private settingsService: SettingsService,
 	) {}
 
-	private handleError = (err: HttpErrorResponse): Observable<never> => {
-		//console.log(err);
-		if (err.error.message) return throwError(err.error.message);
-		if (err.status == 401)
-			return throwError("Invalid username and password");
-	};
-
 	openEmailVerifyDialog() {
 		this.dialog.open(VerifyEmailComponent, {
 			width: "400px",
@@ -130,26 +123,6 @@ export class AuthService {
 			},
 		);
 	};
-
-	signIn(signInDto: { username: string; password: string }) {
-		return this.http
-			.post<AuthToken>(this.metaverseUrl + "/oauth/token", {
-				grant_type: "password",
-				username: signInDto.username,
-				password: signInDto.password,
-				scope: "owner",
-			})
-			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
-	}
-
-	extSignUp(extSignUpDto: { token: string; username: string }) {
-		return this.http
-			.post<AuthToken>(
-				this.metaverseUrl + "/api/auth/signup-external",
-				extSignUpDto,
-			)
-			.pipe(catchError(this.handleError), tap(this.handleAuthentication));
-	}
 
 	autoLogin() {
 		const tokenStr = localStorage.getItem("auth");

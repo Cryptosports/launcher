@@ -1,12 +1,18 @@
-<div class="logo"></div>
-<div class="content">
-	<app-form></app-form>
-</div>
-<div class="logging-in" *ngIf="autoLoggingIn">
-	<mat-progress-spinner
-		mode="indeterminate"
-		diameter="48"
-		color="primary"
-	></mat-progress-spinner>
-	<p>Logging in...</p>
+<div class="container">
+	<div class="content">
+		<ng-lottie class="logo" [options]="logoOptions"></ng-lottie>
+	</div>
+	<div class="status">
+		<div class="logging-in">
+			<mat-progress-spinner
+				mode="indeterminate"
+				diameter="24"
+			></mat-progress-spinner>
+			<p>Signing in...</p>
+		</div>
+		<div style="margin: 4px 0;"></div>
+		<a href="javascript:" (click)="nothingIsHappening()">
+			Click here if nothing is happening
+		</a>
+	</div>
 </div>

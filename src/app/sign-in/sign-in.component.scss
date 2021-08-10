@@ -1,7 +1,14 @@
-$bgDim: 0.2;
+.container {
+	width: 100vw;
+	height: 100vh;
 
-:host {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
 	//background: #e91e63;
+	$bgDim: 0.8;
 	background-image: linear-gradient(
 			0deg,
 			rgba(#1d1f21, $bgDim),
@@ -12,50 +19,67 @@ $bgDim: 0.2;
 	background-repeat: no-repeat;
 	background-size: cover;
 
-	width: 100vw;
-	height: 100vh;
-
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	.logo {
-		height: 100px;
-		width: 100%;
-		background-image: url(../../assets/logo-light.svg);
-		background-position: center;
-		background-repeat: no-repeat;
-		background-size: auto 100%;
-		margin-bottom: 32px;
-	}
+	$statusHeight: 96px;
 
 	.content {
-		width: 400px;
-		padding: 32px;
-		border-radius: 4px;
-		background: #fff;
+		width: 100%;
+		flex-grow: 1;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+
+		.logo {
+			display: block;
+			height: 128px;
+			margin-top: $statusHeight / 2; // equal it out a bit more
+		}
 	}
-}
 
-.logging-in {
-	position: fixed;
-	margin: auto;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
+	.status {
+		$height: $statusHeight;
+		height: $height;
+		max-height: $height;
+		min-height: $height;
+		width: 100%;
 
-	background: rgba(#1d1f21, 0.8);
-	font-weight: 500;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-	color: #fff;
+		background-color: rgba(#fff, 0.15);
+		color: #fff;
+		opacity: 0.6;
+		text-align: center;
+		font-size: 1.1em;
 
-	.mat-progress-spinner ::ng-deep circle {
-		stroke: #fff;
+		a {
+			opacity: 1;
+			font-weight: 400;
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.logging-in {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			height: 32px;
+			opacity: 0.6;
+
+			.mat-progress-spinner ::ng-deep circle {
+				stroke: #fff;
+			}
+
+			p {
+				margin-left: 12px;
+				font-weight: 400;
+			}
+		}
 	}
 }
