@@ -277,8 +277,9 @@ export class InterfaceService {
 				// );
 
 				this.zone.run(() => {
-					// lets hope this works
+					electron.remote.getCurrentWindow().setAlwaysOnTop(true);
 					electron.remote.getCurrentWindow().show();
+					electron.remote.getCurrentWindow().setAlwaysOnTop(false);
 
 					this.dialog.open(CrashDialogComponent, {
 						disableClose: true,
