@@ -32,28 +32,6 @@
 		"installerSidebar": "assets/installer-sidebar.bmp",
 		"include": "build/installer.nsh"
 	},
-	"mac": {
-		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
-		"target": ["dmg", "zip"],
-		"icon": "assets/icon.icns",
-		"category": "public.app-category.games"
-	},
-	"dmg": {
-		"background": "assets/dmg.png",
-		"title": "Tivoli Cloud VR",
-		"contents": [
-			{
-				"x": 170,
-				"y": 190
-			},
-			{
-				"x": 370,
-				"y": 190,
-				"type": "link",
-				"path": "/Applications"
-			}
-		]
-	},
 	"linux": {
 		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
 		"target": ["AppImage", "pacman", "deb"],
