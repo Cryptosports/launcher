@@ -59,8 +59,8 @@ launcher linux:
     artifacts:
         expire_in: 1 day
         paths:
-            - launcher/dist/*.AppImage
-            - launcher/dist/*.yml
+            - dist/*.AppImage
+            - dist/*.yml
 
 upload launcher:
     stage: deploy
