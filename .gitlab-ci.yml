@@ -19,7 +19,7 @@ launcher windows:
     extends: .production
 
     variables:
-        CSC_LINK: C:\tivoli-cloud-vr.p12
+        CSC_LINK: C:\tivoli-cloud-vr.ci.pfx
         # CSC_KEY_PASSWORD
 
     script:
