@@ -6,6 +6,7 @@ import { AuthService, User } from "../auth/auth.service";
 import { CrashDialogComponent } from "./crash-dialog/crash-dialog.component";
 import { DiscordService } from "./discord.service";
 import { InterfaceSettingsService } from "./interface-settings.service";
+import { InterfaceUpdaterService } from "./interface-updater.service";
 import { SettingsService } from "./settings/settings.service";
 import { tutorialWorldAddress } from "./utils";
 
@@ -40,6 +41,7 @@ export class InterfaceService {
 		private readonly authService: AuthService,
 		private readonly settingsService: SettingsService,
 		private readonly interfaceSettingsService: InterfaceSettingsService,
+		private readonly interfaceUpdaterService: InterfaceUpdaterService,
 		private readonly dialog: MatDialog,
 		private readonly zone: NgZone,
 		private readonly discordService: DiscordService,
@@ -72,7 +74,7 @@ export class InterfaceService {
 	}
 
 	showErrorMessage(message: string, detail?: string) {
-		electron.remote.dialog.showMessageBox(null, {
+		electron.ipcRenderer.invoke("show-message-box", {
 			type: "error",
 			buttons: ["OK"],
 			title: "Tivoli Cloud VR",
@@ -82,18 +84,16 @@ export class InterfaceService {
 	}
 
 	getInterfacePath() {
-		const defaultInterfacePath = path.resolve(
-			electron.remote.app.getAppPath(),
-			"interface",
-		);
+		const installedInterfacePath = this.interfaceUpdaterService
+			.interfacePath;
 
 		const interfacePath = this.settingsService.getSetting<boolean>(
 			"interfacePathEnabled",
 		).value
 			? this.settingsService
 					.getSetting<string>("interfacePath")
-					.value.trim() || defaultInterfacePath
-			: defaultInterfacePath;
+					.value.trim() || installedInterfacePath
+			: installedInterfacePath;
 
 		return interfacePath;
 	}
@@ -244,10 +244,7 @@ export class InterfaceService {
 			this.children.push(child);
 
 			if (alreadyRunning) {
-				const win = electron.remote.getCurrentWindow();
-				if (win.isMinimized() == false) {
-					win.minimize();
-				}
+				electron.ipcRenderer.invoke("minimize");
 				return;
 			} else {
 				this.child = child;
@@ -277,9 +274,7 @@ export class InterfaceService {
 				// );
 
 				this.zone.run(() => {
-					electron.remote.getCurrentWindow().setAlwaysOnTop(true);
-					electron.remote.getCurrentWindow().show();
-					electron.remote.getCurrentWindow().setAlwaysOnTop(false);
+					electron.ipcRenderer.invoke("force-show");
 
 					this.dialog.open(CrashDialogComponent, {
 						disableClose: true,
@@ -331,11 +326,7 @@ export class InterfaceService {
 								line,
 							)
 						) {
-							const win = electron.remote.getCurrentWindow();
-							// if (win.isMinimized() == false) {
-							// 	win.minimize();
-							// }
-							win.hide();
+							electron.ipcHandler.invoke("hide");
 						}
 					});
 				});

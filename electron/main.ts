@@ -1,7 +1,8 @@
-import * as Sentry from "@sentry/electron";
+// import * as Sentry from "@sentry/electron";
 import {
 	app,
 	BrowserWindow,
+	dialog,
 	ipcMain,
 	Menu,
 	nativeImage,
@@ -10,135 +11,55 @@ import {
 } from "electron";
 import { autoUpdater } from "electron-updater";
 import { watchFile } from "fs";
-import { rmdirSync } from "fs-extra";
 import * as path from "path";
 
-autoUpdater.autoDownload = false;
+export class TivoliLauncher {
+	win: BrowserWindow;
+	tray: Tray;
 
-const oldUserData = app.getPath("userData");
-app.setPath(
-	"userData",
-	path.resolve(oldUserData, "../Tivoli Cloud VR/launcher"),
-);
-// delete %appdata%/tivoli-cloud-vr immediately after changing above
-// there is a chance it might have made it already
-// timeout not necessary but just incase
-setTimeout(() => {
-	try {
-		rmdirSync(oldUserData, { recursive: true });
-	} catch (err) {}
-}, 1000);
+	appLock: boolean;
 
-let win: BrowserWindow;
-let tray: Tray;
-let isQuiting = false;
+	DEV = process.env.DEV != null;
 
-app.on("before-quit", function () {
-	isQuiting = true;
-});
+	APP_ROOT = path.resolve(__dirname, "../../out/index.html");
+	APP_ASSETS = path.resolve(__dirname, "../../assets");
 
-const DEV = process.env.DEV != null;
-
-const appLock = !DEV ? app.requestSingleInstanceLock() : true;
-if (!appLock) app.quit();
-
-Sentry.init({
-	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
-	environment: "production",
-	enabled: !DEV,
-});
-
-if (appLock || DEV) {
-	const APP_ROOT = path.resolve(__dirname, "../../out/index.html");
-	const APP_ASSETS = path.resolve(__dirname, "../../assets");
-
-	const APP_ICON = nativeImage.createFromPath(
-		path.resolve(APP_ASSETS, "icon.ico"),
-	);
-	const RUNNING_ICON = nativeImage.createFromPath(
-		path.resolve(APP_ASSETS, "running.png"),
+	APP_ICON = nativeImage.createFromPath(
+		path.resolve(this.APP_ASSETS, "icon.ico"),
 	);
 
-	if (DEV) {
-		// auto reload in dev
-		watchFile(APP_ROOT, { interval: 500 }, () => {
-			if (win != null) win.loadFile(APP_ROOT);
-		});
-	}
+	RUNNING_ICON = nativeImage.createFromPath(
+		path.resolve(this.APP_ASSETS, "running.png"),
+	);
 
-	// tivoli:// functionality
-	app.setAsDefaultProtocolClient("tivoli");
+	isRunning = false;
+	isServerRunning = false;
+	isQuiting = false;
 
-	let openedUrl = null;
-	ipcMain.on("url", (e, msg) => {
-		if (msg == "get-url")
-			if (win != null) win.webContents.send("url", openedUrl);
-	});
+	createTray() {
+		if (this.tray) this.tray.destroy();
 
-	const processArgvForUrl = (argv: string[]) => {
-		const url = [...argv].pop().toLowerCase();
-		if (url.startsWith("tivoli://")) {
-			openedUrl = url;
-			if (win != null) win.webContents.send("url", openedUrl);
-		}
-	};
+		this.tray = new Tray(path.resolve(this.APP_ASSETS, "tray-icon.png"));
 
-	processArgvForUrl(process.argv);
-
-	app.on("second-instance", (e, argv) => {
-		processArgvForUrl(argv);
-	});
-
-	// mac
-	app.on("open-url", (e, url) => {
-		e.preventDefault();
-		processArgvForUrl([url]);
-	});
-
-	// window time
-	app.commandLine.appendSwitch("disable-site-isolation-trials");
-
-	// fix google logging in (More tools > Network conditions > Chrome - Windows)
-	app.userAgentFallback =
-		"Mozilla/5.0 (Windows NT 10.0; WOW64; rv:70.0) Gecko/20100101 Firefox/70.0";
-
-	const createWindow = () => {
-		if (!appLock) return;
-		if (win != null) return;
-		if (tray != null) return;
-
-		win = new BrowserWindow({
-			title: "Tivoli Cloud VR " + app.getVersion(),
-
-			width: 1000,
-			height: 640,
-			resizable: DEV, // only resizable when developing
-
-			webPreferences: {
-				nodeIntegration: true,
-				//backgroundThrottling: false,
-				nativeWindowOpen: true,
-				//webSecurity: false,
-				devTools: DEV,
-			},
-
-			icon: APP_ICON,
-			autoHideMenuBar: true,
-		});
-
-		tray = new Tray(path.resolve(APP_ASSETS, "tray-icon.png"));
-		tray.setToolTip("Tivoli Cloud VR " + app.getVersion());
+		// tray.setToolTip("Tivoli Cloud VR " + app.getVersion());
+		// if (process.platform != "darwin") {
+		// 	tray.setTitle("Tivoli Cloud VR " + app.getVersion());
+		// }
+		this.tray.setToolTip("Tivoli Cloud VR");
 		if (process.platform != "darwin") {
-			tray.setTitle("Tivoli Cloud VR " + app.getVersion());
+			this.tray.setTitle("Tivoli Cloud VR");
 		}
-		tray.on("click", () => {
-			win.show();
+
+		this.tray.on("click", () => {
+			this.win.show();
 		});
-		tray.setContextMenu(
+
+		this.tray.setContextMenu(
 			Menu.buildFromTemplate([
 				{
-					icon: path.resolve(APP_ASSETS, "tray-icon.png"),
-					label: "Tivoli Cloud VR " + app.getVersion(),
+					icon: path.resolve(this.APP_ASSETS, "tray-icon.png"),
+					// label: "Tivoli Cloud VR " + app.getVersion(),
+					label: "Tivoli Cloud VR",
 					enabled: false,
 				},
 				{
@@ -147,13 +68,13 @@ if (appLock || DEV) {
 				{
 					label: "Open Tivoli interface",
 					click: () => {
-						win.webContents.send("url", "tivoli://");
+						this.win.webContents.send("url", "tivoli://");
 					},
 				},
 				{
 					label: "Open Tivoli launcher",
 					click: () => {
-						win.show();
+						this.win.show();
 					},
 				},
 				{
@@ -181,115 +102,240 @@ if (appLock || DEV) {
 				{
 					label: "Quit Tivoli",
 					click: () => {
-						isQuiting = true;
-						win.close();
+						this.isQuiting = true;
+						this.win.close();
 					},
 				},
 			]),
 		);
+	}
 
-		// win.on("minimize", event => {
+	createWindow(autoUpdate: boolean) {
+		if (!this.appLock) return;
+		if (this.win) this.win.close();
+
+		this.win = new BrowserWindow({
+			// title: "Tivoli Cloud VR " + app.getVersion(),
+			title: "Tivoli Cloud VR",
+
+			width: autoUpdate ? 350 : 1000,
+			height: autoUpdate ? 250 : 640,
+			frame: !autoUpdate,
+
+			resizable: this.DEV, // only resizable when developing
+
+			webPreferences: {
+				nodeIntegration: true,
+				contextIsolation: false, // require()
+				backgroundThrottling: false,
+				nativeWindowOpen: true,
+				devTools: this.DEV,
+			},
+
+			icon: this.APP_ICON,
+			autoHideMenuBar: true,
+		});
+
+		this.win.menuBarVisible = false;
+
+		// that.win.on("minimize", event => {
 		// 	event.preventDefault();
-		// 	win.hide();
+		// 	that.win.hide();
 		// });
 
-		win.on("close", event => {
-			if ((isRunning || isServerRunning) && !isQuiting) {
+		this.win.on("close", event => {
+			if ((this.isRunning || this.isServerRunning) && !this.isQuiting) {
 				event.preventDefault();
-				win.hide();
+				this.win.hide();
 			}
 		});
 
-		win.on("closed", () => {
-			win = null;
+		this.win.loadFile(this.APP_ROOT, {
+			hash: autoUpdate ? "#/auto-update" : "#/",
 		});
 
-		win.loadFile(APP_ROOT);
-	};
-
-	app.on("ready", createWindow);
-
-	app.on("activate", () => {
-		if (win == null) {
-			createWindow();
-		} else {
-			win.show();
+		if (!autoUpdate) {
+			this.createTray();
 		}
-	});
+	}
 
-	app.on("window-all-closed", () => {
-		app.quit();
-	});
+	constructor() {
+		app.on("before-quit", function () {
+			this.isQuiting = true;
+		});
 
-	// restore if opened twice
-	app.on("second-instance", () => {
-		if (win && !DEV) {
-			win.show();
+		this.appLock = !this.DEV ? app.requestSingleInstanceLock() : true;
+		if (!this.appLock) app.quit();
+
+		// Sentry.init({
+		// 	dsn: "https://59d159ce1c03480d8c13f00d5d5ede3b@sentry.tivolicloud.com/2",
+		// 	environment: "production",
+		// 	enabled: !DEV,
+		// });
+
+		if (!(this.appLock || this.DEV)) return;
+
+		if (this.DEV) {
+			// auto reload in dev
+			watchFile(this.APP_ROOT, { interval: 500 }, () => {
+				if (this.win != null) {
+					this.win.loadFile(this.APP_ROOT, {
+						hash: "#/",
+					});
+				}
+			});
 		}
-	});
 
-	// running for changing window icon
-	let isRunning = false;
-	ipcMain.on("running", (e, newIsRunning: boolean) => {
-		if (win == null) return;
+		// tivoli:// functionality
+		app.setAsDefaultProtocolClient("tivoli");
 
-		if (isRunning == newIsRunning) return;
-		isRunning = newIsRunning;
+		let openedUrl = null;
+		ipcMain.on("url", (e, msg) => {
+			if (msg == "get-url")
+				if (this.win != null)
+					this.win.webContents.send("url", openedUrl);
+		});
 
-		win.setOverlayIcon(isRunning ? RUNNING_ICON : null, "Running");
-	});
+		const processArgvForUrl = (argv: string[]) => {
+			const url = [...argv].pop().toLowerCase();
+			if (url.startsWith("tivoli://")) {
+				openedUrl = url;
+				if (this.win != null)
+					this.win.webContents.send("url", openedUrl);
+			}
+		};
 
-	let isServerRunning = false;
-	ipcMain.on("server-running", (e, newIsServerRunning: boolean) => {
-		if (win == null) return;
+		processArgvForUrl(process.argv);
 
-		isServerRunning = newIsServerRunning;
-	});
+		app.on("second-instance", (e, argv) => {
+			processArgvForUrl(argv);
+		});
 
-	// updater
-	const sendUpdateMessage = (msg: string, info: any = null) => {
-		if (win == null) return;
-		win.webContents.send("updater", msg, info);
-	};
+		// mac
+		app.on("open-url", (e, url) => {
+			e.preventDefault();
+			processArgvForUrl([url]);
+		});
 
-	ipcMain.on("updater", (e, msg: string) => {
-		switch (msg) {
-			case "check-for-update":
-				if (DEV) break;
-				autoUpdater.checkForUpdates();
-				break;
+		// window time
+		app.commandLine.appendSwitch("disable-site-isolation-trials");
 
-			case "dismiss-update":
-				if (win != null) win.setProgressBar(-1); // off
-				break;
+		app.on("ready", () => {
+			if (this.DEV) {
+				this.createWindow(false);
+			} else {
+				// this.createWindow(!this.DEV);
+				// this.win.setProgressBar(-1); // off
+				// this.win.setProgressBar(2); // indeterminate
+				// this.win.setProgressBar(0.5); // 50%
+				// this.win.webContents.once("did-finish-load", () => {});
 
-			case "start-download":
-				if (win != null) win.setProgressBar(0); // 0%
-				autoUpdater.downloadUpdate();
-				break;
+				autoUpdater.checkForUpdatesAndNotify().catch(error => {
+					this.createWindow(true);
+					this.win.webContents.once("did-finish-load", () => {
+						this.win.webContents.send("update-error");
+					});
+				});
 
-			case "close":
-				if (win != null) win.close();
-				break;
-		}
-	});
+				ipcMain.handle("update-create-launcher-window", () => {
+					this.createWindow(false);
+				});
 
-	autoUpdater.on("update-available", e => {
-		if (win != null) win.setProgressBar(2); // indeterminate
-		sendUpdateMessage("update-available");
-	});
-	// autoUpdater.on("update-not-available", e => {});
+				autoUpdater.on("update-not-available", () => {
+					this.createWindow(false);
+				});
 
-	autoUpdater.on("error", e => {
-		if (win != null) win.setProgressBar(-1); // off
-		sendUpdateMessage("error", e);
-	});
-	autoUpdater.on("download-progress", e => {
-		if (win != null) win.setProgressBar(e.percent / 100); // x%
-		sendUpdateMessage("download-progress", e);
-	});
+				autoUpdater.on("update-available", () => {
+					this.createWindow(true);
+					this.win.webContents.once("did-finish-load", () => {
+						this.win.webContents.send("update-available");
+					});
+				});
 
-	autoUpdater.on("update-downloaded", e => {
-		autoUpdater.quitAndInstall();
-	});
+				autoUpdater.on("download-progress", e => {
+					if (this.win != null) {
+						this.win.setProgressBar(e.percent / 100); // x%
+						this.win.webContents.send(
+							"update-download-progress",
+							e.percent,
+						);
+					}
+				});
+
+				autoUpdater.on("update-downloaded", () => {
+					autoUpdater.quitAndInstall();
+				});
+			}
+		});
+
+		app.on("activate", () => {
+			if (this.win == null) {
+				// this.createWindow(!this.DEV);
+			} else {
+				this.win.show();
+			}
+		});
+
+		app.on("window-all-closed", () => {
+			app.quit();
+		});
+
+		// restore if opened twice
+		app.on("second-instance", () => {
+			if (this.win && !this.DEV) {
+				this.win.show();
+			}
+		});
+
+		// running for changing window icon
+		ipcMain.on("running", (e, newIsRunning: boolean) => {
+			if (this.win == null) return;
+
+			if (this.isRunning == newIsRunning) return;
+			this.isRunning = newIsRunning;
+
+			this.win.setOverlayIcon(
+				this.isRunning ? this.RUNNING_ICON : null,
+				"Running",
+			);
+		});
+
+		ipcMain.on("server-running", (e, newIsServerRunning: boolean) => {
+			if (this.win == null) return;
+			this.isServerRunning = newIsServerRunning;
+		});
+
+		// ipc functions
+		ipcMain.handle("force-show", e => {
+			this.win.setAlwaysOnTop(true);
+			this.win.show();
+			this.win.setAlwaysOnTop(false);
+		});
+		ipcMain.handle("hide", e => {
+			this.win.hide();
+		});
+		ipcMain.handle("minimize", e => {
+			if (this.win.isMinimized() == false) {
+				this.win.minimize();
+			}
+		});
+		ipcMain.handle("show-message-box", async (e, options) => {
+			const { response } = await dialog.showMessageBox(options);
+			return response;
+		});
+		ipcMain.handle(
+			"show-error-box",
+			async (e, title: string, content: string) => {
+				dialog.showErrorBox(title, content);
+			},
+		);
+		ipcMain.handle("version", () => {
+			return app.getVersion();
+		});
+		ipcMain.handle("progress-bar", (e, progress: number) => {
+			this.win.setProgressBar(progress);
+		});
+	}
 }
+
+new TivoliLauncher();

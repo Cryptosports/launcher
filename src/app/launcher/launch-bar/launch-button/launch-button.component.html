@@ -1,11 +1,17 @@
-<button mat-flat-button (click)="onLaunch()" [disabled]="running">
+<button
+	mat-flat-button
+	(click)="onLaunch()"
+	[disabled]="running"
+	[class.updating]="updating"
+>
+	<div class="update-progress-bar" [style.left]="progress + '%'"></div>
 	<div class="content">
 		<div class="icon">
-			<mat-icon *ngIf="!running">
+			<mat-icon *ngIf="!running && !updating">
 				launch
 			</mat-icon>
 			<mat-progress-spinner
-				*ngIf="running"
+				*ngIf="running || updating"
 				diameter="28"
 				strokeWidth="4"
 				color="primary"
@@ -14,14 +20,19 @@
 			</mat-progress-spinner>
 		</div>
 		<div class="text">
-			<ng-container *ngIf="!running">
-				Launch Tivoli client
+			<ng-container *ngIf="!updating">
+				<ng-container *ngIf="!running">
+					Launch Tivoli client
+				</ng-container>
+				<ng-container *ngIf="running">
+					Tivoli is now running!
+				</ng-container>
 			</ng-container>
-			<ng-container *ngIf="running">
-				Tivoli is now running!
+			<ng-container *ngIf="updating">
+				Updating Tivoli...
 			</ng-container>
 			<br />
-			<span>
+			<span *ngIf="!updating">
 				using
 				<ng-container
 					*ngIf="
@@ -41,6 +52,12 @@
 					version {{ currentVersion }}
 				</ng-template>
 			</span>
+			<span *ngIf="updating">
+				{{ progress.toFixed(0) }}% complete ({{
+					progressFileSize.toFixed(0)
+				}}
+				MB)</span
+			>
 		</div>
 	</div>
 </button>

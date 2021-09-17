@@ -2,6 +2,7 @@ import { Component, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
+import { InterfaceUpdaterService } from "./interface-updater.service";
 import { InterfaceService } from "./interface.service";
 import { SettingsService } from "./settings/settings.service";
 import { WorldServerService } from "./world-server.service";
@@ -14,6 +15,7 @@ import { WorldServerService } from "./world-server.service";
 export class LauncherComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly interfaceService: InterfaceService,
+		private readonly interfaceUpdaterService: InterfaceUpdaterService,
 		public readonly settingsService: SettingsService, // to init defaults
 		public readonly worldServerService: WorldServerService,
 		private router: Router,
@@ -38,10 +40,7 @@ export class LauncherComponent implements OnInit, OnDestroy {
 			});
 		});
 
-		// if (!this.interfaceService.downloaded())
-		// 	this.dialog.open(DownloadComponent, {
-		// 		disableClose: true,
-		// 	});
+		this.interfaceUpdaterService.checkForUpdates();
 	}
 
 	openDocs() {

@@ -30,6 +30,7 @@ class Process {
 			env: this.env,
 			detached: false,
 		});
+
 		this.child.on("exit", (code: number, signal: string) => {
 			console.log("Process exited", this.exec, code, signal);
 

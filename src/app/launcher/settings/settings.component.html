@@ -65,14 +65,33 @@
 			>
 				Developer settings
 			</mat-slide-toggle>
+		</div>
+		<div>
+			<h2><mat-icon>info</mat-icon> Versions</h2>
+
+			<p>
+				Launcher
+				<span class="version">{{ launcherVersion }}</span>
+			</p>
+			<p>
+				Interface
+				<span class="version">{{ interfaceVersion }}</span>
+			</p>
+
+			<button
+				mat-stroked-button
+				(click)="onRedownloadLatestInterface()"
+				[disabled]="updating || running"
+			>
+				<mat-icon>get_app</mat-icon>
+				Re-download latest interface
+			</button>
 
 			<div style="padding: 8px 0;"></div>
 
 			<h2><mat-icon>delete_forever</mat-icon> Reset</h2>
 
-			<div
-				style="display: flex; align-items: center; flex-direction: row;"
-			>
+			<div>
 				<button mat-stroked-button (click)="onResetInterfaceSettings()">
 					Interface settings
 				</button>

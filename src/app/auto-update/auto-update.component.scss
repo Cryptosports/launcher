@@ -1,0 +1,32 @@
+.auto-update {
+	width: 100%;
+	height: 100%;
+	background-image: linear-gradient(
+			0deg,
+			rgba(#1d1f21, 0.4),
+			rgba(#1d1f21, 0.4)
+		),
+		url("../../assets/squirrel-nut-cafe.jpg");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+
+	.logo {
+		display: block;
+		width: 80%;
+	}
+
+	p {
+		font-weight: 400;
+		font-size: 1.2em;
+	}
+
+	.progress {
+		width: 60%;
+	}
+}

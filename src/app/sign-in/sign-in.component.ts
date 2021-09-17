@@ -47,11 +47,7 @@ export class SignInComponent implements OnDestroy {
 						this.authService.handleAuthentication(
 							JSON.parse(req.query.token),
 						);
-						electron.remote.getCurrentWindow().setAlwaysOnTop(true);
-						electron.remote.getCurrentWindow().show();
-						electron.remote
-							.getCurrentWindow()
-							.setAlwaysOnTop(false);
+						electron.ipcRenderer.invoke("force-show");
 					});
 				});
 

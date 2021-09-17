@@ -1,7 +1,7 @@
 {
 	"appId": "com.tivolicloud.launcher",
 	"productName": "Tivoli Cloud VR",
-	"asar": false,
+	"asar": true,
 	"protocols": {
 		"name": "Tivoli Cloud VR",
 		"schemes": ["tivoli"],
@@ -10,30 +10,21 @@
 	"publish": [
 		{
 			"provider": "generic",
-			"url": "https://cdn.tivolicloud.com/releases",
+			"url": "https://cdn.tivolicloud.com/releases/launcher",
 			"useMultipleRangeRequest": false
 		}
 	],
 	"win": {
-		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
+		"artifactName": "TivoliCloudVRLauncher-${version}.${ext}",
 		"target": "nsis",
-		"icon": "assets/icon.ico",
-		"publisherName": [
-			"Tivoli Cloud VR, Inc.",
-			"Sectigo RSA Code Signing CA"
-		]
+		"icon": "assets/icon.ico"
 	},
 	"nsis": {
-		"oneClick": false,
-		"perMachine": true,
-		"allowToChangeInstallationDirectory": true,
-		"runAfterFinish": true,
-		"installerHeader": "assets/installer-header.bmp",
-		"installerSidebar": "assets/installer-sidebar.bmp",
-		"include": "build/installer.nsh"
+		"oneClick": true,
+		"perMachine": false
 	},
 	"linux": {
-		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
+		"artifactName": "TivoliCloudVRLauncher-${version}.${ext}",
 		"target": ["AppImage", "pacman", "deb"],
 		"icon": "assets/icon.icns",
 		"category": "Game"
@@ -54,11 +45,5 @@
 			"libopengl0"
 		]
 	},
-	"files": [
-		"out",
-		"electron/dist",
-		"interface/**/*",
-		"assets",
-		"!assets/private"
-	]
+	"files": ["out", "electron/dist", "assets", "!assets/private"]
 }

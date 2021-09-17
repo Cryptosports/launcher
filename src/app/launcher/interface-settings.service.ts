@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { config } from "process";
 import { SettingsService } from "./settings/settings.service";
+import { getOsConfigPath, getOsLocalPath } from "./utils";
 
 const require = (window as any).require;
 const process = (window as any).process;
@@ -8,7 +9,6 @@ const process = (window as any).process;
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
-const fsExtra = require("fs-extra");
 const electron = require("electron");
 
 @Injectable({
@@ -31,42 +31,26 @@ export class InterfaceSettingsService {
 		return "Tivoli Cloud VR" + (isDev ? " - dev" : "");
 	}
 
-	getConfigPath() {
-		return path.resolve(
-			process.platform == "win32"
-				? path.resolve(os.homedir(), "AppData/Roaming")
-				: process.platform == "darwin"
-				? path.resolve(os.homedir(), ".config")
-				: process.platform == "linux"
-				? path.resolve(os.homedir(), ".config")
-				: null,
-			this.getFolderName(),
-		);
-	}
+	private readonly configPath = path.resolve(
+		getOsConfigPath(),
+		this.getFolderName(),
+	);
 
-	getLocalPath() {
-		return path.resolve(
-			process.platform == "win32"
-				? path.resolve(os.homedir(), "AppData/Local")
-				: process.platform == "darwin"
-				? path.resolve(os.homedir(), "Library/Application Support")
-				: process.platform == "linux"
-				? path.resolve(os.homedir(), ".local/share")
-				: null,
-			this.getFolderName(),
-		);
-	}
+	private readonly localPath = path.resolve(
+		getOsLocalPath(),
+		this.getFolderName(),
+	);
 
 	getInterfaceSettingsPath() {
-		return path.resolve(this.getConfigPath(), "Interface.json");
+		return path.resolve(this.configPath, "Interface.json");
 	}
 
 	getInterfaceDataPaths() {
-		return [this.getConfigPath(), this.getLocalPath()];
+		return [this.configPath, this.localPath];
 	}
 
 	readInterfaceSettings() {
-		const appDataPath = this.getConfigPath();
+		const appDataPath = this.configPath;
 		const jsonPath = path.resolve(appDataPath, "Interface.json");
 
 		try {
@@ -79,7 +63,7 @@ export class InterfaceSettingsService {
 	}
 
 	writeInterfaceSettings(interfaceSettings: Object) {
-		const appDataPath = this.getConfigPath();
+		const appDataPath = this.configPath;
 
 		if (!fs.existsSync(appDataPath)) fs.mkdirSync(appDataPath);
 
@@ -89,12 +73,12 @@ export class InterfaceSettingsService {
 
 	resettingInterfaceData = false;
 	async resetInterfaceData(showDialog = false) {
-		// TODO: dont delete `this.getConfigPath() + "/launcher"`
+		// TODO: dont delete `this.configPath + "/launcher"`
 
 		this.resettingInterfaceData = true;
 		for (const path of this.getInterfaceDataPaths()) {
 			try {
-				await fsExtra.remove(path);
+				fs.rmdirSync(path, { recursive: true });
 			} catch (err) {
 				console.error(err);
 			}
@@ -102,7 +86,7 @@ export class InterfaceSettingsService {
 		this.resettingInterfaceData = false;
 
 		if (showDialog) {
-			electron.remote.dialog.showMessageBox(null, {
+			electron.ipcRenderer.invoke("show-message-box", {
 				type: "info",
 				buttons: ["OK"],
 				title: "Tivoli Cloud VR",

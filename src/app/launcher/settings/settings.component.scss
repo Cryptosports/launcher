@@ -11,7 +11,8 @@
 		justify-content: center;
 
 		> div {
-			width: 450px;
+			// width: 400px;
+			margin: 0 32px;
 		}
 
 		h2 > mat-icon {
@@ -30,6 +31,15 @@
 
 		mat-form-field {
 			width: 100%;
+		}
+
+		.version {
+			padding: 4px 6px;
+			font-weight: 500;
+			background-color: rgba(#000, 0.05);
+			color: #000;
+			border-radius: 4px;
+			margin-left: 4px;
 		}
 	}
 

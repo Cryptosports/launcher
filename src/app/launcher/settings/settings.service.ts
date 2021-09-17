@@ -36,7 +36,12 @@ export class SettingsService {
 			}
 
 			localStorage.setItem("settings." + key, value);
+
 			this.settings[key] = new BehaviorSubject<typeof value>(value);
+
+			this.settings[key].subscribe(value => {
+				localStorage.setItem("settings." + key, value);
+			});
 		}
 
 		// clean up unused settings
@@ -57,14 +62,15 @@ export class SettingsService {
 	setSetting<T>(key: string, value: T) {
 		const setting = this.settings[key] as BehaviorSubject<T>;
 		if (setting == null) return;
-
-		localStorage.setItem("settings." + key, value as any);
 		setting.next(value);
 		return setting;
 	}
 
 	constructor() {
 		this.setDefaultSettings({
+			// interface updater
+			currentVersion: "none",
+
 			// launchbar
 			disableVr: false,
 			alwaysSpawnInTutorialWorld: false,

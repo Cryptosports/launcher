@@ -1,0 +1,9 @@
+<div class="auto-update">
+	<ng-lottie class="logo" [options]="logoOptions"></ng-lottie>
+	<p>{{ text }}</p>
+	<mat-progress-bar
+		class="progress"
+		[mode]="progress == -1 ? 'indeterminate' : 'determinate'"
+		[value]="progress"
+	></mat-progress-bar>
+</div>

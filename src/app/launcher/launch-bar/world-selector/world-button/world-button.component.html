@@ -12,7 +12,7 @@
 					? 'url(' +
 					  metaverseUrl +
 					  '/api/domain/' +
-					  world.id +
+					  (world == null ? '_' : world.id) +
 					  '/image)'
 					: ''
 			"
