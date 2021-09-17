@@ -60,8 +60,6 @@ launcher linux:
         expire_in: 1 day
         paths:
             - launcher/dist/*.AppImage
-            - launcher/dist/*.pacman
-            - launcher/dist/*.deb
             - launcher/dist/*.yml
 
 upload launcher:
@@ -80,6 +78,6 @@ upload launcher:
         - gcloud auth activate-service-account --key-file $GCP_AUTH_JSON
         - gsutil cp
           "*.exe" "*.blockmap"
-          "*.AppImage" "*.deb" "*.pacman"
+          "*.AppImage"
           "*.yml"
           gs://tivolicloud-cdn/releases/launcher
