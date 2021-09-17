@@ -1,65 +1,35 @@
 stages:
-    #- bridge
     - build
     - deploy
 
-# windows ntfs is REALLY slow
-# dependencies:
-#     stage: dependencies
-#     tags:
-#         - windows
+.production:
+    only:
+        - /^[0-9]+?\.[0-9]+?\.[0-9]+?$/i
 
-#     cache:
-#         paths:
-#             - node_modules/
+.deploy:
+    extends: .production
+    when: manual
+    allow_failure: false
 
-#     script:
-#         - yarn install
-
-#     only:
-#         changes:
-#             - yarn.lock
-
-build launcher:
+launcher windows:
     stage: build
     tags:
         - windows
 
-    environment:
-        name: production
-    only:
-        - pipelines
-
-    # cache:
-    #     policy: pull
-    #     paths:
-    #         - node_modules/
+    extends: .production
 
     variables:
         CSC_LINK: C:\Users\maki\tivoli-cloud-vr.p12
-        #
-        # from ci variabls:
-        #   GITLAB_API_TOKEN
-        #   CSC_KEY_PASSWORD
-        #   DO_KEY_ID
-        #   DO_SECRET_KEY
-        #
-        # from pipeline, should have:
-        #   RELEASE_NUMBER
-        #   UPSTREAM_JOBS_URL
-        #   UPSTREAM_JOB
+        # CSC_KEY_PASSWORD
 
     script:
-        # prepare: download and unzip interface and change version in package.json
         - cd .gitlab
-        - yarn install
-        - node prepare.js
+        - node update-version.js
         - cd ..
 
-        # install, build and package
         - yarn install
-        - yarn run build
-        - yarn run package
+        - yarn build
+        - yarn package
 
     artifacts:
         expire_in: 1 day
@@ -68,20 +38,44 @@ build launcher:
             - dist/*.blockmap
             - dist/*.yml
 
-deploy launcher:
-    stage: deploy
-    tags:
-        - windows
+launcher linux:
+    stage: build
 
-    dependencies:
-        - build launcher
-
-    environment:
-        name: production
-    only:
-        - pipelines
+    extends: .production
 
     script:
         - cd .gitlab
+        - node update-version.js
+        - cd ..
+
         - yarn install
-        - node deploy.js
+        - yarn build
+        - yarn package
+
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - launcher/dist/*.AppImage
+            - launcher/dist/*.pacman
+            - launcher/dist/*.deb
+            - launcher/dist/*.yml
+
+upload launcher:
+    stage: deploy
+    image: google/cloud-sdk:alpine
+
+    extends: .deploy
+
+    needs:
+        - job: launcher windows
+          artifacts: true
+        - job: launcher linux
+          artifacts: true
+
+    script:
+        - gcloud auth activate-service-account --key-file $GCP_AUTH_JSON
+        - gsutil cp
+          "*.exe" "*.blockmap"
+          "*.AppImage" "*.deb" "*.pacman"
+          "*.yml"
+          gs://tivolicloud-cdn/releases/launcher
