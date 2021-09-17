@@ -76,6 +76,8 @@ upload launcher:
 
     script:
         - gcloud auth activate-service-account --key-file $GCP_AUTH_JSON
+
+        - cd dist
         - gsutil cp
           "*.exe" "*.blockmap"
           "*.AppImage"
