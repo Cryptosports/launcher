@@ -40,11 +40,14 @@ launcher windows:
 
 launcher linux:
     stage: build
-    image: node:lts
+    image: archlinux:latest
 
     extends: .production
 
     script:
+        # nodejs-lts-fermium is 14
+        - pacman -Syu --noconfirm nodejs-lts-fermium npm yarn python binutils git openssh
+
         - cd .gitlab
         - node update-version.js
         - cd ..
