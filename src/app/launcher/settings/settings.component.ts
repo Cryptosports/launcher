@@ -67,6 +67,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 		this.interfaceUpdaterService.downloadLatest();
 	}
 
+	onOpenInstalledInterfacePath() {
+		electron.shell.openPath(
+			this.interfaceUpdaterService.getInterfacePath(),
+		);
+	}
+
 	async onResetInterfaceSettings() {
 		const response = await electron.ipcRenderer.invoke("show-message-box", {
 			type: "question",

@@ -36,15 +36,24 @@ export class InterfaceUpdaterService {
 	public readonly updatesUrl =
 		"https://cdn.tivolicloud.com/releases/interface";
 
-	public readonly interfacePath = path.resolve(
-		getOsLocalPath(),
-		"TivoliCloudVRInterface",
-	);
+	getInterfacePath() {
+		const customPath = this.settingsService
+			.getSetting<string>("interfaceInstallationPath")
+			.getValue();
 
-	public readonly interfaceExePath = path.resolve(
-		this.interfacePath,
-		process.platform == "win32" ? "interface.exe" : "interface",
-	);
+		if (typeof customPath == "string" && customPath.trim() != "") {
+			return customPath.trim();
+		} else {
+			return path.resolve(getOsLocalPath(), "TivoliCloudVRInterface");
+		}
+	}
+
+	getInterfaceExePath() {
+		return path.resolve(
+			this.getInterfacePath(),
+			process.platform == "win32" ? "interface.exe" : "interface",
+		);
+	}
 
 	progress$ = new BehaviorSubject<number>(0);
 	progressFileSize$ = new BehaviorSubject<number>(0);
@@ -80,10 +89,11 @@ export class InterfaceUpdaterService {
 			}
 
 			// recursively remove folder and recreate
-			if (fs.existsSync(this.interfacePath)) {
-				fs.rmdirSync(this.interfacePath, { recursive: true });
+			const interfacePath = this.getInterfacePath();
+			if (fs.existsSync(interfacePath)) {
+				fs.rmdirSync(interfacePath, { recursive: true });
 			}
-			fs.mkdirSync(this.interfacePath);
+			fs.mkdirSync(interfacePath);
 
 			this.currentVersion$.next("none");
 
@@ -105,7 +115,7 @@ export class InterfaceUpdaterService {
 			const zipSize = Number(zipRes.headers.get("content-length"));
 			this.progressFileSize$.next(zipSize);
 
-			const zipPath = path.resolve(this.interfacePath, zipFilename);
+			const zipPath = path.resolve(interfacePath, zipFilename);
 			const zipStream = fs.createWriteStream(zipPath);
 
 			// make a progress stream to get progress
@@ -130,7 +140,7 @@ export class InterfaceUpdaterService {
 			// unzip and cleanup
 			let zipExtractedSize = 0;
 			await extractZip(zipPath, {
-				dir: this.interfacePath,
+				dir: interfacePath,
 				onEntry: (entry, zipfile) => {
 					zipExtractedSize += entry.compressedSize;
 					progress$.next(
@@ -160,7 +170,7 @@ export class InterfaceUpdaterService {
 
 	async checkForUpdates() {
 		// if not downloaded, download
-		if (!fs.existsSync(this.interfaceExePath)) {
+		if (!fs.existsSync(this.getInterfaceExePath())) {
 			this.downloadLatest();
 			return;
 		}

@@ -70,6 +70,7 @@ export class SettingsService {
 		this.setDefaultSettings({
 			// interface updater
 			currentVersion: "none",
+			interfaceInstallationPath: "",
 
 			// launchbar
 			disableVr: false,

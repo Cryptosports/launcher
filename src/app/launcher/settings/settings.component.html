@@ -86,6 +86,41 @@
 				<mat-icon>get_app</mat-icon>
 				Re-download latest interface
 			</button>
+			<div style="margin: 4px 0;"></div>
+			<button mat-stroked-button (click)="onOpenInstalledInterfacePath()">
+				<mat-icon>folder_open</mat-icon>
+				Open installed interface path
+			</button>
+
+			<br />
+
+			<mat-form-field style="width: 300px;">
+				<mat-label>
+					Custom interface installation path
+				</mat-label>
+				<input
+					matInput
+					[value]="
+						settingsService.getSetting('interfaceInstallationPath')
+							| async
+					"
+					(change)="
+						updateSettingString('interfaceInstallationPath', $event)
+					"
+				/>
+			</mat-form-field>
+			<p
+				style="
+					margin: 0;
+					margin-top: -16px;
+					font-size: 0.8em;
+					opacity: 0.8;
+				"
+			>
+				Leave empty to reset and make sure to
+				<br />
+				manually re-download if you change path
+			</p>
 
 			<div style="padding: 8px 0;"></div>
 

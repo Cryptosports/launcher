@@ -84,8 +84,7 @@ export class InterfaceService {
 	}
 
 	getInterfacePath() {
-		const installedInterfacePath = this.interfaceUpdaterService
-			.interfacePath;
+		const installedInterfacePath = this.interfaceUpdaterService.getInterfacePath();
 
 		const interfacePath = this.settingsService.getSetting<boolean>(
 			"interfacePathEnabled",
