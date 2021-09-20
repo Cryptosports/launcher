@@ -81,5 +81,8 @@ upload launcher:
         - gsutil cp
           "*.exe" "*.blockmap"
           "*.AppImage"
+          gs://tivolicloud-cdn/releases/launcher
+
+        - gsutil cp
           "latest*.yml"
           gs://tivolicloud-cdn/releases/launcher
