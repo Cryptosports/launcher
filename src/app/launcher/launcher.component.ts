@@ -4,8 +4,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { InterfaceUpdaterService } from "./interface-updater.service";
 import { InterfaceService } from "./interface.service";
+import { OldLauncherComplainDialogComponent } from "./old-launcher-complain-dialog/old-launcher-complain-dialog.component";
 import { SettingsService } from "./settings/settings.service";
 import { WorldServerService } from "./world-server.service";
+
+const require = (window as any).require;
+
+const fs = require("fs");
 
 @Component({
 	selector: "app-launcher",
@@ -41,6 +46,12 @@ export class LauncherComponent implements OnInit, OnDestroy {
 		});
 
 		this.interfaceUpdaterService.checkForUpdates();
+
+		if (fs.existsSync("C:\\Program Files\\Tivoli Cloud VR")) {
+			this.dialog.open(OldLauncherComplainDialogComponent, {
+				width: "450px",
+			});
+		}
 	}
 
 	openDocs() {

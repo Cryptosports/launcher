@@ -14,6 +14,7 @@ import { WorldButtonComponent } from "./launch-bar/world-selector/world-button/w
 import { WorldSelectorComponent } from "./launch-bar/world-selector/world-selector.component";
 import { LauncherComponent } from "./launcher.component";
 import { LogsComponent } from "./logs/logs.component";
+import { OldLauncherComplainDialogComponent } from "./old-launcher-complain-dialog/old-launcher-complain-dialog.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { TokboxSettingsComponent } from "./tokbox-stream/tokbox-settings/tokbox-settings.component";
 import { TokboxStreamComponent } from "./tokbox-stream/tokbox-stream.component";
@@ -54,6 +55,7 @@ const routes: Routes = [
 		LaunchButtonComponent,
 		WorldButtonComponent,
 		WorldSelectorComponent,
+		OldLauncherComplainDialogComponent,
 	],
 	imports: [
 		CommonModule,
@@ -62,6 +64,10 @@ const routes: Routes = [
 		ScrollingModule,
 		ClipboardModule,
 	],
-	entryComponents: [TokboxSettingsComponent, CrashDialogComponent],
+	entryComponents: [
+		TokboxSettingsComponent,
+		CrashDialogComponent,
+		OldLauncherComplainDialogComponent,
+	],
 })
 export class LauncherModule {}
