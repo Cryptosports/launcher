@@ -3,12 +3,12 @@ stages:
     - build
     - deploy
 
-# .production:
-#     only:
-#         - /^[0-9]+?\.[0-9]+?\.[0-9]+?$/i
+.production:
+    only:
+        - /^[0-9]+?\.[0-9]+?\.[0-9]+?$/i
 
 .deploy:
-    # extends: .production
+    extends: .production
     when: manual
     allow_failure: false
 
@@ -31,7 +31,7 @@ launcher linux:
     stage: build
     image: node:lts
 
-    # extends: .production
+    extends: .production
 
     cache:
         key:
@@ -42,9 +42,9 @@ launcher linux:
         policy: pull
 
     script:
-        # - cd .gitlab
-        # - node update-version.js
-        # - cd ..
+        - cd .gitlab
+        - node update-version.js
+        - cd ..
 
         - yarn install
         - yarn build
@@ -61,16 +61,16 @@ launcher windows:
     tags:
         - windows
 
-    # extends: .production
+    extends: .production
 
     variables:
         CSC_LINK: C:\tivoli-cloud-vr.ci.pfx
         # CSC_KEY_PASSWORD
 
     script:
-        # - cd .gitlab
-        # - node update-version.js
-        # - cd ..
+        - cd .gitlab
+        - node update-version.js
+        - cd ..
 
         - yarn install
         - yarn build
