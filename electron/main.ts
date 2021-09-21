@@ -349,7 +349,7 @@ export class TivoliLauncher {
 					`<html>
 	<body>
 		<p>
-			Firefox doesn't allow automatically closing pages.
+			Firefox doesn't allow closing pages automatically.
 			<br />
 			Please manually close the page. Thank you.
 		</p>
