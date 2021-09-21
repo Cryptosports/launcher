@@ -29,7 +29,7 @@ dependencies:
 
 launcher linux:
     stage: build
-    image: archlinux:latest
+    image: node:lts
 
     extends: .production
 
@@ -42,12 +42,9 @@ launcher linux:
         policy: pull
 
     script:
-        # nodejs-lts-fermium is 14
-        - pacman -Syu --noconfirm nodejs-lts-fermium npm yarn python binutils git openssh
-
-        - cd .gitlab
-        - node update-version.js
-        - cd ..
+        # - cd .gitlab
+        # - node update-version.js
+        # - cd ..
 
         - yarn install
         - yarn build
@@ -71,9 +68,9 @@ launcher windows:
         # CSC_KEY_PASSWORD
 
     script:
-        - cd .gitlab
-        - node update-version.js
-        - cd ..
+        # - cd .gitlab
+        # - node update-version.js
+        # - cd ..
 
         - yarn install
         - yarn build
