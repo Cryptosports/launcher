@@ -12,6 +12,8 @@ import {
 import { autoUpdater } from "electron-updater";
 import { watchFile } from "fs";
 import * as path from "path";
+import * as express from "express";
+import * as getPort from "get-port";
 
 export class TivoliLauncher {
 	win: BrowserWindow;
@@ -334,6 +336,34 @@ export class TivoliLauncher {
 		});
 		ipcMain.handle("progress-bar", (e, progress: number) => {
 			this.win.setProgressBar(progress);
+		});
+
+		let expressServer: any = null;
+
+		ipcMain.on("get-auth-token", async (event, metaverseUrl: string) => {
+			if (expressServer) expressServer.close();
+
+			const expressApp = express();
+			expressApp.get("/signIn", (req, res) => {
+				res.send(
+					"<script>setInterval(()=>{window.close();},100);window.close();</script>",
+				);
+				event.reply(
+					"auth-token",
+					JSON.parse(req.query.token as string),
+				);
+				if (expressServer) {
+					expressServer.close();
+					expressServer = null;
+				}
+			});
+
+			const expressPort = await getPort();
+			expressServer = expressApp.listen(expressPort, "127.0.0.1");
+
+			shell.openExternal(
+				metaverseUrl + "?launcherSignInPort=" + expressPort,
+			);
 		});
 	}
 }
