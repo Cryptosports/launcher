@@ -35,6 +35,7 @@ export class SignInComponent implements OnDestroy {
 					(event, token: AuthToken) => {
 						this.zone.run(() => {
 							this.authService.handleAuthentication(token);
+							electron.ipcRenderer.invoke("force-show");
 						});
 					},
 				);
