@@ -63,14 +63,6 @@ launcher windows:
 
     # extends: .production
 
-    cache:
-        key:
-            files:
-                - yarn.lock
-        paths:
-            - node_modules
-        policy: pull
-
     variables:
         CSC_LINK: C:\tivoli-cloud-vr.ci.pfx
         # CSC_KEY_PASSWORD
