@@ -122,7 +122,6 @@ export class InterfaceUpdaterService {
 			const zipStream = fs.createWriteStream(zipPath);
 
 			// make a progress stream to get progress
-
 			let zipDownloadedSize = 0;
 			const progress$ = this.progress$;
 
@@ -159,6 +158,7 @@ export class InterfaceUpdaterService {
 
 			this.currentVersion$.next(latest.version);
 		} catch (error) {
+			console.error(error);
 			this.updating$.next(false);
 			this.progress$.next(0);
 			this.progressFileSize$.next(0);
