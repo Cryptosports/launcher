@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .container {
 	width: 100vw;
 	height: 100vh;
@@ -33,7 +35,7 @@
 		.logo {
 			display: block;
 			height: 128px;
-			margin-top: $statusHeight / 2; // equal it out a bit more
+			margin-top: math.div($statusHeight, 2); // equal it out a bit more
 		}
 	}
 
