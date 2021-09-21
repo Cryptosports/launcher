@@ -346,7 +346,21 @@ export class TivoliLauncher {
 			const expressApp = express();
 			expressApp.get("/signIn", (req, res) => {
 				res.send(
-					"<script>setInterval(()=>{window.close();},100);window.close();</script>",
+					`<html>
+	<body>
+		<p>
+			Firefox doesn't allow automatically closing pages.
+			<br />
+			Please manually close the page. Thank you.
+		</p>
+		<script>
+			setInterval(() => {
+				window.close();
+			}, 100);
+			window.close();
+		</script>
+	</body>
+</html>`,
 				);
 				event.reply(
 					"auth-token",
