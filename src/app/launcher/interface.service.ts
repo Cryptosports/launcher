@@ -325,7 +325,7 @@ export class InterfaceService {
 								line,
 							)
 						) {
-							electron.ipcHandler.invoke("hide");
+							electron.ipcRenderer.invoke("hide");
 						}
 					});
 				});
