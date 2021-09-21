@@ -1,15 +1,63 @@
 stages:
+    - dependencies
     - build
     - deploy
 
 .production:
-    only:
-        - /^[0-9]+?\.[0-9]+?\.[0-9]+?$/i
+    # only:
+    #     - /^[0-9]+?\.[0-9]+?\.[0-9]+?$/i
 
 .deploy:
     extends: .production
     when: manual
     allow_failure: false
+
+dependencies:
+    stage: dependencies
+    image: node:lts
+
+    cache:
+        key:
+            files:
+                - yarn.lock
+        paths:
+            - node_modules
+
+    script:
+        - yarn install
+        - yarn ngcc --create-ivy-entry-points
+
+launcher linux:
+    stage: build
+    image: archlinux:latest
+
+    extends: .production
+
+    cache:
+        key:
+            files:
+                - yarn.lock
+        paths:
+            - node_modules
+        policy: pull
+
+    script:
+        # nodejs-lts-fermium is 14
+        - pacman -Syu --noconfirm nodejs-lts-fermium npm yarn python binutils git openssh
+
+        - cd .gitlab
+        - node update-version.js
+        - cd ..
+
+        - yarn install
+        - yarn build
+        - yarn package
+
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - dist/*.AppImage
+            - dist/*.yml
 
 launcher windows:
     stage: build
@@ -36,30 +84,6 @@ launcher windows:
         paths:
             - dist/*.exe
             - dist/*.blockmap
-            - dist/*.yml
-
-launcher linux:
-    stage: build
-    image: archlinux:latest
-
-    extends: .production
-
-    script:
-        # nodejs-lts-fermium is 14
-        - pacman -Syu --noconfirm nodejs-lts-fermium npm yarn python binutils git openssh
-
-        - cd .gitlab
-        - node update-version.js
-        - cd ..
-
-        - yarn install
-        - yarn build
-        - yarn package
-
-    artifacts:
-        expire_in: 1 day
-        paths:
-            - dist/*.AppImage
             - dist/*.yml
 
 upload launcher:
