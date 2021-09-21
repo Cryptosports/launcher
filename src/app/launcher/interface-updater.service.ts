@@ -79,6 +79,9 @@ export class InterfaceUpdaterService {
 	}
 
 	async downloadLatest(latest?: Latest) {
+		// dont update if already updating
+		if (this.updating$.getValue()) return;
+
 		try {
 			this.updating$.next(true);
 			this.progress$.next(0);
