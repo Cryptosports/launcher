@@ -43,7 +43,6 @@ export class DiscordService {
 					} else {
 						this.updateDomainId(this.currentDomainId, true);
 					}
-					console.log(this.rpc);
 				});
 		};
 
