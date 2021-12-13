@@ -27,6 +27,11 @@ interface Latest {
 		sha256: string;
 		size: number;
 	};
+	macos: {
+		filename: string;
+		sha256: string;
+		size: number;
+	};
 }
 
 @Injectable({
@@ -49,10 +54,17 @@ export class InterfaceUpdaterService {
 	}
 
 	getInterfaceExePath() {
-		return path.resolve(
-			this.getInterfacePath(),
-			process.platform == "win32" ? "interface.exe" : "interface",
-		);
+		switch (process.platform) {
+			case "win32":
+				return path.resolve(this.getInterfacePath(), "interface.exe");
+			case "linux":
+				return path.resolve(this.getInterfacePath(), "interface");
+			case "darwin":
+				return path.resolve(
+					this.getInterfacePath(),
+					"interface.app/Contents/MacOS/interface",
+				);
+		}
 	}
 
 	progress$ = new BehaviorSubject<number>(0);
@@ -105,6 +117,8 @@ export class InterfaceUpdaterService {
 				zipFilename = latest.windows.filename;
 			} else if (process.platform == "linux") {
 				zipFilename = latest.linux.filename;
+			} else if (process.platform == "darwin") {
+				zipFilename = latest.macos.filename;
 			} else {
 				throw new Error(
 					"Interface not available for platform: " + process.platform,
