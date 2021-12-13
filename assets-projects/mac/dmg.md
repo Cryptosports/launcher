@@ -1,0 +1,3 @@
+- Export as 540x380 `dmg.png`
+- Export as 1080x760 `dmg@2x.png`
+- Run `tiffutil -cathidpicheck dmg.png dmg@2x.png -out dmg.tiff`

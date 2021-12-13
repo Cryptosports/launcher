@@ -83,6 +83,30 @@ launcher windows:
             - dist/*.blockmap
             - dist/*.yml
 
+launcher macos:
+    stage: build
+    tags:
+        - macos
+
+    extends: .production
+
+    script:
+        - cd .gitlab
+        - node update-version.js
+        - cd ..
+
+        - yarn install
+        - yarn build
+        - yarn package
+
+    artifacts:
+        expire_in: 1 day
+        paths:
+            - dist/*.dmg
+            - dist/*.zip
+            - dist/*.blockmap
+            - dist/*.yml
+
 upload launcher:
     stage: deploy
     image: google/cloud-sdk:alpine
@@ -94,14 +118,18 @@ upload launcher:
           artifacts: true
         - job: launcher linux
           artifacts: true
+        - job: launcher macos
+          artifacts: true
 
     script:
         - gcloud auth activate-service-account --key-file $GCP_AUTH_JSON
 
         - cd dist
         - gsutil cp
-          "*.exe" "*.blockmap"
+          "*.exe"
           "*.AppImage"
+          "*.dmg" "*.zip"
+          "*.blockmap"
           gs://tivolicloud-cdn/releases/launcher
 
         - gsutil cp

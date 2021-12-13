@@ -34,6 +34,13 @@ export class TivoliLauncher {
 		path.resolve(this.APP_ASSETS, "running.png"),
 	);
 
+	TRAY_ICON_PATH = path.resolve(
+		this.APP_ASSETS,
+		process.platform == "darwin"
+			? "tray/iconTemplate.png"
+			: "tray/icon.png",
+	);
+
 	isRunning = false;
 	isServerRunning = false;
 	isQuiting = false;
@@ -41,7 +48,7 @@ export class TivoliLauncher {
 	createTray() {
 		if (this.tray) this.tray.destroy();
 
-		this.tray = new Tray(path.resolve(this.APP_ASSETS, "tray-icon.png"));
+		this.tray = new Tray(this.TRAY_ICON_PATH);
 
 		// tray.setToolTip("Tivoli Cloud VR " + app.getVersion());
 		// if (process.platform != "darwin") {
@@ -59,7 +66,7 @@ export class TivoliLauncher {
 		this.tray.setContextMenu(
 			Menu.buildFromTemplate([
 				{
-					icon: path.resolve(this.APP_ASSETS, "tray-icon.png"),
+					icon: path.resolve(this.TRAY_ICON_PATH),
 					// label: "Tivoli Cloud VR " + app.getVersion(),
 					label: "Tivoli Cloud VR",
 					enabled: false,

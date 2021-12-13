@@ -23,6 +23,31 @@
 		"oneClick": true,
 		"perMachine": false
 	},
+	"mac": {
+		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
+		"target": {
+			"target": "default",
+			"arch": ["x64", "arm64"]
+		},
+		"icon": "assets/icon.icns",
+		"category": "public.app-category.games"
+	},
+	"dmg": {
+		"background": "assets/dmg.tiff",
+		"title": "Tivoli Cloud VR",
+		"contents": [
+			{
+				"x": 170,
+				"y": 190
+			},
+			{
+				"x": 370,
+				"y": 190,
+				"type": "link",
+				"path": "/Applications"
+			}
+		]
+	},
 	"linux": {
 		"artifactName": "TivoliCloudVRLauncher-${version}.${ext}",
 		"target": ["AppImage"],
@@ -45,5 +70,5 @@
 			"libopengl0"
 		]
 	},
-	"files": ["out", "electron/dist", "assets", "!assets/private"]
+	"files": ["out", "electron/dist", "assets"]
 }

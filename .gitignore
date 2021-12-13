@@ -10,3 +10,5 @@ package-lock.json
 electron-builder.env
 yarn-error.log
 /.gitlab/interface.zip
+/assets-projects/mac/*.png
+/assets-projects/mac/*.tiff
