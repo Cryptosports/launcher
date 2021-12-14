@@ -27,7 +27,7 @@
 		"artifactName": "Tivoli Cloud VR ${version}.${ext}",
 		"target": {
 			"target": "default",
-			"arch": ["x64", "arm64"]
+			"arch": ["universal"]
 		},
 		"icon": "assets/icon.icns",
 		"category": "public.app-category.games"
